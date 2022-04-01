@@ -18,6 +18,7 @@ const TextField = ({ name, setValue }) => {
         autoCapitalize='none'
         onChange={(e) => setValue(e)}
         containerStyle={styles.input}
+        inputStyle={styles.label}
       />
     </View>
   )
@@ -31,13 +32,16 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(0,0,0,.75)',
     margin: 8,
     padding: 8,
     width: '95%',
   },
   input: {
     height: 35,
+  },
+  label: {
+    color: 'white'
   }
 })
 

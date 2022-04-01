@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 
 import {
-  Button
+  Button, CheckBox, Icon
 } from 'react-native-elements'
 
 import TextField from '../components/TextField'
@@ -20,6 +20,7 @@ const LoginForm = () => {
   const [title, setTitle] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [check1, setCheck1] = useState(false)
 
   return (
     <ImageBackground 
@@ -29,7 +30,9 @@ const LoginForm = () => {
     >
     <View style={styles.container} >
       
-      <Text>{(title ? 'Iniciar sesión' : 'Sesión iniciada')}</Text>
+      <Text
+        style={styles.text}
+      >{(title ? 'Iniciar sesión' : 'Sesión iniciada')}</Text>
       <TextField
         name='Correo electrónico'
         setValue={setEmail}
@@ -38,7 +41,15 @@ const LoginForm = () => {
         name='Contraseña'
         setValue={setPassword}
       />
-      <Text>Recordar datos de acceso</Text>
+      <CheckBox
+         center
+         title="Recordar datos de acceso"
+         checked={check1}
+         onPress={() => setCheck1(!check1)}
+         containerStyle={styles.checkbox}
+         textStyle={styles.checkboxText}
+      />
+
       <View
         style={styles.buttonContainer}
       >
@@ -52,22 +63,17 @@ const LoginForm = () => {
           buttonStyle={styles.button}
         />
       </View>
-      <Text>
-        ¿Se te han olvidado tus datos para iniciar sesión? No esperes más y
+      <Text
+        style={styles.text}
+      >
         <Button
-          title='recupera tus datos de acceso'
+          title='¿Has olvidado tu contraseña?'
           type='clear'
-          containerStyle={{
-            height: 35,
-            width: '100%',
-            margin: 0,
-            padding: 0
-          }}
+          containerStyle={styles.buttonRecover}
           titleStyle={{
             fontSize: 16
           }}
         />
-        .
       </Text>
 
     </View>
@@ -97,6 +103,24 @@ const styles = StyleSheet.create({
   button: {
     width: 170,
     marginHorizontal: 2,
+  },
+
+  text:{
+    color: 'white'
+  },
+  checkbox:{
+    backgroundColor: 'transparent',
+    width: '95%',
+    borderColor: 'transparent'
+  },
+  checkboxText:{
+    color: 'white'
+  },
+  buttonRecover: {
+    height: 35,
+    width: '100%',
+    margin: 0,
+    padding: 0
   }
 })
 
