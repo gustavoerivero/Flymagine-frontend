@@ -8,10 +8,15 @@ import {
 } from 'react-native'
 
 import {
-  Button, CheckBox, Icon
+  Button,
+  CheckBox
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+
+import MakeItRain from 'react-native-make-it-rain'
 
 import TextField from '../components/TextField'
 import PasswordField from '../components/PasswordField'
@@ -22,7 +27,7 @@ import Bibliothecary from '../assets/images/Bibliothecary.jpg'
 const LoginForm = () => {
 
   const Navegation = useNavigation()
-  const [title, setTitle] = useState(false)
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [check1, setCheck1] = useState(false)
@@ -30,83 +35,100 @@ const LoginForm = () => {
   return (
     <ImageBackground
       style={styles.imageBackground}
+      imageStyle={{
+        opacity: .5,
+        backgroundColor: 'rgba(187, 103, 220, .75)',
+      }}
       source={Bibliothecary}
-      resizeMode="cover"
+      resizeMode='cover'
     >
-      <View style={styles.container} >
-        <Image
-          source={Flymagine}
-          style={{
-            width: '30%',
-            height: '30%',
-            marginBottom: 50,
-            opacity: 0.8
+      <KeyboardAwareScrollView>
+        <MakeItRain
+          numItems={80}
+          itemDimensions={{
+            width: 5,
+            height: 5,
           }}
+          itemTintStrength={0.8}
+          fallSpeed={10}
         />
-        <TextField
-          name='Correo electrónico'
-          setValue={setEmail}
-        />
-        <PasswordField
-          name='Contraseña'
-          setValue={setPassword}
-        />
-        <CheckBox
-          center
-          title="Recordar datos de acceso"
-          checked={check1}
-          onPress={() => setCheck1(!check1)}
-          containerStyle={styles.checkbox}
-          textStyle={styles.checkboxText}
-        />
+        <View style={styles.container} >
+          <Image
+            source={Flymagine}
+            style={{
+              width: '50%',
+              height: '40%',
+              marginBottom: 50,
+              opacity: 0.8,
+            }}
+            resizeMode="contain"
+          />
+          <TextField
+            name='Correo electrónico'
+            setValue={setEmail}
+          />
+          <PasswordField
+            name='Contraseña'
+            setValue={setPassword}
+            value={password}
+          />
+          <CheckBox
+            center
+            title="Recordar usuario"
+            checked={check1}
+            onPress={() => setCheck1(!check1)}
+            containerStyle={styles.checkbox}
+            textStyle={styles.checkboxText}
+          />
 
-        <View
-          style={styles.buttonContainer}
-        >
+          <View
+            style={styles.buttonContainer}
+          >
+            <Button
+              title='Iniciar Sesión'
+              buttonStyle={styles.button}
+            />
+            <Button
+              title='Regístrate'
+              buttonStyle={styles.button}
+              onPress={() => Navegation.navigate("Register")}
+            />
+          </View>
           <Button
-            title={(title ? 'Iniciar sesión' : 'Cerrar Sesión')}
-            buttonStyle={styles.button}
-            onPress={() => setTitle(!title)}
+            title='¿Has olvidado tu contraseña?'
+            type='clear'
+            containerStyle={styles.buttonRecover}
+            titleStyle={{
+              fontSize: 16,
+              color: '#25AADB'
+            }}
           />
-          <Button
-            title='Regístrate'
-            buttonStyle={styles.button}
-            onPress={() => Navegation.navigate("Register")}
-          />
+          <Text
+            style={[
+              styles.text,
+              {
+                fontSize: 10,
+                marginTop: 10
+              }
+            ]}
+          >
+            Thoteam ® - 2022
+          </Text>
+
         </View>
-        <Button
-          title='¿Has olvidado tu contraseña?'
-          type='clear'
-          containerStyle={styles.buttonRecover}
-          titleStyle={{
-            fontSize: 16,
-            color: '#25AADB'
-          }}
-        />
-        <Text
-          style={[
-            styles.text,
-            {
-              fontSize: 10,
-              marginTop: 10
-            }
-          ]}
-        >
-          Thoteam ® - 2022
-        </Text>
-
-      </View>
+      </KeyboardAwareScrollView>
     </ImageBackground>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: '60%',
+    paddingTop: '80%',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '90%',
-    height: '90%',
+    alignSelf: 'center',
+    width: '95%',
+    height: '85%',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -114,8 +136,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   imageBackground: {
-    width: '100%',
-    height: '100%',
     flex: 1,
     alignItems: 'center',
   },
@@ -137,7 +157,7 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   buttonRecover: {
-    height: 35,
+    height: 40,
     width: '100%',
     margin: 0,
     padding: 0

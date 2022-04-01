@@ -5,33 +5,50 @@ import {
 } from 'react-native'
 import {
   Input,
-  Icon
+  Icon,
+  Button
 } from 'react-native-elements'
 
-const PasswordField = ({ name, setValue }) => {
+import PasswordValidator from '../utilities/PasswordValidator'
 
-  const [show, setShow] = useState(true)
+const PasswordField = ({ name, setValue, value }) => {
+
+  const [show, setShow] = useState(false)
 
   return (
-    <View style={styles.item}>
-      <Input
-        placeholder={name}
-        placeholderTextColor='#ccc'
-        underlineColorAndroid={'transparent'}
-        autoCapitalize='none'
-        secureTextEntry={show}
-        onChange={(e) => setValue(e)}
-        containerStyle={styles.input}
-        inputStyle={styles.label}
-        rightIcon={
-          <Icon 
-            type='feather'
-            name='eye'
-            color='#25AADB'
-          />
-        }
-      />
-    </View>
+      <View style={styles.item}>
+        <Input
+          placeholder={name}
+          placeholderTextColor='#ccc'
+          underlineColorAndroid={'transparent'}
+          autoCapitalize='none'
+          secureTextEntry={show ? false : true}
+          onChange={(e) => setValue(e)}
+          containerStyle={styles.input}
+          inputStyle={styles.label}
+          rightIcon={
+            <Button
+              icon={
+                <Icon
+                  type='feather'
+                  name={show ? 'eye' : 'eye-off'}
+                  color='#25AADB'
+                />
+              }
+              onPress={() => setShow(!show)}
+              type='clear'
+            />
+          }
+          /*
+          errorMessage={
+            PasswordValidator(value) ? '' : 'La contraseña ingresada no es válida.'
+          }
+          errorStyle={{
+            paddingTop: 5,
+          }}    
+          */      
+        />
+      </View>
   )
 }
 
@@ -43,7 +60,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: 'rgba(0,0,0,.75)',
+    backgroundColor: 'rgba(40, 10, 57, .75)',
     margin: 8,
     padding: 8,
     width: '95%'
