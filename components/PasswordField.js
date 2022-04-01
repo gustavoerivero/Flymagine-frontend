@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   View,
   StyleSheet
 } from 'react-native'
 import {
-  Input
+  Input,
+  Icon
 } from 'react-native-elements'
 
 const PasswordField = ({ name, setValue }) => {
+
+  const [show, setShow] = useState(true)
 
   return (
     <View style={styles.item}>
@@ -16,10 +19,17 @@ const PasswordField = ({ name, setValue }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        secureTextEntry={true}
+        secureTextEntry={show}
         onChange={(e) => setValue(e)}
         containerStyle={styles.input}
         inputStyle={styles.label}
+        rightIcon={
+          <Icon 
+            type='feather'
+            name='eye'
+            color='#25AADB'
+          />
+        }
       />
     </View>
   )
@@ -39,7 +49,7 @@ const styles = StyleSheet.create({
     width: '95%'
   },
   input: {
-    height: 35,
+    height: 50,
   },
   label: {
     color: 'white'

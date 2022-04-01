@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     width: '95%',
   },
   input: {
-    height: 35,
+    height: 50,
   },
   label: {
     color: 'white'
