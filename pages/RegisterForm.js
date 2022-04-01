@@ -11,21 +11,20 @@ import {
   Button, CheckBox, Icon
 } from 'react-native-elements'
 
-import { useNavigation } from '@react-navigation/native'
-
 import TextField from '../components/TextField'
 import PasswordField from '../components/PasswordField'
 
 import Flymagine from '../assets/adaptive-icon.png'
 import Bibliothecary from '../assets/images/Bibliothecary.jpg'
 
-const LoginForm = () => {
-
-  const Navegation = useNavigation()
-  const [title, setTitle] = useState(false)
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [check1, setCheck1] = useState(false)
+const RegisterForm = () => {
+  
+  let userData = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      passwordHash: '',
+  }
 
   return (
     <ImageBackground
@@ -34,67 +33,30 @@ const LoginForm = () => {
       resizeMode="cover"
     >
       <View style={styles.container} >
-        <Image
-          source={Flymagine}
-          style={{
-            width: '30%',
-            height: '30%',
-            marginBottom: 50,
-            opacity: 0.8
-          }}
+        <TextField
+          name='Nombre'
+          setValue={userData.firstName}
+        />
+        <TextField
+          name='Apellido'
+          setValue={userData.lastName}
         />
         <TextField
           name='Correo electrónico'
-          setValue={setEmail}
+          setValue={userData.email}
         />
         <PasswordField
           name='Contraseña'
-          setValue={setPassword}
+          setValue={userData.passwordHash}
         />
-        <CheckBox
-          center
-          title="Recordar datos de acceso"
-          checked={check1}
-          onPress={() => setCheck1(!check1)}
-          containerStyle={styles.checkbox}
-          textStyle={styles.checkboxText}
-        />
-
         <View
           style={styles.buttonContainer}
         >
           <Button
-            title={(title ? 'Iniciar sesión' : 'Cerrar Sesión')}
-            buttonStyle={styles.button}
-            onPress={() => setTitle(!title)}
-          />
-          <Button
             title='Regístrate'
             buttonStyle={styles.button}
-            onPress={() => Navegation.navigate("Register")}
           />
         </View>
-        <Button
-          title='¿Has olvidado tu contraseña?'
-          type='clear'
-          containerStyle={styles.buttonRecover}
-          titleStyle={{
-            fontSize: 16,
-            color: '#25AADB'
-          }}
-        />
-        <Text
-          style={[
-            styles.text,
-            {
-              fontSize: 10,
-              marginTop: 10
-            }
-          ]}
-        >
-          Thoteam ® - 2022
-        </Text>
-
       </View>
     </ImageBackground>
   )
@@ -102,7 +64,6 @@ const LoginForm = () => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: '60%',
     alignItems: 'center',
     justifyContent: 'center',
     width: '90%',
@@ -144,4 +105,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default LoginForm
+export default RegisterForm

@@ -1,19 +1,8 @@
-import { StyleSheet, View } from 'react-native'
-
-import LoginForm from './pages/LoginForm'
+import React from 'react'
+import Navegation from './Navegation'
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <LoginForm />
-    </View>
+    <Navegation />
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
