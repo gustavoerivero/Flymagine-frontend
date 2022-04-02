@@ -7,6 +7,8 @@ import {
   Input
 } from 'react-native-elements'
 
+import styles from './styled-components/styles'
+
 const TextField = ({ name, setValue }) => {
 
   return (
@@ -16,33 +18,12 @@ const TextField = ({ name, setValue }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        onChange={(e) => setValue(e)}
+        onChangeText={(text) => setValue(text)}
         containerStyle={styles.input}
-        inputStyle={styles.label}
+        inputStyle={styles.label}     
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: 'rgba(40, 10, 57, .75)',
-    margin: 8,
-    padding: 8,
-    width: '95%',
-  },
-  input: {
-    height: 50,
-  },
-  label: {
-    color: 'white'
-  }
-})
 
 export default TextField

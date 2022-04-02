@@ -18,8 +18,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import MakeItRain from 'react-native-make-it-rain'
 
-import TextField from '../components/TextField'
-import PasswordField from '../components/PasswordField'
+import EmailField from '../components/LoginComponents/EmailField'
+import PasswordField from '../components/LoginComponents/PasswordField'
+
+//import handleChange from '../utilities/HandleChange'
 
 import Flymagine from '../assets/adaptive-icon.png'
 import Bibliothecary from '../assets/images/Bibliothecary.jpg'
@@ -30,7 +32,8 @@ const LoginForm = () => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [check1, setCheck1] = useState(false)
+
+  const [check, setCheck] = useState(false)
 
   return (
     <ImageBackground
@@ -63,20 +66,21 @@ const LoginForm = () => {
             }}
             resizeMode="contain"
           />
-          <TextField
+          <EmailField
             name='Correo electrónico'
-            setValue={setEmail}
+            value={email}
+            setValues={setEmail}
           />
           <PasswordField
             name='Contraseña'
-            setValue={setPassword}
             value={password}
+            setValues={setPassword}
           />
           <CheckBox
             center
             title="Recordar usuario"
-            checked={check1}
-            onPress={() => setCheck1(!check1)}
+            checked={check}
+            onPress={() => setCheck(!check)}
             containerStyle={styles.checkbox}
             textStyle={styles.checkboxText}
           />

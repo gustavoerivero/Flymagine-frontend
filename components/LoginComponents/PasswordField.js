@@ -1,19 +1,16 @@
 import React, { useState } from 'react'
-import {
-  View,
-  StyleSheet
-} from 'react-native'
+import { View } from 'react-native'
 import {
   Input,
   Icon,
   Button
 } from 'react-native-elements'
 
-import PasswordValidator from '../utilities/PasswordValidator'
+import PasswordValidator from '../../utilities/PasswordValidator'
 
-import styles from './styled-components/styles'
+import styles from './styled-components/login-styles'
 
-const PasswordField = ({ name, setValues, value }) => {
+const PasswordField = ({ name, value, setValues }) => {
 
   const [show, setShow] = useState(false)
 
@@ -46,7 +43,7 @@ const PasswordField = ({ name, setValues, value }) => {
           }
           errorStyle={{
             paddingTop: 5,
-          }}              
+          }}               
         />
       </View>
   )
