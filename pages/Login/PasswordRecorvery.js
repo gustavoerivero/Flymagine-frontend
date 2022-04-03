@@ -13,9 +13,9 @@ import {
 
 import { useNavigation } from '@react-navigation/native'
 
-import EmailField from '../components/LoginComponents/EmailField'
+import EmailField from '../../components/LoginComponents/EmailField'
 
-import Bibliothecary from '../assets/images/Bibliothecary.jpg'
+import Bibliothecary from '../../assets/images/Bibliothecary.jpg'
 
 const PasswordRecovery = () => {
 
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
     width: '95%',
     height: '35%',
   },
-
   imageBackground: {
     flex: 1,
     alignItems: 'center',

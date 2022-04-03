@@ -1,13 +1,53 @@
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import LoginScreen from "./pages/LoginForm"
-import RegisterScreen from "./pages/RegisterForm"
-import PasswordRecoveryScreen from './pages/PasswordRecorvery'
+import LoginScreen from "./pages/Login/LoginForm"
+import RegisterScreen from "./pages/Login/RegisterForm"
+import PasswordRecoveryScreen from './pages/Login/PasswordRecorvery'
+import HomeView from './pages/HomeView'
 import ReaderUserProfileScreen from './pages/ReaderUserProfile'
 
-const Stack = createNativeStackNavigator();
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+
+const Stack = createNativeStackNavigator()
+const Tab = createBottomTabNavigator()
+
+const Tabs = () => {
+  return(
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarActiveTintColor: 'purple'
+      }}
+    >
+      <Tab.Screen 
+        name="Home" 
+        component={HomeView} 
+        options={{
+          headerShown: false,
+          title: 'Inicio',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),          
+        }}
+      />
+      <Tab.Screen 
+        name="Profile" 
+        component={ReaderUserProfileScreen} 
+        options={{
+          headerShown: false,
+          title: 'Perfil',
+          tabBarIcon: ({ color, size }) => (
+            <Entypo name="user" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  )
+}
 
 function MyStack() {
   return (
@@ -36,8 +76,11 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="ReaderUserProfile"
-        component={ReaderUserProfileScreen}
+        name="Home"
+        component={Tabs}        
+        options={{
+          headerShown: false
+        }}
       />
     </Stack.Navigator>
   )
