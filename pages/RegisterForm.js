@@ -1,30 +1,28 @@
 import React, { useState } from 'react'
-import {
+import { handleChange } from '../utils/functions'
+import { 
   View,
   Text,
   StyleSheet,
-  ImageBackground,
-  Image
+  ImageBackground
 } from 'react-native'
 
-import {
-  Button, CheckBox, Icon
-} from 'react-native-elements'
+import {Button} from 'react-native-elements'
 
 import TextField from '../components/TextField'
 import PasswordField from '../components/PasswordField'
-
-import Flymagine from '../assets/adaptive-icon.png'
 import Bibliothecary from '../assets/images/Bibliothecary.jpg'
 
 const RegisterForm = () => {
-  
-  let userData = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      passwordHash: '',
-  }
+
+  const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    passwordHash: ''
+  })
+
+  const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
 
   return (
     <ImageBackground
@@ -35,26 +33,30 @@ const RegisterForm = () => {
       <View style={styles.container} >
         <TextField
           name='Nombre'
-          setValue={userData.firstName}
+          setText={(text) => _handleChange("firstName", text)}
         />
         <TextField
           name='Apellido'
-          setValue={userData.lastName}
+          setText={(text) => _handleChange("lastName", text)}
         />
         <TextField
           name='Correo electrónico'
-          setValue={userData.email}
+          setText={(text) => _handleChange("email", text)}
         />
         <PasswordField
           name='Contraseña'
-          setValue={userData.passwordHash}
+          setText={(text) => _handleChange("passwordHash", text)}
         />
+        <Text style={styles.text}>
+          {JSON.stringify(userData, null, 2)}
+        </Text>
         <View
           style={styles.buttonContainer}
         >
           <Button
             title='Regístrate'
             buttonStyle={styles.button}
+            onPress={() => Show()}
           />
         </View>
       </View>
