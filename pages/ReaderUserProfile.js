@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 import Profile from '../assets/profile-default.png'
+import { BackgroundImage } from '@rneui/base'
 
 const ReaderUserProfile = () => {
 
@@ -98,7 +99,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     width: '100%',
-    height: '50%'
+    height: '50%',
+    backgroundColor: '#9681DF',
   },
   itemContainer: {
     backgroundColor: '#9681DF',
