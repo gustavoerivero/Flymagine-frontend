@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import { handleChange } from '../utils/functions'
-import { 
+import {
   View,
   Text,
   StyleSheet,
   ImageBackground
 } from 'react-native'
 
-import {Button} from 'react-native-elements'
+import { Button } from 'react-native-elements'
+
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import TextField from '../components/TextField'
+import EmailField from '../components/EmailField'
 import PasswordField from '../components/PasswordField'
+
 import Bibliothecary from '../assets/images/Bibliothecary.jpg'
 
 const RegisterForm = () => {
@@ -27,39 +31,47 @@ const RegisterForm = () => {
   return (
     <ImageBackground
       style={styles.imageBackground}
+      imageStyle={{
+        opacity: .75,
+        backgroundColor: 'rgba(187, 103, 220, .75)',
+      }}
       source={Bibliothecary}
-      resizeMode="cover"
+      resizeMode='cover'
     >
-      <View style={styles.container} >
-        <TextField
-          name='Nombre'
-          setText={(text) => _handleChange("firstName", text)}
-        />
-        <TextField
-          name='Apellido'
-          setText={(text) => _handleChange("lastName", text)}
-        />
-        <TextField
-          name='Correo electrónico'
-          setText={(text) => _handleChange("email", text)}
-        />
-        <PasswordField
-          name='Contraseña'
-          setText={(text) => _handleChange("passwordHash", text)}
-        />
-        <Text style={styles.text}>
-          {JSON.stringify(userData, null, 2)}
-        </Text>
-        <View
-          style={styles.buttonContainer}
-        >
-          <Button
-            title='Regístrate'
-            buttonStyle={styles.button}
-            onPress={() => Show()}
+      <KeyboardAwareScrollView>
+        <View style={styles.container} >
+          <TextField
+            name='Nombre'
+            setText={(text) => _handleChange("firstName", text)}
           />
+          <TextField
+            name='Apellido'
+            setText={(text) => _handleChange("lastName", text)}
+          />
+          <EmailField
+            name='Correo electrónico'
+            setValues={(text) => _handleChange("email", text)}
+            value={userData.email}
+          />
+          <PasswordField
+            name='Contraseña'
+            setValues={(text) => _handleChange("passwordHash", text)}
+            value={userData.passwordHash}
+          />
+          <Text style={styles.text}>
+            {JSON.stringify(userData, null, 2)}
+          </Text>
+          <View
+            style={styles.buttonContainer}
+          >
+            <Button
+              title='Regístrate'
+              buttonStyle={styles.button}
+              onPress={() => alert('Registro exitoso')}
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAwareScrollView>
     </ImageBackground>
   )
 }
@@ -67,9 +79,9 @@ const RegisterForm = () => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '90%',
-    height: '90%',
+    alignSelf: 'center',
+    width: '95%',
+    height: '85%',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -77,8 +89,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   imageBackground: {
-    width: '100%',
-    height: '100%',
     flex: 1,
     alignItems: 'center',
   },

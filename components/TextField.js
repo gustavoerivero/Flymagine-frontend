@@ -2,6 +2,8 @@ import React from 'react'
 import { View } from 'react-native'
 import { Input } from 'react-native-elements'
 
+import styles from './styled-components/styles'
+
 const TextField = ({ name, setText }) => {
 
   return (
@@ -11,7 +13,7 @@ const TextField = ({ name, setText }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        onChangeText={(text) =>setText(text)}
+        onChangeText={(text) => setText(text)}
         containerStyle={styles.input}
         inputStyle={styles.label}     
       />

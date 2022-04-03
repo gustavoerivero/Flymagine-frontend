@@ -2,11 +2,11 @@ import React from 'react'
 import { View } from 'react-native'
 import { Input } from 'react-native-elements'
 
-import EmailValidator from '../../utilities/EmailValidator'
+import EmailValidator from '../utilities/EmailValidator'
 
 import styles from './styled-components/styles'
 
-const EmailField = ({ name, setValue, value }) => {
+const EmailField = ({ name, value, setValues }) => {
 
   return (
     <View style={styles.item}>
@@ -15,7 +15,7 @@ const EmailField = ({ name, setValue, value }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        onChangeText={(text) => setValue(text)}
+        onChangeText={(text) => setValues(text)}
         containerStyle={styles.input}
         inputStyle={styles.label}       
         errorMessage={

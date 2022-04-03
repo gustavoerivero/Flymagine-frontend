@@ -21,7 +21,7 @@ import MakeItRain from 'react-native-make-it-rain'
 import EmailField from '../components/LoginComponents/EmailField'
 import PasswordField from '../components/LoginComponents/PasswordField'
 
-//import handleChange from '../utilities/HandleChange'
+import { handleChange } from '../utils/functions'
 
 import Flymagine from '../assets/adaptive-icon.png'
 import Bibliothecary from '../assets/images/Bibliothecary.jpg'
@@ -30,10 +30,13 @@ const LoginForm = () => {
 
   const Navegation = useNavigation()
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [userData, setUserData] = useState({
+    email: '',
+    passwordHash: '',
+    dataRemember: false
+  })
 
-  const [check, setCheck] = useState(false)
+  const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
 
   return (
     <ImageBackground
@@ -68,19 +71,19 @@ const LoginForm = () => {
           />
           <EmailField
             name='Correo electrónico'
-            value={email}
-            setValues={setEmail}
+            value={userData.email}
+            setValues={(text) => _handleChange("email", text)}
           />
           <PasswordField
             name='Contraseña'
-            value={password}
-            setValues={setPassword}
+            value={userData.passwordHash}
+            setValues={(text) => _handleChange("passwordHash", text)}
           />
           <CheckBox
             center
             title="Recordar usuario"
-            checked={check}
-            onPress={() => setCheck(!check)}
+            checked={userData.dataRemember}
+            onPress={() => _handleChange("dataRemember", !userData.dataRemember)}
             containerStyle={styles.checkbox}
             textStyle={styles.checkboxText}
           />

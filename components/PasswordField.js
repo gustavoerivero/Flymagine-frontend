@@ -10,7 +10,7 @@ import PasswordValidator from '../utilities/PasswordValidator'
 
 import styles from './styled-components/styles'
 
-const PasswordField = ({ name, setValues, value }) => {
+const PasswordField = ({ name, value, setValues }) => {
 
   const [show, setShow] = useState(false)
 
