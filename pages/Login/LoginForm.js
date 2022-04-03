@@ -18,13 +18,13 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import MakeItRain from 'react-native-make-it-rain'
 
-import EmailField from '../components/LoginComponents/EmailField'
-import PasswordField from '../components/LoginComponents/PasswordField'
+import EmailField from '../../components/LoginComponents/EmailField'
+import PasswordField from '../../components/LoginComponents/PasswordField'
 
-import { handleChange } from '../utils/functions'
+import { handleChange } from '../../utils/functions'
 
-import Flymagine from '../assets/adaptive-icon.png'
-import Bibliothecary from '../assets/images/Bibliothecary.jpg'
+import Flymagine from '../../assets/adaptive-icon.png'
+import Bibliothecary from '../../assets/images/Bibliothecary.jpg'
 
 const LoginForm = () => {
 
@@ -94,7 +94,7 @@ const LoginForm = () => {
             <Button
               title='Iniciar Sesión'
               buttonStyle={styles.button}
-              onPress={() => Navegation.navigate("ReaderUserProfile")}
+              onPress={() => Navegation.navigate("Home")}
             />
             <Button
               title='Regístrate'
@@ -153,7 +153,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 2,
     backgroundColor: '#9681DF'
   },
-
   text: {
     color: 'white'
   },

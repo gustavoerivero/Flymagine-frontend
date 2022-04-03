@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { handleChange } from '../utils/functions'
+import { handleChange } from '../../utils/functions'
 import {
   View,
   Text,
@@ -11,11 +11,11 @@ import { Button } from 'react-native-elements'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import TextField from '../components/TextField'
-import EmailField from '../components/EmailField'
-import PasswordField from '../components/PasswordField'
+import TextField from '../../components/TextField'
+import EmailField from '../../components/EmailField'
+import PasswordField from '../../components/PasswordField'
 
-import Bibliothecary from '../assets/images/Bibliothecary.jpg'
+import Bibliothecary from '../../assets/images/Bibliothecary.jpg'
 
 const RegisterForm = () => {
 
