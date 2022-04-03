@@ -45,11 +45,9 @@ const LoginForm = () => {
         />
         <TextField
           name='Correo electrónico'
-          setValue={setEmail}
         />
         <PasswordField
           name='Contraseña'
-          setValue={setPassword}
         />
         <CheckBox
           center

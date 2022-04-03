@@ -7,7 +7,7 @@ import {
   Input
 } from 'react-native-elements'
 
-const TextField = ({ name, setValue }) => {
+const TextField = ({ name, setText }) => {
 
   return (
     <View style={styles.item}>
@@ -16,7 +16,7 @@ const TextField = ({ name, setValue }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        onChange={(e) => setValue(e)}
+        onChangeText={(text) =>setText(text)}
         containerStyle={styles.input}
         inputStyle={styles.label}
       />

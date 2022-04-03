@@ -8,7 +8,7 @@ import {
   Icon
 } from 'react-native-elements'
 
-const PasswordField = ({ name, setValue }) => {
+const PasswordField = ({ name, setText }) => {
 
   const [show, setShow] = useState(true)
 
@@ -20,7 +20,7 @@ const PasswordField = ({ name, setValue }) => {
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
         secureTextEntry={show}
-        onChange={(e) => setValue(e)}
+        onChangeText={(text) =>setText(text)}
         containerStyle={styles.input}
         inputStyle={styles.label}
         rightIcon={
