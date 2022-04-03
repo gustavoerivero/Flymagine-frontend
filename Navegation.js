@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import LoginScreen from "./pages/LoginForm"
 import RegisterScreen from "./pages/RegisterForm"
+import PasswordRecoveryScreen from './pages/PasswordRecorvery'
 // import PassRecorvery from "./pages/passwordRecorvery"
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,13 @@ function MyStack () {
                 component={RegisterScreen}
                 options={{ 
                     title: 'Registro' 
+                }}
+            />
+            <Stack.Screen
+                name="PasswordRecovery"
+                component={PasswordRecoveryScreen}
+                options={{
+                    title: 'Recuperar contraseña'
                 }}
             />
             {/* <Stack.Screen 
