@@ -1,20 +1,16 @@
 import React, { useState } from 'react'
-import {
+import { handleChange } from '../utils/functions'
+import { 
   View,
   Text,
   StyleSheet,
-  ImageBackground,
-  Image
+  ImageBackground
 } from 'react-native'
 
-import {
-  Button, CheckBox, Icon, Input
-} from 'react-native-elements'
+import {Button} from 'react-native-elements'
 
 import TextField from '../components/TextField'
 import PasswordField from '../components/PasswordField'
-
-import Flymagine from '../assets/adaptive-icon.png'
 import Bibliothecary from '../assets/images/Bibliothecary.jpg'
 
 const RegisterForm = () => {
@@ -26,16 +22,7 @@ const RegisterForm = () => {
     passwordHash: ''
   })
 
-  const handleChange = (item, e) => {
-    let updatedValue = {};
-    console.log(userData[item])
-    updatedValue = {[item]: e};
-    setUserData(userData => ({
-      ...userData,
-      ...updatedValue
-    }))
-    console.log(e)
-  }
+  const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
 
   return (
     <ImageBackground
@@ -46,19 +33,19 @@ const RegisterForm = () => {
       <View style={styles.container} >
         <TextField
           name='Nombre'
-          setText={(text) => handleChange("firstName", text)}
+          setText={(text) => _handleChange("firstName", text)}
         />
         <TextField
           name='Apellido'
-          setText={(text) => handleChange("lastName", text)}
+          setText={(text) => _handleChange("lastName", text)}
         />
         <TextField
           name='Correo electrónico'
-          setText={(text) => handleChange("email", text)}
+          setText={(text) => _handleChange("email", text)}
         />
         <PasswordField
           name='Contraseña'
-          setText={(text) => handleChange("passwordHash", text)}
+          setText={(text) => _handleChange("passwordHash", text)}
         />
         <Text style={styles.text}>
           {JSON.stringify(userData, null, 2)}
