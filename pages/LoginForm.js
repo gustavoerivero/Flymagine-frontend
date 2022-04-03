@@ -39,7 +39,7 @@ const LoginForm = () => {
     <ImageBackground
       style={styles.imageBackground}
       imageStyle={{
-        opacity: .5,
+        opacity: .75,
         backgroundColor: 'rgba(187, 103, 220, .75)',
       }}
       source={Bibliothecary}
