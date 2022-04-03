@@ -4,41 +4,49 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import LoginScreen from "./pages/LoginForm"
 import RegisterScreen from "./pages/RegisterForm"
-// import PassRecorvery from "./pages/passwordRecorvery"
+import PasswordRecoveryScreen from './pages/PasswordRecorvery'
+import ReaderUserProfileScreen from './pages/ReaderUserProfile'
 
 const Stack = createNativeStackNavigator();
 
-function MyStack () {
-    return (
-        <Stack.Navigator
-            initialRouteName="Login"
-        >
-            <Stack.Screen
-                name="Login"
-                component={LoginScreen}
-                options={{ 
-                    headerShown: false
-                }}
-            />
-            <Stack.Screen 
-                name="Register" 
-                component={RegisterScreen}
-                options={{ 
-                    title: 'Registro' 
-                }}
-            />
-            {/* <Stack.Screen 
-                name="Recorvery" 
-                component={PassRecorvery} 
-            /> */}
-        </Stack.Navigator>
-    )
+function MyStack() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Login"
+    >
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          title: 'Registro'
+        }}
+      />
+      <Stack.Screen
+        name="PasswordRecovery"
+        component={PasswordRecoveryScreen}
+        options={{
+          title: 'Recuperar contraseña'
+        }}
+      />
+      <Stack.Screen
+        name="ReaderUserProfile"
+        component={ReaderUserProfileScreen}
+      />
+    </Stack.Navigator>
+  )
 }
 
 export default function Navegation() {
-    return (
-        <NavigationContainer>
-            <MyStack />
-        </NavigationContainer>
-    )
+  return (
+    <NavigationContainer>
+      <MyStack />
+    </NavigationContainer>
+  )
 }

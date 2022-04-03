@@ -94,6 +94,7 @@ const LoginForm = () => {
             <Button
               title='Iniciar Sesión'
               buttonStyle={styles.button}
+              onPress={() => Navegation.navigate("ReaderUserProfile")}
             />
             <Button
               title='Regístrate'
@@ -109,6 +110,7 @@ const LoginForm = () => {
               fontSize: 16,
               color: '#25AADB'
             }}
+            onPress={() => Navegation.navigate("PasswordRecovery")}
           />
           <Text
             style={[
