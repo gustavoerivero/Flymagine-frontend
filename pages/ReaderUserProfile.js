@@ -13,7 +13,8 @@ import {
 import { useNavigation } from '@react-navigation/native'
 
 import Profile from '../assets/profile-default.png'
-import { BackgroundImage } from '@rneui/base'
+
+import { AntDesign } from '@expo/vector-icons';
 
 const ReaderUserProfile = () => {
 
@@ -46,29 +47,29 @@ const ReaderUserProfile = () => {
         }}
       >
         <Tab.Item
-          title="Principal"
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
+          icon={{ name: 'star', type: 'ionicon',  }}
         />
         <Tab.Item
-          title="Favoritos"
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
+          icon={{ name: 'heart', type: 'ionicon',  }}
         />
         <Tab.Item
-          title="Por Leer"
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
+          icon={{ name: 'time', type: 'ionicon',  }}
         />
         <Tab.Item
-          title="Leyendo"
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
+          icon={{ name: 'book', type: 'ionicon',  }}
         />
         <Tab.Item
-          title="Leídos"
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
+          icon={{ name: 'checkmark-done-sharp', type: 'ionicon',  }}
         />
       </Tab>
 
@@ -104,6 +105,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     backgroundColor: '#9681DF',
+    alignSelf: 'center',
     
   },
   text: {
