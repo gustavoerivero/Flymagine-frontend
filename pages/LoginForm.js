@@ -66,7 +66,7 @@ const LoginForm = () => {
           <Button
             title={(title ? 'Iniciar sesión' : 'Cerrar Sesión')}
             buttonStyle={styles.button}
-            onPress={() => setTitle(!title)}
+            onPress={() => Navegation.navigate("ReaderUserProfile")}
           />
           <Button
             title='Regístrate'
