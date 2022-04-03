@@ -76,7 +76,7 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="Home"
+        name="SignIn"
         component={Tabs}        
         options={{
           headerShown: false
