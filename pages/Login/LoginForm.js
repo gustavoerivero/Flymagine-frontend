@@ -94,7 +94,7 @@ const LoginForm = () => {
             <Button
               title='Iniciar Sesión'
               buttonStyle={styles.button}
-              onPress={() => Navegation.navigate("Home")}
+              onPress={() => Navegation.navigate("SignIn")}
             />
             <Button
               title='Regístrate'
