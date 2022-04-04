@@ -7,16 +7,13 @@ import {
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import TobBar from '../components/TopBar'
-
-const HomeView = () => {
+const SearchPage = () => {
   return (
     <View
       style={styles.container}
     >
       <KeyboardAwareScrollView>
-        <TobBar />
-        <Text>HomeView</Text>
+        <Text>SearchPage</Text>
       </KeyboardAwareScrollView>
     </View>
   )
@@ -25,7 +22,9 @@ const HomeView = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 
-export default HomeView
+export default SearchPage
