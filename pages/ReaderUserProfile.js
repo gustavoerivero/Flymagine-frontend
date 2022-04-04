@@ -17,7 +17,7 @@ import Profile from '../assets/profile-default.png'
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 
 const ReaderUserProfile = () => {
 
@@ -27,7 +27,8 @@ const ReaderUserProfile = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row', paddingBottom: 90}}>
+      <View style={{ flexDirection: 'row', paddingBottom: 50, paddingTop: 30, 
+                      alignItems: 'center', justifyContent: 'space-between' }}>
         <Image
           source={Profile}
           style={styles.image}
@@ -35,35 +36,45 @@ const ReaderUserProfile = () => {
         />
         <Button
           title='Editar perfil'
-          icon={{ name: 'settings', type: 'ionicon', borderWidth: 1, borderRadius: 200, size: 15 }}
-          style={styles.button}
+          icon={{ name: 'settings-sharp', type: 'ionicon', borderWidth: 1, borderRadius: 200, size: 15, color: 'white'}}
+          buttonStyle={styles.button}
         />
       </View>
-      <View style={styles.flex}>
+      <View style={{flexDirection: 'row', paddingLeft: 5}}>
         <Ionicons name="person" size={24} color="black" />
         <Text
-          style={{ fontSize: 24, fontWeight: 'bold', marginLeft: 5 }}>
-          Nombre del usuario
+          style={{ fontSize: 24, fontWeight: 'bold', marginLeft: 5, marginBottom: 5 }}>
+          "Nombre del usuario"
         </Text>
       </View>
-      <View style={styles.flex}>
+      <View style={{flexDirection: 'row', paddingLeft: 5}}>
         <FontAwesome name="calendar" size={12} color="black" />
-        <Text style={{marginLeft: 5}}>
+        <Text style={{ marginLeft: 5, marginBottom: 2.5, }}>
           Fecha de nacimiento:
         </Text>
       </View>
-      <View style={styles.flex}>
+      <View style={{flexDirection: 'row', paddingLeft: 5}}>
         <MaterialIcons name="description" size={12} color="black" />
-        <Text style={{marginLeft: 5}}>
-          Descripción del usuario
+        <Text style={{ marginLeft: 5, marginBottom: 2.5, }}>
+          biografía del usuario:
         </Text>
       </View>
-      <Text
-        style={styles.follow}
-      >
-        # Siguiendo                     # Seguido
-      </Text>
-
+      <View style={{flexDirection: 'row', paddingLeft: 5}}>
+        <Entypo name="book" size={12} color="black" />
+        <Text style={{ marginLeft: 5, marginBottom: 5 }}>
+          Géneros literarios favoritos:
+        </Text>
+      </View>
+      <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+        <Text style={styles.follow}
+        >
+          # Siguiendo
+        </Text>
+        <Text style={styles.follow}
+        >
+          # Seguido
+        </Text>
+      </View>
       <Tab
         value={index}
         onChange={(e) => setIndex(e)}
@@ -75,27 +86,27 @@ const ReaderUserProfile = () => {
         <Tab.Item
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
-          icon={{ name: 'star', type: 'ionicon', }}
+          icon={{ name: 'star', type: 'ionicon', color: 'black' }}
         />
         <Tab.Item
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
-          icon={{ name: 'heart', type: 'ionicon', }}
+          icon={{ name: 'heart', type: 'ionicon', color: 'black' }}
         />
         <Tab.Item
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
-          icon={{ name: 'time', type: 'ionicon', }}
+          icon={{ name: 'time', type: 'ionicon', color: 'black' }}
         />
         <Tab.Item
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
-          icon={{ name: 'book', type: 'ionicon', }}
+          icon={{ name: 'book', type: 'ionicon', color: 'black' }}
         />
         <Tab.Item
           titleStyle={styles.text}
           containerStyle={styles.itemContainer}
-          icon={{ name: 'checkmark-done-sharp', type: 'ionicon', }}
+          icon={{ name: 'checkmark-done-sharp', type: 'ionicon', color: 'black' }}
         />
       </Tab>
 
@@ -119,8 +130,7 @@ const styles = StyleSheet.create({
   image: {
     width: '40%',
     height: '300%',
-    borderBottomWidth: 1,
-    marginRight: 100,
+    marginLeft: 5,
   },
   container: {
     justifyContent: 'center',
@@ -142,19 +152,16 @@ const styles = StyleSheet.create({
   },
   follow: {
     fontSize: 18,
-    alignSelf: 'center',
     fontStyle: 'italic',
+    marginBottom: 5,
   },
   button: {
-    backgroundColor: 'black',
-    alignSelf: 'center',
-    borderWidth: 1,
+    backgroundColor: 'rgba(0, 0, 0, .5)',
+    borderWidth: 2,
+    borderColor: 'black',
     borderRadius: 200,
+    marginRight: 5
   },
-  flex: {
-    flexDirection: 'row',
-    paddingLeft: 5
-  }
 })
 
 export default ReaderUserProfile
