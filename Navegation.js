@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { 
+  NavigationContainer,
+  useScrollToTop
+} from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
@@ -14,7 +17,6 @@ import NotificationsPage from './pages/NotificationsPage'
 import ReaderUserProfileScreen from './pages/ReaderUserProfile'
 
 import { 
-  MaterialCommunityIcons,
   Entypo,
   FontAwesome,
   Ionicons

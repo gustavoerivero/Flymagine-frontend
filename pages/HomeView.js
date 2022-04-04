@@ -1,31 +1,65 @@
-import React from 'react'
+import React, {
+  useState,
+  useEffect
+} from 'react'
 import {
-  View,
   Text,
-  StyleSheet,
+  View
 } from 'react-native'
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Container from '../components/Container'
 
-import TobBar from '../components/TopBar'
+import Post from '../components/Post/Post'
+/*
+import {
+  getPosts,
+  baseApi,
+  basicAuthApi,
+} from '../services/index'
+*/
 
 const HomeView = () => {
+
+  const [posts, setPosts] = useState([])
+/*
+  useEffect(() => {
+    getPosts()
+      .then(data => {
+        setPosts(data)
+      })
+  }, 
+  */)
+     
+
+  const post = [
+    {
+      author: 'John Doe',
+      title: 'Post 1',
+      description: 'This is a post 1',
+      image: 'https://picsum.photos/200/300',
+    },
+    {
+      author: 'Pedro Pérez',
+      title: 'Post 2',
+      description: 'This is a post 1',
+      image: 'https://picsum.photos/200/300',
+    },
+  ]
+
   return (
-    <View
-      style={styles.container}
-    >
-      <KeyboardAwareScrollView>
-        <TobBar />
-        <Text>HomeView</Text>
-      </KeyboardAwareScrollView>
-    </View>
+    <Container>
+      <View>
+        {post.map((post) => (
+          <Post
+            key={post.id}
+            title={post.title}
+            description={post.description}
+            image={post.image}
+          />
+        ))}
+      </View>
+    </Container>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-})
 
 export default HomeView
