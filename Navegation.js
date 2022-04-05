@@ -9,6 +9,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import LoginScreen from './pages/Login/LoginForm'
 import RegisterScreen from './pages/Login/RegisterForm'
 import PasswordRecoveryScreen from './pages/Login/PasswordRecorvery'
+import PasswordRecoveryStep2Screen from './pages/Login/PasswordRecoveryStep2'
 
 import HomeView from './pages/HomeView'
 import SearchPage from './pages/SearchPage'
@@ -122,6 +123,13 @@ function MyStack() {
         options={{
           title: 'Recuperar contraseña'
         }}
+        />
+        <Stack.Screen
+        name="PasswordRecovery2"
+        component={PasswordRecoveryStep2Screen}
+        options={{
+          title: 'Recuperar contraseña'
+        }}
       />
       <Stack.Screen
         name="SignIn"
@@ -132,10 +140,10 @@ function MyStack() {
       />
       <Stack.Screen
         name="EditReaderUserProfile"
-        component={EditReaderUserProfileScreen}        
+        component={EditReaderUserProfileScreen} 
         options={{
-          headerShown: false
-        }}
+          title: 'Editar perfil'
+        }}       
       />
     </Stack.Navigator>
   )
