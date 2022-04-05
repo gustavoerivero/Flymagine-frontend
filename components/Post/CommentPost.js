@@ -16,18 +16,18 @@ import {
   parseTime,
 } from '../../utilities/Parsers'
 
-import { useNavigation } from '@react-navigation/native'
+const CommentPost = (data) => {
 
-const Post = (props) => {
+  const [props, setProps] = useState(data.props)
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
-  const [comments, setComments] = useState(props.comments.length)
-
-  const Navegation = useNavigation()
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {
+      padding: 10,
+      paddingTop: 45,
+    }]}>
       <View style={styles.photoContainer}>
         <Button
           buttonStyle={styles.profileButton}
@@ -105,42 +105,14 @@ const Post = (props) => {
               onPress={() => {
                 setIsLiked(!isLiked)
                 setLikes(isLiked ? likes - 1 : likes + 1)
-                console.log(`${props.author}'s post liked`)	
+                console.log(`${props.author}'s post liked`)
               }}
-            />
-            <Button
-              containerStyle={{
-                borderRadius: 50,
-              }}
-              buttonStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 5,
-                height: 30,
-                width: 50
-              }}
-              icon={{
-                name: 'comment',
-                type: 'material-community',
-                color: '#aaa',
-                size: 15,
-              }}
-              title={comments}
-              titleStyle={{
-                fontSize: 10,
-                color: '#aaa',
-              }}
-              onPress={() => Navegation.navigate("CommentPage", {props: props})}
             />
           </View>
         </View>
       </View>
-      <Divider
-        color='black'
-        inset={true}
-        width={1}
-      />
     </View>
   )
 }
 
-export default Post
+export default CommentPost

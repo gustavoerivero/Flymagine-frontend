@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   },
   descriptionContainer: {
     paddingLeft: 10,
-    paddingRight: '20%',
     marginBottom: 5,
+    marginRight: 70,
   },
   content: {
     textAlign: 'justify',

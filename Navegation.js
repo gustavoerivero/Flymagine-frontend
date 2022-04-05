@@ -13,15 +13,16 @@ import PasswordRecoveryStep2Screen from './pages/Login/PasswordRecoveryStep2'
 import HomeView from './pages/HomeView'
 import SearchPage from './pages/SearchPage'
 import PostPage from './pages/PostPage'
+import CommentPage from './pages/CommentPage'
 import NotificationsPage from './pages/NotificationsPage'
-import ReaderUserProfileScreen from './pages/ReaderUserProfile'
-import EditReaderUserProfileScreen from './pages/EditReaderUserProfile'
+import ReaderUserProfile from './pages/ReaderUserProfile'
+import EditReaderUserProfile from './pages/EditReaderUserProfile'
 
 import {
   Entypo,
   FontAwesome,
   Ionicons
-} from '@expo/vector-icons';
+} from '@expo/vector-icons'
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -84,7 +85,7 @@ const Tabs = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ReaderUserProfileScreen}
+        component={ReaderUserProfile}
         options={{
           headerShown: false,
           title: 'Perfil',
@@ -139,10 +140,17 @@ function MyStack() {
       />
       <Stack.Screen
         name="EditReaderUserProfile"
-        component={EditReaderUserProfileScreen} 
+        component={EditReaderUserProfile} 
         options={{
           title: 'Editar perfil'
         }}       
+      />
+      <Stack.Screen
+        name="CommentPage"
+        component={CommentPage}
+        options={{
+          headerShown: false
+        }}
       />
     </Stack.Navigator>
   )
