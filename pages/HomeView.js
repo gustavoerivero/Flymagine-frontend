@@ -12,7 +12,9 @@ import Post from '../components/Post/Post'
 
 import dataPosts from '../utilities/data/posts'
 
-const HomeView = () => {
+const HomeView = ({ params }) => {
+
+  const [signIn, setSignIn] = useState('Adam Meddler')
 
   const [posts, setPosts] = useState(dataPosts || [])
   return (
@@ -21,6 +23,7 @@ const HomeView = () => {
         {posts?.map((post) => (
           <Post
             key={post.id}
+            signIn={signIn}
             author={post.owner.firstName + ' ' + post.owner.lastName}
             avatar={post.owner.picture}
             image={post.image}

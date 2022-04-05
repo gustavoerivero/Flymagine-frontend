@@ -16,6 +16,10 @@ import {
   parseTime,
 } from '../../utilities/Parsers'
 
+import {
+  previousFourteenHours
+} from '../../utils/functions'
+
 import { useNavigation } from '@react-navigation/native'
 
 const Post = (props) => {
@@ -48,18 +52,52 @@ const Post = (props) => {
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.headerContainer}>
-          <Text style={{
-            fontWeight: 'bold',
-            marginRight: 5,
-          }}>
-            {props.author}
-          </Text>
-          <Text style={{
-            fontSize: 10,
-            color: '#aaa',
-          }}>
-            {parseDate(props.date) + ' ' + parseTime(props.date)}
-          </Text>
+          <View style={styles.title}>
+            <Text style={{
+              fontWeight: 'bold',
+              marginRight: 5,
+            }}>
+              {props.author}
+            </Text>
+            <Text style={{
+              fontSize: 10,
+              color: '#aaa',
+            }}>
+              {parseDate(props.date) + ' ' + parseTime(props.date)}
+            </Text>
+          </View>
+          <View style={styles.titleButtons}>
+            {(props.signIn === props.author && previousFourteenHours(props.date)) && (
+              <>
+                <Button
+                  containerStyle={styles.button}
+                  icon={{
+                    name: 'edit',
+                    type: 'font-awesome',
+                    color: '#aaa',
+                    size: 15,
+                  }}
+                  type='clear'
+                  onPress={() => {
+                    console.log(`Edit post`)
+                  }}
+                />
+                <Button
+                  containerStyle={styles.button}
+                  icon={{
+                    name: 'trash',
+                    type: 'font-awesome',
+                    color: '#aaa',
+                    size: 15,
+                  }}
+                  type='clear'
+                  onPress={() => {
+                    console.log(`Delete post`)
+                  }}
+                />
+              </>
+            )}
+          </View>
         </View>
         <View style={styles.descriptionContainer}>
           <Text
@@ -105,7 +143,7 @@ const Post = (props) => {
               onPress={() => {
                 setIsLiked(!isLiked)
                 setLikes(isLiked ? likes - 1 : likes + 1)
-                console.log(`${props.author}'s post liked`)	
+                console.log(`${props.author}'s post liked`)
               }}
             />
             <Button
@@ -129,7 +167,7 @@ const Post = (props) => {
                 fontSize: 10,
                 color: '#aaa',
               }}
-              onPress={() => Navegation.navigate("CommentPage", {props: props})}
+              onPress={() => Navegation.navigate("CommentPage", { props: props })}
             />
           </View>
         </View>

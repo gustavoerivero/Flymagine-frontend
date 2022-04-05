@@ -40,6 +40,7 @@ const CommentPage = ({ route }) => {
                   <Comment
                     key={index}
                     props={comment}
+                    signIn={props.signIn}
                   />
                 )
               })}

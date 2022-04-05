@@ -16,9 +16,14 @@ import {
   parseTime,
 } from '../../utilities/Parsers'
 
+import {
+  previousFourteenHours
+} from '../../utils/functions'
+
 const Comment = (data) => {
 
   const [props, setProps] = useState(data.props)
+  const [signIn, setSignIn] = useState(data.signIn)
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
@@ -32,7 +37,7 @@ const Comment = (data) => {
           icon={
             <Image
               source={{
-                uri: props.owner.picture 
+                uri: props.owner.picture
               }}
               style={styles.profileButton}
             />
@@ -45,18 +50,52 @@ const Comment = (data) => {
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.headerContainer}>
-          <Text style={{
-            fontWeight: 'bold',
-            marginRight: 5,
-          }}>
-            {props.owner.firstName + ' ' + props.owner.lastName}
-          </Text>
-          <Text style={{
-            fontSize: 10,
-            color: '#aaa',
-          }}>
-            {parseDate(props.publishDate) + ' ' + parseTime(props.publishDate)}
-          </Text>
+          <View style={styles.title}>
+            <Text style={{
+              fontWeight: 'bold',
+              marginRight: 5,
+            }}>
+              {props.owner.firstName + ' ' + props.owner.lastName}
+            </Text>
+            <Text style={{
+              fontSize: 10,
+              color: '#aaa',
+            }}>
+              {parseDate(props.publishDate) + ' ' + parseTime(props.publishDate)}
+            </Text>
+          </View>
+          <View style={styles.titleButtons}>
+            {(signIn === (props.owner.firstName + ' ' + props.owner.lastName) && previousFourteenHours(props.publishDate)) && (
+              <>
+                <Button
+                  containerStyle={styles.button}
+                  icon={{
+                    name: 'edit',
+                    type: 'font-awesome',
+                    color: '#aaa',
+                    size: 15,
+                  }}
+                  type='clear'
+                  onPress={() => {
+                    console.log(`Edit post`)
+                  }}
+                />
+                <Button
+                  containerStyle={styles.button}
+                  icon={{
+                    name: 'trash',
+                    type: 'font-awesome',
+                    color: '#aaa',
+                    size: 15,
+                  }}
+                  type='clear'
+                  onPress={() => {
+                    console.log(`Delete post`)
+                  }}
+                />
+              </>
+            )}
+          </View>
         </View>
         <View style={styles.descriptionContainer}>
           <Text
@@ -68,7 +107,7 @@ const Comment = (data) => {
         <View>
           <Divider style={{
             marginRight: '20%',
-          }}/>
+          }} />
           <View style={styles.actionsContainer}>
             <Button
               containerStyle={{
@@ -94,7 +133,7 @@ const Comment = (data) => {
               onPress={() => {
                 setIsLiked(!isLiked)
                 setLikes(isLiked ? likes - 1 : likes + 1)
-                console.log(`${props.owner.firstName + ' ' + props.owner.lastName}'s comment liked`)	
+                console.log(`${props.owner.firstName + ' ' + props.owner.lastName}'s comment liked`)
               }}
             />
           </View>

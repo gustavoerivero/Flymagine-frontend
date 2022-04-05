@@ -16,6 +16,10 @@ import {
   parseTime,
 } from '../../utilities/Parsers'
 
+import {
+  previousFourteenHours
+} from '../../utils/functions'
+
 const CommentPost = (data) => {
 
   const [props, setProps] = useState(data.props)
@@ -48,18 +52,52 @@ const CommentPost = (data) => {
       </View>
       <View style={styles.contentContainer}>
         <View style={styles.headerContainer}>
-          <Text style={{
-            fontWeight: 'bold',
-            marginRight: 5,
-          }}>
-            {props.author}
-          </Text>
-          <Text style={{
-            fontSize: 10,
-            color: '#aaa',
-          }}>
-            {parseDate(props.date) + ' ' + parseTime(props.date)}
-          </Text>
+          <View style={styles.title}>
+            <Text style={{
+              fontWeight: 'bold',
+              marginRight: 5,
+            }}>
+              {props.author}
+            </Text>
+            <Text style={{
+              fontSize: 10,
+              color: '#aaa',
+            }}>
+              {parseDate(props.date) + ' ' + parseTime(props.date)}
+            </Text>
+          </View>
+          <View style={styles.titleButtons}>
+            {(props.signIn === props.author && previousFourteenHours(props.date)) && (
+              <>
+                <Button
+                  containerStyle={styles.button}
+                  icon={{
+                    name: 'edit',
+                    type: 'font-awesome',
+                    color: '#aaa',
+                    size: 15,
+                  }}
+                  type='clear'
+                  onPress={() => {
+                    console.log(`Edit post`)
+                  }}
+                />
+                <Button
+                  containerStyle={styles.button}
+                  icon={{
+                    name: 'trash',
+                    type: 'font-awesome',
+                    color: '#aaa',
+                    size: 15,
+                  }}
+                  type='clear'
+                  onPress={() => {
+                    console.log(`Delete post`)
+                  }}
+                />
+              </>
+            )}
+          </View>
         </View>
         <View style={styles.descriptionContainer}>
           <Text

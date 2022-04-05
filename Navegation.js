@@ -27,7 +27,9 @@ import {
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
-const Tabs = () => {
+const Tabs = ({ route }) => {
+
+  const { user } = route.params.email
 
   const [notifications, setNotifications] = useState(50)
 
@@ -41,6 +43,7 @@ const Tabs = () => {
       <Tab.Screen
         name="Home"
         component={HomeView}
+        initialParams={{ user: user }}
         options={{
           headerShown: false,
           title: 'Inicio',
