@@ -15,6 +15,7 @@ import SearchPage from './pages/SearchPage'
 import PostPage from './pages/PostPage'
 import NotificationsPage from './pages/NotificationsPage'
 import ReaderUserProfileScreen from './pages/ReaderUserProfile'
+import EditReaderUserProfileScreen from './pages/EditReaderUserProfile'
 
 import { 
   Entypo,
@@ -125,6 +126,13 @@ function MyStack() {
       <Stack.Screen
         name="SignIn"
         component={Tabs}        
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="EditReaderUserProfile"
+        component={EditReaderUserProfileScreen}        
         options={{
           headerShown: false
         }}
