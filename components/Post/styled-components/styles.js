@@ -47,10 +47,14 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   descriptionContainer: {
-
+    paddingLeft: 10,
+    paddingRight: '20%',
+    marginBottom: 5,
   },
   content: {
-
+    textAlign: 'justify',
+    fontSize: 12,
+    marginBottom: 5,
   },
   actionsContainer: {
     display: 'flex',
@@ -60,7 +64,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     marginRight: '20%',
-  }
+  },
+  image: {
+    width: '85%',
+    height: 200,
+    margin: 5,
+  },
+
 })
 
 export default styles
