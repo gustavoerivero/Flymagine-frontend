@@ -1,27 +1,40 @@
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import React, { useState } from 'react'
+import { 
+  NavigationContainer,
+  useScrollToTop
+} from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-import LoginScreen from "./pages/Login/LoginForm"
-import RegisterScreen from "./pages/Login/RegisterForm"
+import LoginScreen from './pages/Login/LoginForm'
+import RegisterScreen from './pages/Login/RegisterForm'
 import PasswordRecoveryScreen from './pages/Login/PasswordRecorvery'
+
 import HomeView from './pages/HomeView'
+import SearchPage from './pages/SearchPage'
+import PostPage from './pages/PostPage'
+import NotificationsPage from './pages/NotificationsPage'
 import ReaderUserProfileScreen from './pages/ReaderUserProfile'
 import EditReaderUserProfileScreen from './pages/EditReaderUserProfile'
 
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { 
+  Entypo,
+  FontAwesome,
+  Ionicons
+} from '@expo/vector-icons';
 
 const Stack = createNativeStackNavigator()
 const Tab = createBottomTabNavigator()
 
 const Tabs = () => {
+
+  const [notifications, setNotifications] = useState(50)
+
   return(
     <Tab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: 'purple'
+        tabBarActiveTintColor: 'purple',
       }}
     >
       <Tab.Screen 
@@ -29,10 +42,44 @@ const Tabs = () => {
         component={HomeView} 
         options={{
           headerShown: false,
-          title: 'Inicio',
+          title: 'Buscar',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+            <FontAwesome name="home" color={color} size={size} />
           ),          
+        }}
+      />
+      <Tab.Screen 
+        name="Search" 
+        component={SearchPage} 
+        options={{
+          headerShown: false,
+          title: 'Buscar',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="search" color={color} size={size} />
+          ),          
+        }}
+      />
+      <Tab.Screen 
+        name="Post" 
+        component={PostPage} 
+        options={{
+          headerShown: false,
+          title: 'Postear',
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="plus" color={color} size={size} />
+          ),          
+        }}
+      />
+      <Tab.Screen 
+        name="Notifications" 
+        component={NotificationsPage} 
+        options={{
+          headerShown: false,
+          title: 'Notificaciones',              
+          tabBarBadge: notifications <= 20 ? notifications : '+20',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="notifications" color={color} size={size} />
+          ),
         }}
       />
       <Tab.Screen 
