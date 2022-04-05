@@ -61,7 +61,7 @@ const PasswordRecovery = () => {
               <Button
                 title='Aceptar'
                 buttonStyle={styles.button}
-                onPress={() => Navegation.navigate("Login")}
+                onPress={() => Navegation.navigate("PasswordRecovery2")}
               />
             </View>
           </View>
