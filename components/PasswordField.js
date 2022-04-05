@@ -1,16 +1,18 @@
 import React, { useState } from 'react'
-import {
-  View,
-  StyleSheet
-} from 'react-native'
+import { View } from 'react-native'
 import {
   Input,
-  Icon
+  Icon,
+  Button
 } from 'react-native-elements'
 
-const PasswordField = ({ name, setValue }) => {
+import PasswordValidator from '../utilities/PasswordValidator'
 
-  const [show, setShow] = useState(true)
+import styles from './styled-components/styles'
+
+const PasswordField = ({ name, value, setValues }) => {
+
+  const [show, setShow] = useState(false)
 
   return (
     <View style={styles.item}>
@@ -19,41 +21,32 @@ const PasswordField = ({ name, setValue }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        secureTextEntry={show}
-        onChange={(e) => setValue(e)}
+        secureTextEntry={show ? false : true}
+        onChangeText={(text) => setValues(text)}
         containerStyle={styles.input}
         inputStyle={styles.label}
         rightIcon={
-          <Icon 
-            type='feather'
-            name='eye'
-            color='#25AADB'
+          <Button
+            icon={
+              <Icon
+                type='feather'
+                name={show ? 'eye' : 'eye-off'}
+                color='#25AADB'
+              />
+            }
+            onPress={() => setShow(!show)}
+            type='clear'
           />
         }
+        errorMessage={
+          value.length === 0 || PasswordValidator(value) ? null : 'Ingrese una contraseña válida'
+        }
+        errorStyle={{
+          paddingTop: 5,
+        }}
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 5,
-    backgroundColor: 'rgba(0,0,0,.75)',
-    margin: 8,
-    padding: 8,
-    width: '95%'
-  },
-  input: {
-    height: 50,
-  },
-  label: {
-    color: 'white'
-  }
-})
 
 export default PasswordField
