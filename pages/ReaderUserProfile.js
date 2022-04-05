@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 
 import {
-  Button, CheckBox, Icon, Tab, TabView
+  Button, Icon, Tab, TabView
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
@@ -19,6 +19,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 
+import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
+import EditReaderUserProfile from './EditReaderUserProfile'
+
 const ReaderUserProfile = () => {
 
   const [index, setIndex] = React.useState(0);
@@ -26,7 +29,7 @@ const ReaderUserProfile = () => {
   const Navegation = useNavigation()
 
   return (
-    <View style={styles.container}>
+    <View style={stylesReaderUserProfile.container}>
       <View style={{ flexDirection: 'row', paddingBottom: 50, paddingTop: 30, 
                       alignItems: 'center', justifyContent: 'space-between' }}>
         <Image
@@ -36,8 +39,10 @@ const ReaderUserProfile = () => {
         />
         <Button
           title='Editar perfil'
-          icon={{ name: 'settings-sharp', type: 'ionicon', borderWidth: 1, borderRadius: 200, size: 15, color: 'white'}}
+          icon={{ name: 'settings-sharp', type: 'ionicon', borderRadius: 200, size: 15, color: 'white'}}
           buttonStyle={styles.button}
+          containerStyle={{borderRadius: 200, marginRight: 5}}
+          onPress={() => Navegation.navigate(EditReaderUserProfile)}
         />
       </View>
       <View style={{flexDirection: 'row', paddingLeft: 5}}>
@@ -131,14 +136,6 @@ const styles = StyleSheet.create({
     width: '40%',
     height: '300%',
     marginLeft: 5,
-  },
-  container: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#9681DF',
-    paddingTop: 40
   },
   itemContainer: {
     backgroundColor: 'rgba(235, 235, 255, .1)',

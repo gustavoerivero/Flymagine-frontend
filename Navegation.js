@@ -8,6 +8,7 @@ import RegisterScreen from "./pages/Login/RegisterForm"
 import PasswordRecoveryScreen from './pages/Login/PasswordRecorvery'
 import HomeView from './pages/HomeView'
 import ReaderUserProfileScreen from './pages/ReaderUserProfile'
+import EditReaderUserProfileScreen from './pages/EditReaderUserProfile'
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -78,6 +79,13 @@ function MyStack() {
       <Stack.Screen
         name="SignIn"
         component={Tabs}        
+        options={{
+          headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="EditReaderUserProfile"
+        component={EditReaderUserProfileScreen}        
         options={{
           headerShown: false
         }}
