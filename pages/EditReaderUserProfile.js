@@ -19,9 +19,12 @@ import Profile from '../assets/profile-default.png'
 
 import { Entypo } from '@expo/vector-icons';
 
+import { handleChange } from '../utils/functions'
+
 import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
 import TextField from '../components/TextField'
 import EmailField from '../components/EmailField'
+import PasswordFieldUser from '../components/PasswordFieldUser'
 
 const EditReaderUserProfile = () => {
 
@@ -32,13 +35,18 @@ const EditReaderUserProfile = () => {
         address: '',
         biography: '',
         email: '',
-        passwordHash: ''
+        passwordHash: '',
+        passwordHash2: '',
+        disable: true,
+        hide: true,
     })
     const [index, setIndex] = React.useState(0);
 
     const [modalVisible, setModalVisible] = useState(false);
 
     const Navegation = useNavigation()
+
+    const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
 
     return (
         <ScrollView>
@@ -68,6 +76,7 @@ const EditReaderUserProfile = () => {
                         <TextField
                             name='Nombre'
                             setText={(text) => _handleChange("firstName", text)}
+                            editable={false}
                         />
                         <TextField
                             name='Apellido'
@@ -97,7 +106,8 @@ const EditReaderUserProfile = () => {
                             icon={<Entypo name="book" size={20} color="black" />}
                         />
                     </View>
-                    <View style={styles.data}>
+                    <View
+                    style={styles.data}>
                         <Text style={styles.text}>
                             Datos de acceso
                         </Text>
@@ -106,9 +116,22 @@ const EditReaderUserProfile = () => {
                             value={userData.email}
                             setValues={(text) => _handleChange("email", text)}
                         />
+                        <PasswordFieldUser
+                            name='Nueva Contraseña'
+                            value={userData.passwordHash}
+                            setValues={(text) => _handleChange("passwordHash", text)}
+                            disable={userData.disable}
+                        />
+                        <PasswordFieldUser
+                            name='Repetir Nueva Contraseña'
+                            value={userData.passwordHash2}
+                            setValues={(text) => _handleChange("passwordHash2", text)}
+                            disable={userData.disable}
+                        />
                         <Button
                             title={'Cambiar contraseña'}
                             buttonStyle={styles.genButton}
+                            onPress={() => _handleChange("disable", !userData.disable)}
                         />
                     </View>
                     <Button
