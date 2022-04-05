@@ -1,5 +1,4 @@
-const baseApi = 'https://c09e788e-186f-40bb-8e9a-7ccce6e457a7.mock.pstmn.io'
-const basicAuthApi = 'Basic 12345678'
+import axios from 'axios'
 
 const fetchData = async (url, method, data, auth=null) => {
 
@@ -24,13 +23,6 @@ const fetchData = async (url, method, data, auth=null) => {
 }
 
 export default {
-  getPosts: async (method) => {
-    const url = `${baseApi}/posts`
-    const data = {
-      
-    }
-    return await fetchData(url, 'GET')
-  },
   baseApi,
   basicAuthApi,
 }
