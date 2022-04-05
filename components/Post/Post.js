@@ -65,6 +65,16 @@ const Post = (props) => {
           </Text>
         </View>
         <View>
+          {props.image !== "" && (
+            <Image
+              source={{
+                uri: props.image
+              }}
+              style={styles.image}
+            />
+          )}
+        </View>
+        <View>
           <Divider />
           <View style={styles.actionsContainer}>
             <Button

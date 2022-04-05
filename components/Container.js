@@ -4,6 +4,7 @@ import React, {
 } from 'react'
 import {
   Text,
+  ScrollView,
   View,
   StyleSheet,
 } from 'react-native'
@@ -18,9 +19,7 @@ const Container = ({ children }) => {
   const reload = useCallback(() => setKey((prevKey) => prevKey + 1), [])
 
   return (
-    <View
-      style={styles.container}
-    >
+    <ScrollView>
       <TobBar
         reload={reload}
       />
@@ -32,7 +31,7 @@ const Container = ({ children }) => {
           {children}
         </KeyboardAwareScrollView>
       </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -54,7 +53,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(134, 48, 197, .15)',
     borderRadius: 5,
     borderWidth: 1,
-    height: '100%',
   }
 })
 
