@@ -1,0 +1,22 @@
+[
+    {
+      "id": "2412bn1h24135274mm",
+      "notificationDate": "2022-04-04T14:04:07.598Z",
+      "transmitter": {
+        "id": "60d0fe4f5311236168a109ca",
+        "firstName": "Avernis",
+        "lastName": "Blakthus",
+        "picture": "https://randomuser.me/api/portraits/men/22.jpg"
+      }
+    },
+    {
+      "id": "2412bn1h24135274m12",
+      "notificationDate": "2022-04-04T14:04:07.598Z",
+      "transmitter": {
+        "id": "60d0fe4f5311236168a109ca",
+        "firstName": "Avernis",
+        "lastName": "Blakthus",
+        "picture": "https://randomuser.me/api/portraits/men/22.jpg"
+      }
+    }
+]
