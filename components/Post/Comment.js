@@ -11,6 +11,8 @@ import { Divider } from '@rneui/themed'
 import styles from './styled-components/styles'
 import { Button, Image } from 'react-native-elements'
 
+import Dialog from '../Dialog'
+
 import {
   parseDate,
   parseTime,
@@ -20,22 +22,19 @@ import {
   previousFourteenHours
 } from '../../utils/functions'
 
-import { useNavigation } from '@react-navigation/native'
-import Dialog from '../Dialog'
+const Comment = (data) => {
 
-const Post = (props) => {
+  const [props, setProps] = useState(data.props)
+  const [signIn, setSignIn] = useState(data.signIn)
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
-  const [comments, setComments] = useState(props.comments.length)
-
+  
   const [editChoice, setEditChoice] = useState(false)
   const [editVisible, setEditVisible] = useState(false)
 
   const [deleteVisible, setDeleteVisible] = useState(false)
   const [deleteChocie, setDeleteChoice] = useState(false)
-
-  const Navegation = useNavigation()
 
   return (
     <View style={styles.container}>
@@ -46,14 +45,14 @@ const Post = (props) => {
           icon={
             <Image
               source={{
-                uri: props.avatar
+                uri: props.owner.picture
               }}
               style={styles.profileButton}
             />
           }
           type='clear'
           onPress={() => {
-            console.log(`${props.author}'s profile`)
+            console.log(`${props.owner.firstName + ' ' + props.owner.lastName}'s profile`)
           }}
         />
       </View>
@@ -64,17 +63,17 @@ const Post = (props) => {
               fontWeight: 'bold',
               marginRight: 5,
             }}>
-              {props.author}
+              {props.owner.firstName + ' ' + props.owner.lastName}
             </Text>
             <Text style={{
               fontSize: 10,
               color: '#aaa',
             }}>
-              {parseDate(props.date) + ' ' + parseTime(props.date)}
+              {parseDate(props.publishDate) + ' ' + parseTime(props.publishDate)}
             </Text>
           </View>
           <View style={styles.titleButtons}>
-            {(props.signIn === props.author && previousFourteenHours(props.date)) && (
+            {(signIn === (props.owner.firstName + ' ' + props.owner.lastName) && previousFourteenHours(props.publishDate)) && (
               <>
                 <Button
                   containerStyle={styles.button}
@@ -86,12 +85,12 @@ const Post = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Edit ${props.author}'s post`)
+                    console.log(`Edit ${props.owner.firstName + ' ' + props.owner.lastName}'s comment`)
                     setEditVisible(true)
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer editar esta publicación?'
+                  content='¿Está seguro de querer editar este comentario?'
                   visible={editVisible}
                   setVisible={setEditVisible}
                   setChoice={setEditChoice}
@@ -107,12 +106,12 @@ const Post = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Delete ${props.author}'s post`)
+                    console.log(`Delete ${props.owner.firstName + ' ' + props.owner.lastName}'s comment`)
                     setDeleteVisible(true)
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer eliminar esta publicación?'
+                  content='¿Está seguro de querer eliminar este comentario?'
                   visible={deleteVisible}
                   setVisible={setDeleteVisible}
                   setChoice={setDeleteChoice}
@@ -126,21 +125,13 @@ const Post = (props) => {
           <Text
             style={styles.content}
           >
-            {props.description}
+            {props.text}
           </Text>
         </View>
         <View>
-          {props.image !== "" && (
-            <Image
-              source={{
-                uri: props.image
-              }}
-              style={styles.image}
-            />
-          )}
-        </View>
-        <View>
-          <Divider />
+          <Divider style={{
+            marginRight: '20%',
+          }} />
           <View style={styles.actionsContainer}>
             <Button
               containerStyle={{
@@ -166,42 +157,14 @@ const Post = (props) => {
               onPress={() => {
                 setIsLiked(!isLiked)
                 setLikes(isLiked ? likes - 1 : likes + 1)
-                console.log(`${props.author}'s post liked`)
+                console.log(`${props.owner.firstName + ' ' + props.owner.lastName}'s comment liked`)
               }}
-            />
-            <Button
-              containerStyle={{
-                borderRadius: 50,
-              }}
-              buttonStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 5,
-                height: 30,
-                width: 50
-              }}
-              icon={{
-                name: 'comment',
-                type: 'material-community',
-                color: '#aaa',
-                size: 15,
-              }}
-              title={comments}
-              titleStyle={{
-                fontSize: 10,
-                color: '#aaa',
-              }}
-              onPress={() => Navegation.navigate("CommentPage", { props: props })}
             />
           </View>
         </View>
       </View>
-      <Divider
-        color='black'
-        inset={true}
-        width={1}
-      />
     </View>
   )
 }
 
-export default Post
+export default Comment
