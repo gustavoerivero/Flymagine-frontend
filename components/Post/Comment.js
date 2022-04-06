@@ -11,6 +11,8 @@ import { Divider } from '@rneui/themed'
 import styles from './styled-components/styles'
 import { Button, Image } from 'react-native-elements'
 
+import Dialog from '../Dialog'
+
 import {
   parseDate,
   parseTime,
@@ -27,6 +29,12 @@ const Comment = (data) => {
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
+  
+  const [editChoice, setEditChoice] = useState(false)
+  const [editVisible, setEditVisible] = useState(false)
+
+  const [deleteVisible, setDeleteVisible] = useState(false)
+  const [deleteChocie, setDeleteChoice] = useState(false)
 
   return (
     <View style={styles.container}>
@@ -77,8 +85,16 @@ const Comment = (data) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Edit post`)
+                    console.log(`Edit ${props.owner.firstName + ' ' + props.owner.lastName}'s comment`)
+                    setEditVisible(true)
                   }}
+                />
+                <Dialog
+                  content='¿Está seguro de querer editar este comentario?'
+                  visible={editVisible}
+                  setVisible={setEditVisible}
+                  setChoice={setEditChoice}
+                  cancelButton={true}
                 />
                 <Button
                   containerStyle={styles.button}
@@ -90,8 +106,16 @@ const Comment = (data) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Delete post`)
+                    console.log(`Delete ${props.owner.firstName + ' ' + props.owner.lastName}'s comment`)
+                    setDeleteVisible(true)
                   }}
+                />
+                <Dialog
+                  content='¿Está seguro de querer eliminar este comentario?'
+                  visible={deleteVisible}
+                  setVisible={setDeleteVisible}
+                  setChoice={setDeleteChoice}
+                  cancelButton={true}
                 />
               </>
             )}
