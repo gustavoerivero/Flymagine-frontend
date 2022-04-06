@@ -3,11 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   Image,
-  TouchableNativeFeedback,
   ScrollView,
 } from 'react-native'
+
+import {Button} from 'react-native-elements'
 
 import ModalDropdown from 'react-native-modal-dropdown';
 
@@ -15,7 +15,7 @@ import Notification from '../components/Notification'
 import dataNotifications from '../utilities/data/notifications'
 import Container from '../components/Container'
 
-let data = [{id:1, name:'Leído'}, {id: 2, name: 'borrar'}]
+let data = [{ id: 1, name: 'Leído' }, { id: 2, name: 'borrar' }]
 
 const NotificationsPage = () => {
 
@@ -24,12 +24,17 @@ const NotificationsPage = () => {
 
   return (
     <Container>
-      <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
         <Button
           title='Marcar todo como leído'
+          buttonStyle={styles.button}
+        />
+        <Button
+        title='Eliminar todo'
+        buttonStyle={styles.button}
         />
       </View>
-      
+
       <ScrollView>
         {notifications?.map((notification) => (
           <Notification
@@ -37,6 +42,7 @@ const NotificationsPage = () => {
             person={notification.transmitter.firstName + ' ' + notification.transmitter.lastName}
             avatar={notification.transmitter.picture}
             date={notification.notificationDate}
+            text={notification.text}
           />
         ))}
       </ScrollView>
@@ -45,7 +51,15 @@ const NotificationsPage = () => {
 }
 
 const styles = StyleSheet.create({
-
+  button: {
+    backgroundColor: 'rgba(0, 0, 0, .5)',
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 200,
+    width: '100%',
+    maxWidth: 250,
+    marginLeft: .01,
+  },
 })
 
 export default NotificationsPage

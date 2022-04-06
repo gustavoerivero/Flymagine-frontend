@@ -46,6 +46,9 @@ const EditReaderUserProfile = () => {
 
     const Navegation = useNavigation()
 
+    const [shouldShow, setShouldShow] = useState(false);
+    const [shouldShow2, setShouldShow2] = useState(true);
+
     const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
 
     return (
@@ -107,7 +110,7 @@ const EditReaderUserProfile = () => {
                         />
                     </View>
                     <View
-                    style={styles.data}>
+                        style={styles.data}>
                         <Text style={styles.text}>
                             Datos de acceso
                         </Text>
@@ -116,23 +119,36 @@ const EditReaderUserProfile = () => {
                             value={userData.email}
                             setValues={(text) => _handleChange("email", text)}
                         />
-                        <PasswordFieldUser
-                            name='Nueva Contraseña'
-                            value={userData.passwordHash}
-                            setValues={(text) => _handleChange("passwordHash", text)}
-                            disable={userData.disable}
-                        />
-                        <PasswordFieldUser
-                            name='Repetir Nueva Contraseña'
-                            value={userData.passwordHash2}
-                            setValues={(text) => _handleChange("passwordHash2", text)}
-                            disable={userData.disable}
-                        />
-                        <Button
-                            title={'Cambiar contraseña'}
-                            buttonStyle={styles.genButton}
-                            onPress={() => _handleChange("disable", !userData.disable)}
-                        />
+                        {shouldShow ? ([
+                            <PasswordFieldUser
+                                name='Nueva Contraseña'
+                                value={userData.passwordHash}
+                                setValues={(text) => _handleChange("passwordHash", text)}
+                                disable={userData.disable}
+                            />,
+                            <PasswordFieldUser
+                                name='Repetir Nueva Contraseña'
+                                value={userData.passwordHash2}
+                                setValues={(text) => _handleChange("passwordHash2", text)}
+                                disable={userData.disable}
+                            />
+                        ]) : null}
+                        {shouldShow2 ? (
+                            <Button
+                                title={'Cambiar contraseña'}
+                                buttonStyle={styles.genButton}
+                                onPress={() => [setShouldShow(!shouldShow), setShouldShow2(!shouldShow2),
+                                _handleChange("disable", !userData.disable)]}
+                            />
+                        ) : null}
+                        {shouldShow ? (
+                            <Button
+                                title={'Cancelar'}
+                                buttonStyle={styles.genButton}
+                                onPress={() => [setShouldShow(!shouldShow), setShouldShow2(!shouldShow2),
+                                _handleChange("disable", !userData.disable)]}
+                            />
+                        ) : null}
                     </View>
                     <Button
                         title={'Guardar cambios'}

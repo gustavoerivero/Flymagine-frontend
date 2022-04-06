@@ -1,14 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     View,
     Text,
     StyleSheet,
-    Button,
     Image,
-    TouchableNativeFeedback
+    TouchableOpacity
 } from 'react-native'
 
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Button } from 'react-native-elements'
 
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -16,43 +15,49 @@ import {
     parseDate,
     parseTime,
 } from '../utilities/Parsers'
-import { clickProps } from 'react-native-web/dist/cjs/modules/forwardedProps';
+import { clickProps } from 'react-native-web/dist/cjs/modules/forwardedProps'
 
 const Notification = (props) => {
-    return (
 
-        <View
-            style={styles.container}
-        >
-            <View style={styles.photoContainer}>
-                <Image
-                    source={{ uri: props.avatar }}
-                    style={styles.profileButton}
-                />
-            </View>
-            <View style={styles.contentContainer}>
-                <View>
-                    <Text style={{
-                        fontSize: 10,
-                        color: '#aaa',
-                    }}>
-                        {parseDate(props.date) + ' ' + parseTime(props.date)}
-                    </Text>
-                    <View style={{ flexDirection: 'row' }}>
+    const [shouldShow, setShouldShow] = useState(true);
+
+    return (
+        <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => setShouldShow(false)}>
+            <View style={styles.container}>
+                <View style={styles.photoContainer}>
+                    <Image
+                        source={{ uri: props.avatar }}
+                        style={styles.profileButton}
+                    />
+                </View>
+                <View style={styles.contentContainer}>
+                    <View>
                         <Text style={{
-                            fontWeight: 'bold',
-                            marginRight: 5,
+                            fontSize: 10,
+                            color: '#aaa',
                         }}>
-                            {props.person}
+                            {parseDate(props.date) + ' ' + parseTime(props.date)}
                         </Text>
-                        <Text>
-                            te ha empezaso a seguir
-                        </Text>
+                        <View style={{ flexDirection: 'row'}}>
+                            <Text style={{
+                                fontWeight: 'bold',
+                                marginRight: 5,
+                            }}>
+                                {props.person}
+                            </Text>
+                            <Text>
+                                {props.text}
+                            </Text>
+                        </View>
                     </View>
                 </View>
-                <FontAwesome name="circle" size={24} color="red" style={styles.icon} />
+                {shouldShow ? (
+                <FontAwesome name="circle" size={24} color="red" style={styles.icon}/>
+                ) : null}
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -62,7 +67,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'nowrap',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-around',
         alignItems: 'center',
         alignContent: 'stretch',
         width: '100%',
@@ -90,7 +95,7 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         alignContent: 'stretch',
         width: '100%',
-        maxWidth: 280,
+        maxWidth: 260,
         marginRight: 10
     },
     profileButton: {
@@ -107,10 +112,23 @@ const styles = StyleSheet.create({
         alignContent: 'center',
     },
     icon: {
-        alignSelf: 'flex-end',
+        alignSelf: 'center',
         justifyContent: 'center',
-        fontSize: 10
+        fontSize: 10,
+        marginRight: 10,
     },
+    button: {
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+        borderWidth: 2,
+        borderColor: 'black',
+        borderRadius: 200,
+        width: '100%',
+        maxWidth: 250,
+        alignSelf: 'flex-end',
+        marginLeft: 1,
+        fontSize: 1
+    },
+
 })
 
 export default Notification

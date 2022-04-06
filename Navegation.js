@@ -80,7 +80,7 @@ const Tabs = ({ route }) => {
         options={{
           headerShown: false,
           title: 'Notificaciones',
-          tabBarBadge: notifications <= 20 ? notifications : '+20',
+          tabBarBadge: notifications <= 20 ? notifications : '+4',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="notifications" color={color} size={size} />
           ),
