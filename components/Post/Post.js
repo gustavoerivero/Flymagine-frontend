@@ -21,12 +21,19 @@ import {
 } from '../../utils/functions'
 
 import { useNavigation } from '@react-navigation/native'
+import Dialog from '../Dialog'
 
 const Post = (props) => {
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
   const [comments, setComments] = useState(props.comments.length)
+
+  const [editChoice, setEditChoice] = useState(false)
+  const [editVisible, setEditVisible] = useState(false)
+
+  const [deleteVisible, setDeleteVisible] = useState(false)
+  const [deleteChocie, setDeleteChoice] = useState(false)
 
   const Navegation = useNavigation()
 
@@ -79,8 +86,16 @@ const Post = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Edit post`)
+                    console.log(`Edit ${props.author}'s post`)
+                    setEditVisible(true)
                   }}
+                />
+                <Dialog
+                  content='¿Está seguro de querer editar esta publicación?'
+                  visible={editVisible}
+                  setVisible={setEditVisible}
+                  setChoice={setEditChoice}
+                  cancelButton={true}
                 />
                 <Button
                   containerStyle={styles.button}
@@ -92,8 +107,16 @@ const Post = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Delete post`)
+                    console.log(`Delete ${props.author}'s post`)
+                    setDeleteVisible(true)
                   }}
+                />
+                <Dialog
+                  content='¿Está seguro de querer eliminar esta publicación?'
+                  visible={deleteVisible}
+                  setVisible={setDeleteVisible}
+                  setChoice={setDeleteChoice}
+                  cancelButton={true}
                 />
               </>
             )}
