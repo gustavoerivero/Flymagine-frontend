@@ -11,6 +11,8 @@ import { Divider } from '@rneui/themed'
 import styles from './styled-components/styles'
 import { Button, Image } from 'react-native-elements'
 
+import { Chip } from 'react-native-paper'
+
 import {
   parseDate,
   parseTime,
@@ -96,6 +98,8 @@ const Post = (props) => {
                   setVisible={setEditVisible}
                   setChoice={setEditChoice}
                   cancelButton={true}
+                  toNavigate='CreatePostPage'
+                  params={props}
                 />
                 <Button
                   containerStyle={styles.button}
@@ -140,6 +144,29 @@ const Post = (props) => {
           )}
         </View>
         <View>
+          <Divider />
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            {props.tags.map((tag, index) => (
+              <Chip
+                key={index}
+                style={{
+                  margin: 2,
+                }}
+                onPress={() => {
+                  console.log(`Tag ${tag}`)
+                }}
+              >
+                {tag}
+              </Chip>                
+            ))}
+          </View>
           <Divider />
           <View style={styles.actionsContainer}>
             <Button

@@ -7,7 +7,8 @@ import {
 } from 'react-native'
 
 import {
-  Button
+  Button,
+  Divider,
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
@@ -39,8 +40,7 @@ const Dialog = ({ visible, setVisible, setChoice, content, toNavigate, params, c
                 setVisible(!visible)
                 setChoice(true)
                 if (toNavigate)
-                  params ? Navegation.navigate(toNavigate) : Navegation.navigate(toNavigate, params)
-                
+                  params ? Navegation.navigate(toNavigate, { props: params }) : Navegation.navigate(toNavigate)
               }}
             />
             {cancelButton &&
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-    color: '#fff',
+    color: '#000',
   },
   centeredView: {
     flex: 1,

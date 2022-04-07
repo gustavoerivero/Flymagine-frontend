@@ -25,10 +25,7 @@ const ListBook = (props) => {
                 <View style={styles.contentContainer}>
                     <View>
                         <View style={{ flexDirection: 'row'}}>
-                            <Text style={{
-                                fontWeight: 'bold',
-                                marginRight: 5,
-                            }}>
+                            <Text style={styles.text}>
                                 {props.name}
                             </Text>
                         </View>
@@ -45,10 +42,10 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         flexWrap: 'nowrap',
-        justifyContent: 'space-around',
-        alignItems: 'center',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
         alignContent: 'stretch',
-        width: '100%',
+        width: '97%',
         minHeight: 100,
         height: 'auto',
         marginBottom: 5,
@@ -56,6 +53,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderRadius: 5,
         elevation: 2,
+        marginLeft: 5,
     },
     photoContainer: {
         display: 'flex',
@@ -77,11 +75,15 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     profileButton: {
-        borderRadius: 50,
         height: 50,
         width: 50,
     },
-
+    text:{
+        fontWeight: 'bold',
+        marginRight: 5,
+        fontSize: 20,
+        marginTop: '6%'
+    }
 })
 
 export default ListBook

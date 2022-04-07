@@ -35,6 +35,13 @@ const NotificationsPage = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <Text 
+          style={styles.headerText}          
+        >
+          Notificaciones
+        </Text>
+      </View>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
         <Button
           buttonStyle={styles.button}
@@ -95,7 +102,23 @@ const styles = StyleSheet.create({
     width: '100%',
     minHeight: '100%',
     backgroundColor: '#F9F7F8',
-    paddingTop: 50
+  },
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignContent: 'center',
+    width: '100%',
+    paddingTop: '10%',
+    paddingBottom: 10,
+    backgroundColor: '#fff'
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'rgba(90, 85, 220, 1)',
+    
   },
 })
 

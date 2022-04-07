@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     width: '100%',
     minHeight: '100%',
     backgroundColor: '#F9F7F8',
-    paddingTop: 50
+    paddingTop: 10
   },
 })
 

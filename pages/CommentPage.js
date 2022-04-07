@@ -18,6 +18,8 @@ const CommentPage = ({ route }) => {
 
   const [props, setProps] = useState(route.params.props)
 
+  const [comment, setComment] = useState('')
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -52,8 +54,9 @@ const CommentPage = ({ route }) => {
             }}
           />
           <View style={styles.commentInput}>
-            <CommentInput
-
+            <CommentInput 
+              text={comment}
+              setText={setComment}
             />
           </View>
         </View>

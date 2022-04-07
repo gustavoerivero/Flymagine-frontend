@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {
   View,
-  StyleSheet,
   ScrollView,
-  Text
+  StyleSheet,
 } from 'react-native'
 import {
   Divider,
   Button,
   Image,
+  Text,
 } from 'react-native-elements'
 
 import { FAB } from '@rneui/themed'
@@ -25,19 +25,18 @@ import {
 } from '../utils/functions'
 
 import {
-  parseDate,
-  parseTime,
+  parseDate
 } from '../utilities/Parsers'
 
-const CreatePostPage = () => {
+const CreatePostPage = ({ route }) => {
 
-  const [post, setPost] = useState({
+  const [post, setPost] = useState(route.params.props || {
     signId: '',
     author: 'Adam Meddler',
     avatar: 'https://randomuser.me/api/portraits/med/men/1.jpg',
     image: '',
     description: '',
-    date: parseDate(new Date()) + ' ' + parseTime(new Date()),
+    date: parseDate(new Date()),
     likes: 0,
     comments: [],
     tags: []
@@ -50,14 +49,7 @@ const CreatePostPage = () => {
   }, [])
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text 
-          style={styles.headerText}          
-        >
-          Comparte tu experiencia
-        </Text>
-      </View>
+    <ScrollView>
       <View style={styles.container}>
         <PostModify
           signIn={post.signIn}
@@ -167,23 +159,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    width: '100%',
-    paddingTop: '10%',
-    paddingBottom: 10,
-    backgroundColor: '#fff'
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'rgba(90, 85, 220, 1)',
-    
   },
   photoContainer: {
     width: '100%',
