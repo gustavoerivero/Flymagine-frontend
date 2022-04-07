@@ -95,6 +95,8 @@ const Comment = (data) => {
                   setVisible={setEditVisible}
                   setChoice={setEditChoice}
                   cancelButton={true}
+                  toNavigate='ModifyCommentPage'
+                  params={props}
                 />
                 <Button
                   containerStyle={styles.button}

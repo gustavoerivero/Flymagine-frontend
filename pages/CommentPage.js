@@ -52,9 +52,7 @@ const CommentPage = ({ route }) => {
             }}
           />
           <View style={styles.commentInput}>
-            <CommentInput
-
-            />
+            <CommentInput />
           </View>
         </View>
 

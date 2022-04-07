@@ -125,6 +125,22 @@
     }
   },
   {
+    "id": "jasnfj12n34n12j",
+    "image": "https://img.dummyapi.io/photo-1500879747858-bb1845b61beb.jpg",
+    "likes": 0,
+    "comments": [],
+    "tags": [],
+    "text": "Simply beautiful... I love it!",
+    "publishDate": "2022-04-09T11:32:23.598Z",
+    "owner": {
+      "id": "60d0fe4f5311236168a109ca",
+      "title": "mr",
+      "firstName": "Adam",
+      "lastName": "Meddler",
+      "picture": "https://randomuser.me/api/portraits/men/1.jpg"
+    }
+  },
+  {
     "id": "2412bn1h24135274m",
     "image": "",
     "likes": 2,
@@ -223,10 +239,10 @@
         }
       }
     ],
-    "tags": [
-      "snow",
+    "tags": [     
       "ice",
-      "mountain"
+      "mountain",
+      "cold"
     ],
     "text": "ice caves in the photo of the wild ice landscape near the countries under ice.",
     "publishDate": "2022-03-24T07:44:17.738Z",

@@ -31,6 +31,7 @@ const HomeView = ({ params }) => {
             date={post.publishDate}
             likes={post.likes}
             comments={post.comments}
+            tags={post.tags}
           />
         ))}
       </ScrollView>
