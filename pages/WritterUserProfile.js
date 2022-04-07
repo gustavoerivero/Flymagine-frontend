@@ -14,16 +14,19 @@ import { useNavigation } from '@react-navigation/native'
 
 import Profile from '../assets/profile-default.png'
 
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
+import { Foundation } from '@expo/vector-icons';
+
 
 import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
 import EditReaderUserProfile from './EditReaderUserProfile'
-import WritterUserProfile from './WritterUserProfile'
+import ReaderUserProfile from './ReaderUserProfile'
+import MyBook from './MyBook'
 
-const ReaderUserProfile = () => {
+const WritterUserProfile = () => {
 
   const [index, setIndex] = React.useState(0);
 
@@ -39,13 +42,13 @@ const ReaderUserProfile = () => {
         />
           <Text
             style={styles.textRol}
-            onPress={() => Navegation.navigate(WritterUserProfile)}>
+            onPress={() => Navegation.navigate(ReaderUserProfile)}>
             Cambiar Rol
           </Text>
         <Button
           title='Editar perfil'
           icon={{ name: 'settings-sharp', type: 'ionicon', borderRadius: 200, size: 15, color: 'white' }}
-          buttonStyle={styles.button}
+          buttonStyle={[styles.button, {marginBottom: 50, marginTop: 30,}]}
           containerStyle={{ borderRadius: 200, marginRight: 5}}
           onPress={() => Navegation.navigate(EditReaderUserProfile)}
 
@@ -86,6 +89,14 @@ const ReaderUserProfile = () => {
           # Seguido
         </Text>
       </View>
+      <Button
+      title='Mis Libros'
+      titleStyle={{marginHorizontal: 5}}
+      buttonStyle={styles.button}
+      icon={<Foundation name="book-bookmark" size={15} color="white" style={{marginHorizontal: 5}}/>}
+      containerStyle={{ borderRadius: 200, marginLeft: 5, paddingBottom: 5 }}
+      onPress={() => Navegation.navigate(MyBook)}
+      />
       <Tab
         value={index}
         onChange={(e) => setIndex(e)}
@@ -145,7 +156,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     alignSelf: 'center',
     marginBottom: 50,
-    marginTop: 30
+    marginTop: 20
   },
   itemContainer: {
     backgroundColor: 'rgba(235, 235, 255, .1)',
@@ -168,8 +179,6 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderRadius: 200,
     marginRight: 5,
-    marginBottom: 50,
-    marginTop: 30,
     maxWidth: 120,
     maxHeight: 40
   },
@@ -179,4 +188,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ReaderUserProfile
+export default WritterUserProfile

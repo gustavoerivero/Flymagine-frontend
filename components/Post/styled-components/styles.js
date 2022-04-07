@@ -42,15 +42,40 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'nowrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignContent: 'center',
+    marginRight: 60,
+    minHeight: 30,
+  },
+  title: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
     justifyContent: 'flex-start',
     alignItems: 'center',
     alignContent: 'center',
   },
+  titleButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    alignContent: 'center',
+  }, 
+  button: {
+    borderRadius: 80,
+  },
   descriptionContainer: {
-
+    paddingLeft: 10,
+    marginBottom: 5,
+    marginRight: 70,
   },
   content: {
-
+    textAlign: 'justify',
+    fontSize: 12,
+    marginBottom: 5,
   },
   actionsContainer: {
     display: 'flex',
@@ -60,7 +85,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignContent: 'center',
     marginRight: '20%',
-  }
+  },
+  image: {
+    width: '85%',
+    height: 200,
+    margin: 5,
+  },
+
 })
 
 export default styles

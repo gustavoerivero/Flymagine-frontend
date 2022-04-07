@@ -13,6 +13,8 @@ import { Button, Image } from 'react-native-elements'
 
 import { Chip } from 'react-native-paper'
 
+import Dialog from '../Dialog'
+
 import {
   parseDate,
   parseTime,
@@ -22,14 +24,12 @@ import {
   previousFourteenHours
 } from '../../utils/functions'
 
-import { useNavigation } from '@react-navigation/native'
-import Dialog from '../Dialog'
+const CommentPost = (data) => {
 
-const Post = (props) => {
+  const [props, setProps] = useState(data.props)
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
-  const [comments, setComments] = useState(props.comments.length)
 
   const [editChoice, setEditChoice] = useState(false)
   const [editVisible, setEditVisible] = useState(false)
@@ -37,10 +37,11 @@ const Post = (props) => {
   const [deleteVisible, setDeleteVisible] = useState(false)
   const [deleteChocie, setDeleteChoice] = useState(false)
 
-  const Navegation = useNavigation()
-
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {
+      padding: 10,
+      paddingTop: 45,
+    }]}>
       <View style={styles.photoContainer}>
         <Button
           buttonStyle={styles.profileButton}
@@ -164,7 +165,7 @@ const Post = (props) => {
                 }}
               >
                 {tag}
-              </Chip>                
+              </Chip>
             ))}
           </View>
           <Divider />
@@ -196,39 +197,11 @@ const Post = (props) => {
                 console.log(`${props.author}'s post liked`)
               }}
             />
-            <Button
-              containerStyle={{
-                borderRadius: 50,
-              }}
-              buttonStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 5,
-                height: 30,
-                width: 50
-              }}
-              icon={{
-                name: 'comment',
-                type: 'material-community',
-                color: '#aaa',
-                size: 15,
-              }}
-              title={comments}
-              titleStyle={{
-                fontSize: 10,
-                color: '#aaa',
-              }}
-              onPress={() => Navegation.navigate("CommentPage", { props: props })}
-            />
           </View>
         </View>
       </View>
-      <Divider
-        color='black'
-        inset={true}
-        width={1}
-      />
     </View>
   )
 }
 
-export default Post
+export default CommentPost
