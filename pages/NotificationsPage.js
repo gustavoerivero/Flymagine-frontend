@@ -7,7 +7,7 @@ import {
   ScrollView,
 } from 'react-native'
 
-import {Button} from 'react-native-elements'
+import { Button } from 'react-native-elements'
 
 import ModalDropdown from 'react-native-modal-dropdown';
 
@@ -15,56 +15,88 @@ import Notification from '../components/Notification'
 import dataNotifications from '../utilities/data/notifications'
 import Container from '../components/Container'
 
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'
+import Dialog from '../components/Dialog'
 
-let data = [{ id: 1, name: 'Leído' }, { id: 2, name: 'borrar' }]
+import {
+  handleChange
+} from '../utils/functions'
 
 const NotificationsPage = () => {
 
-  const [notifications, setNotifications] = useState(dataNotifications || [])
+  const [notifications, setNotifications] = useState(dataNotifications)
   const [data, setData] = useState([])
-  const [shouldShow, setShouldShow] = useState(true);
+  const [shouldShow, setShouldShow] = useState(true)
+  const [modalVisible, setModalVisible] = useState(false)
+  const [choiceSelected, setChoiceSelected] = useState(false)
+
+
+  const _handleChange = (item, value) => handleChange(notifications, setNotifications, item, value)
 
   return (
-    <Container>
+    <View style={styles.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-      {/*<Button
-          title='Marcar todo como leído'
-          buttonStyle={styles.button}
-  />*/}
         <Button
-        buttonStyle={styles.button}
-        icon={<FontAwesome name="trash" size={15} color="black" />}
-        onPress={() => [setShouldShow(false)]}
+          buttonStyle={styles.button}
+          icon={<FontAwesome name="eye" size={15} color="black" />}
+          onPress={() => read(notifications)}
+        />
+        <Button
+          buttonStyle={styles.button}
+          icon={<FontAwesome name="trash" size={15} color="black" />}
+          onPress={() => {
+            setModalVisible(true)
+            if (choiceSelected)
+              setShouldShow(false)
+          }}
+        />
+        <Dialog
+          visible={modalVisible}
+          setVisible={setModalVisible}
+          setChoice={setChoiceSelected}
+          content='¿Seguro que desea eliminar la bandeja de entrada?'
         />
       </View>
       {shouldShow ? (
-      <ScrollView>
-        {notifications?.map((notification) => (
-          <Notification
-            key={notification.id}
-            person={notification.transmitter.firstName + ' ' + notification.transmitter.lastName}
-            avatar={notification.transmitter.picture}
-            date={notification.notificationDate}
-            text={notification.text}
-          />
-        ))}
-      </ScrollView>
-      ) : null}
-    </Container>
+        <ScrollView>
+          {notifications?.map((notification) => (
+            <Notification
+              key={notification.id}
+              person={notification.transmitter.firstName + ' ' + notification.transmitter.lastName}
+              avatar={notification.transmitter.picture}
+              date={notification.notificationDate}
+              text={notification.text}
+              check={notification.check}
+            />
+          ))}
+        </ScrollView>
+      ) : false}
+    </View>
   )
 }
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: 'rgba(0, 0, 0, .5)',
+    backgroundColor: 'rgba(150, 129, 223, .75)',
     borderWidth: 2,
     borderColor: 'black',
     borderRadius: 200,
     width: '100%',
     maxWidth: 250,
     marginLeft: .01,
-  },  
+  },
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    alignContent: 'center',
+    width: '100%',
+    minHeight: '100%',
+    backgroundColor: '#F9F7F8',
+    paddingTop: 50
+  },
 })
 
 export default NotificationsPage

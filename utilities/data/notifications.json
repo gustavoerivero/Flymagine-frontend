@@ -8,7 +8,8 @@
         "lastName": "Blakthus",
         "picture": "https://randomuser.me/api/portraits/men/22.jpg"
       },
-      "text":"te ha empezado a seguir"
+      "text":"te ha empezado a seguir",
+      "check": "true"
     },
     {
       "id": "2412bn1h24135274m12",
@@ -19,7 +20,8 @@
         "lastName": "Puertas",
         "picture": "https://randomuser.me/api/portraits/women/22.jpg"
       },
-      "text":"le ha gustado tu publicación"
+      "text":"le ha gustado tu publicación",
+      "check": "false"
     },
     {
       "id": "2412bn1g444135274m12",
@@ -30,7 +32,8 @@
         "lastName": "Puertas",
         "picture": "https://randomuser.me/api/portraits/women/22.jpg"
       },
-      "text":"ha comentado tu publicación"
+      "text":"ha comentado tu publicación",
+      "check": "false"
     },
     {
       "id": "2412bn1h24135274nn",
@@ -41,6 +44,7 @@
         "lastName": "Lara",
         "picture": "https://randomuser.me/api/portraits/men/10.jpg"
       },
-      "text":"ha subido un nuevo libro"
+      "text":"ha subido un nuevo libro",
+      "check": "false"
     }
 ]

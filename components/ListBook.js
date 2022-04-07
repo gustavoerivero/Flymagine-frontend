@@ -9,17 +9,7 @@ import {
 
 import { Button } from 'react-native-elements'
 
-import { FontAwesome } from '@expo/vector-icons';
-
-import {
-    parseDate,
-    parseTime,
-} from '../utilities/Parsers'
-import { clickProps } from 'react-native-web/dist/cjs/modules/forwardedProps'
-
-const Notification = (props) => {
-
-    const [read, setRead] = useState(props.check)
+const ListBook = (props) => {
 
     return (
         <TouchableOpacity
@@ -28,34 +18,22 @@ const Notification = (props) => {
             <View style={styles.container}>
                 <View style={styles.photoContainer}>
                     <Image
-                        source={{ uri: props.avatar }}
+                        source={{ uri: props.image }}
                         style={styles.profileButton}
                     />
                 </View>
                 <View style={styles.contentContainer}>
                     <View>
-                        <Text style={{
-                            fontSize: 10,
-                            color: '#aaa',
-                        }}>
-                            {parseDate(props.date) + ' ' + parseTime(props.date)}
-                        </Text>
                         <View style={{ flexDirection: 'row'}}>
                             <Text style={{
                                 fontWeight: 'bold',
                                 marginRight: 5,
                             }}>
-                                {props.person}
-                            </Text>
-                            <Text>
-                                {props.text}
+                                {props.name}
                             </Text>
                         </View>
                     </View>
                 </View>
-                {read === 'false' ? (
-                <FontAwesome name="circle" size={24} color="red" style={styles.icon}/>
-                ) : null}
             </View>
         </TouchableOpacity>
     )
@@ -103,32 +81,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: 50,
     },
-    headerContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        flexWrap: 'nowrap',
-        justifyContent: 'flex-start',
-        alignItems: 'center',
-        alignContent: 'center',
-    },
-    icon: {
-        alignSelf: 'center',
-        justifyContent: 'center',
-        fontSize: 10,
-        marginRight: 10,
-    },
-    button: {
-        backgroundColor: 'rgba(0, 0, 0, .5)',
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 200,
-        width: '100%',
-        maxWidth: 250,
-        alignSelf: 'flex-end',
-        marginLeft: 1,
-        fontSize: 1
-    },
 
 })
 
-export default Notification
+export default ListBook
