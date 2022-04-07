@@ -12,14 +12,10 @@ import {
 import { FAB } from '@rneui/themed'
 
 import {
-  Entypo,
   FontAwesome,
-  Ionicons
 } from '@expo/vector-icons'
 
-const CommentInput = () => {
-
-  const [comment, setComment] = useState('')
+const CommentInput = ({ text, setText, placeholder }) => {
 
   return (
     <View
@@ -32,10 +28,11 @@ const CommentInput = () => {
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
+        backgroundColor: '#fff',
       }}
     >
       <Input
-        placeholder='Comentar...'
+        placeholder={placeholder || 'Dínos, ¿qué opinas?...'}
         leftIcon={{
           type: 'font-awesome',
           name: 'comment',
@@ -49,13 +46,17 @@ const CommentInput = () => {
           backgroundColor: 'rgba(215, 215, 215, .10)',
           borderRadius: 5,
           paddingTop: 5,
+          width: '100%',
         }}
         inputStyle={{
           color: '#000000',
           fontSize: 14,
         }}
-        value={comment}
-        onChangeText={(text) => setComment(text)}
+        value={text || ''}
+        onChangeText={setText}
+        rightIconContainerStyle={{
+          left: '10%',
+        }}
         rightIcon={
           <FAB
             icon={
@@ -72,14 +73,8 @@ const CommentInput = () => {
             }
             color='rgba(134, 48, 197, 1)'
             onPress={() => {
-              console.log(comment)
-              setComment('')
-            }
-            }
-            style={{
-              position: 'absolute',
-              right: 0,
-              bottom: 0,
+              console.log(text)
+              setText('')              
             }}
           />
         }

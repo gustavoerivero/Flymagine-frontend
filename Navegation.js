@@ -13,7 +13,9 @@ import PasswordRecoveryStep2Screen from './pages/Login/PasswordRecoveryStep2'
 import HomeView from './pages/HomeView'
 import SearchPage from './pages/SearchPage'
 import PostPage from './pages/PostPage'
+import CreatePostPage from './pages/CreatePostPage'
 import CommentPage from './pages/CommentPage'
+import ModifyCommentPage from './pages/ModifyCommentPage'
 import NotificationsPage from './pages/NotificationsPage'
 import ReaderUserProfile from './pages/ReaderUserProfile'
 import EditReaderUserProfile from './pages/EditReaderUserProfile'
@@ -102,6 +104,7 @@ const Tabs = ({ route }) => {
 }
 
 function MyStack() {
+
   return (
     <Stack.Navigator
       initialRouteName="Login"
@@ -126,8 +129,8 @@ function MyStack() {
         options={{
           title: 'Recuperar contraseña'
         }}
-        />
-        <Stack.Screen
+      />
+      <Stack.Screen
         name="PasswordRecovery2"
         component={PasswordRecoveryStep2Screen}
         options={{
@@ -143,16 +146,30 @@ function MyStack() {
       />
       <Stack.Screen
         name="EditReaderUserProfile"
-        component={EditReaderUserProfile} 
+        component={EditReaderUserProfile}
         options={{
           title: 'Editar perfil'
-        }}       
+        }}
       />
       <Stack.Screen
         name="CommentPage"
         component={CommentPage}
         options={{
           headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="CreatePostPage"
+        component={CreatePostPage}
+        options={{
+          title: 'Post'
+        }}
+      />
+      <Stack.Screen
+        name="ModifyCommentPage"
+        component={ModifyCommentPage}
+        options={{
+          title: 'Editar comentario'
         }}
       />
     </Stack.Navigator>
