@@ -24,15 +24,19 @@ import {
   permisionFunction,
 } from '../utils/functions'
 
+import {
+  parseDate
+} from '../utilities/Parsers'
+
 const CreatePostPage = ({ route }) => {
 
   const [post, setPost] = useState(route.params.props || {
     signId: '',
-    author: '',
-    avatar: '',
+    author: 'Adam Meddler',
+    avatar: 'https://randomuser.me/api/portraits/med/men/1.jpg',
     image: '',
     description: '',
-    date: '',
+    date: parseDate(new Date()),
     likes: 0,
     comments: [],
     tags: []

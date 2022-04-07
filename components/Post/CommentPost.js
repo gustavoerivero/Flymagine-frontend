@@ -94,7 +94,7 @@ const CommentPost = (data) => {
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer editar esta ?'
+                  content='¿Está seguro de querer editar esta publicación?'
                   visible={editVisible}
                   setVisible={setEditVisible}
                   setChoice={setEditChoice}
