@@ -19,6 +19,8 @@ import ModifyCommentPage from './pages/ModifyCommentPage'
 import NotificationsPage from './pages/NotificationsPage'
 import ReaderUserProfile from './pages/ReaderUserProfile'
 import EditReaderUserProfile from './pages/EditReaderUserProfile'
+import WritterUserProfile from './pages/WritterUserProfile'
+import MyBook from './pages/MyBook'
 
 import {
   Entypo,
@@ -82,14 +84,14 @@ const Tabs = ({ route }) => {
         options={{
           headerShown: false,
           title: 'Notificaciones',
-          tabBarBadge: notifications <= 20 ? notifications : '+20',
+          tabBarBadge: notifications <= 20 ? notifications : '+4',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="notifications" color={color} size={size} />
           ),
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="ReaderUserProfile"
         component={ReaderUserProfile}
         options={{
           headerShown: false,
@@ -156,6 +158,20 @@ function MyStack() {
         component={CommentPage}
         options={{
           headerShown: false
+        }}
+      />
+      <Stack.Screen
+        name="WritterUserProfile"
+        component={WritterUserProfile}
+        options={{
+          title: 'Perfil'
+        }}
+      />
+      <Stack.Screen
+        name="MyBook"
+        component={MyBook}
+        options={{
+          title: 'Mis Libros'
         }}
       />
       <Stack.Screen
