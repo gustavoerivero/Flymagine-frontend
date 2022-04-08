@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import {
-Tab, TabView, AirbnbRating
+    Tab, TabView, AirbnbRating
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
@@ -21,11 +21,12 @@ import { Entypo } from '@expo/vector-icons'
 import { Foundation } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
 
 
 import stylesProfile from '../components/styled-components/stylesProfile'
 
-const BookProfile = () => {
+const Book = () => {
 
     const [index, setIndex] = React.useState(0);
 
@@ -34,6 +35,8 @@ const BookProfile = () => {
     const [shouldShow, setShouldShow] = useState(true)
     const [shouldShow2, setShouldShow2] = useState(true)
     const [shouldShow3, setShouldShow3] = useState(true)
+    const [shouldShow4, setShouldShow4] = useState(false)
+    const [show, setShow] = useState(true)
 
     return (
         <View style={stylesProfile.container}>
@@ -44,14 +47,11 @@ const BookProfile = () => {
                     resizeMode='stretch'
                 />
                 <TouchableOpacity
-                    style={stylesProfile.button}
+                    style={styles.buttonF}
                     activeOpacity={0.85}
+                    onPress={() => setShow(!show)}
                 >
-                    <Ionicons name="ios-settings-sharp" size={15} color="white" />
-                    <Text
-                        style={styles.textButton}>
-                        Editar libro
-                    </Text>
+                    <MaterialIcons name="favorite" size={20} color={show? 'white':'red'} />
                 </TouchableOpacity>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -85,7 +85,8 @@ const BookProfile = () => {
                 {shouldShow2 ? (
                     <TouchableOpacity
                         style={styles.buttonD}
-                        onPress={() => [setShouldShow(true), setShouldShow2(false), setShouldShow3(true)]}>
+                        onPress={() => [setShouldShow(true), setShouldShow2(false), 
+                        setShouldShow3(true), setShouldShow4(false)]}>
                         <AntDesign name="pdffile1" size={24} color="red" />
                     </TouchableOpacity>
                 ) : false}
@@ -95,7 +96,8 @@ const BookProfile = () => {
                     <TouchableOpacity
                         style={styles.buttonT}
                         activeOpacity={0.85}
-                        onPress={() => [setShouldShow(false), setShouldShow2(true), setShouldShow3(false)]}
+                        onPress={() => [setShouldShow(false), setShouldShow2(true), 
+                            setShouldShow3(false), setShouldShow4(false)] }
                     >
                         <Ionicons name="time" size={15} color="white" />
                         <Text
@@ -108,7 +110,8 @@ const BookProfile = () => {
                     <TouchableOpacity
                         style={styles.buttonT}
                         activeOpacity={0.85}
-                        onPress={() => [setShouldShow(true), setShouldShow2(true), setShouldShow3(false)]}
+                        onPress={() => [setShouldShow(true), setShouldShow2(true), 
+                            setShouldShow3(false), setShouldShow4(true)]}
                     >
                         <Ionicons name="checkmark-done-sharp" size={15} color="white" />
                         <Text
@@ -118,6 +121,18 @@ const BookProfile = () => {
                     </TouchableOpacity>
                 ) : false}
             </View>
+            {shouldShow4 ? (
+                <TouchableOpacity
+                    style={styles.buttonT}
+                    activeOpacity={0.85}
+                >
+                    <FontAwesome name="pencil-square-o" size={15} color="white" style={{marginLeft: 2}} />
+                    <Text
+                        style={styles.textButton}>
+                        Escribir review
+                    </Text>
+                </TouchableOpacity>
+            ) : false}
             <View style={{ alignSelf: 'flex-start', marginBottom: 5 }}>
                 <AirbnbRating
                     count={5}
@@ -175,6 +190,20 @@ const styles = StyleSheet.create({
         color: 'white',
         marginLeft: 5,
     },
+    buttonF: {
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+        borderWidth: 2,
+        borderColor: 'black',
+        borderRadius: 200,
+        width: '100%',
+        height: '100%',
+        marginRight: 10,
+        maxWidth: 35,
+        maxHeight: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'flex-start'
+    },
     buttonD: {
         backgroundColor: 'rgba(255, 255 ,255, .75)',
         borderWidth: 2,
@@ -212,4 +241,4 @@ const styles = StyleSheet.create({
     },
 })
 
-export default BookProfile
+export default Book

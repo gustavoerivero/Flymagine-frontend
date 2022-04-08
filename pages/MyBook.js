@@ -8,11 +8,11 @@ import {
   TouchableOpacity
 } from 'react-native'
 
-import { Button } from 'react-native-elements'
+import { useNavigation } from '@react-navigation/native'
 
 import ListBook from '../components/ListBook'
 import dataBooks from '../utilities/data/books'
-import Container from '../components/Container'
+import RegisterBook from './RegisterBook'
 
 import { AntDesign } from '@expo/vector-icons';
 
@@ -24,7 +24,7 @@ const MyBook = () => {
 
   const [books, setBooks] = useState(dataBooks)
   const [data, setData] = useState([])
-
+  const Navegation = useNavigation()
 
   const _handleChange = (item, value) => handleChange(books, setBooks, item, value)
 
@@ -33,6 +33,7 @@ const MyBook = () => {
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.85}
+        onPress={() => Navegation.navigate(RegisterBook)}
       >
         <AntDesign name="plus" size={24} color="black" style={styles.textButton}/>
 

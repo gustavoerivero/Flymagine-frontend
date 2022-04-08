@@ -24,6 +24,8 @@ import MyBook from './pages/MyBook'
 import MyFollower from './pages/MyFollower'
 import MyFollow from './pages/MyFollow'
 import BookProfile from './pages/BookProfile'
+import RegisterBook from './pages/RegisterBook'
+import Book from './pages/Book'
 
 import {
   Entypo,
@@ -208,6 +210,21 @@ function MyStack() {
       <Stack.Screen
       name="BookProfile"
       component={BookProfile}
+      options={{
+        title: 'Perfil del libro'
+      }}
+      />
+      
+      <Stack.Screen
+      name="RegisterBook"
+      component={RegisterBook}
+      options={{
+        title: 'Registrar libro'
+      }}
+      />
+      <Stack.Screen
+      name="Book"
+      component={Book}
       options={{
         title: 'Perfil del libro'
       }}
