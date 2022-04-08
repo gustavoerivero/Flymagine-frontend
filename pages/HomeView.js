@@ -20,7 +20,7 @@ const HomeView = ({ params }) => {
   return (
     <Container>
       <ScrollView>
-        {posts?.map((post) => (
+        {posts?.map((post, id) => (
           <Post
             key={post.id}
             signIn={signIn}
@@ -32,6 +32,10 @@ const HomeView = ({ params }) => {
             likes={post.likes}
             comments={post.comments}
             tags={post.tags}
+            personTags={post.personTags}
+            id={id}
+            posts={posts}
+            setPosts={setPosts}
           />
         ))}
       </ScrollView>

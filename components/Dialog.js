@@ -13,7 +13,7 @@ import {
 
 import { useNavigation } from '@react-navigation/native'
 
-const Dialog = ({ visible, setVisible, setChoice, content, toNavigate, params, cancelButton, method }) => {
+const Dialog = ({ visible, setVisible, setChoice, content, toNavigate, params, cancelButton }) => {
 
   const Navegation = useNavigation()
   const [shouldShow,setShouldShow] = useState(true)

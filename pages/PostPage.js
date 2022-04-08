@@ -12,7 +12,7 @@ import {
 } from 'react-native-elements'
 
 import { FAB } from '@rneui/themed'
-import { Ionicons } from '@expo/vector-icons';
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 
 import CommentInput from '../components/Post/CommentInput'
 
@@ -29,6 +29,8 @@ import {
   parseTime,
 } from '../utilities/Parsers'
 
+import AddTag from '../components/Post/AddTag'
+
 const CreatePostPage = () => {
 
   const [post, setPost] = useState({
@@ -40,8 +42,18 @@ const CreatePostPage = () => {
     date: parseDate(new Date()) + ' ' + parseTime(new Date()),
     likes: 0,
     comments: [],
-    tags: []
+    tags: [],
+    personTags: []
   })
+  
+  const [addPersonDialog, setAddPersonDialog] = useState(false)
+  const [addPersonChoice, setAddPersonChoice] = useState(false)
+
+  const [addTagDialog, setAddTagDialog] = useState(false)
+  const [addTagChoice, setAddTagChoice] = useState(false)
+
+  const [personTags, setPersonTags] = useState(post.personTags || [])
+  const [tags, setTags] = useState(post.tags || [])
 
   const _handleChange = (item, value) => handleChange(post, setPost, item, value)
 
@@ -52,8 +64,8 @@ const CreatePostPage = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
-        <Text 
-          style={styles.headerText}          
+        <Text
+          style={styles.headerText}
         >
           Comparte tu experiencia
         </Text>
@@ -69,6 +81,10 @@ const CreatePostPage = () => {
           likes={post.likes}
           comments={post.comments}
           tags={post.tags}
+          personTags={post.personTags}
+          id={post.id}
+          posts={post.posts}
+          setPosts={post.setPosts}
         />
         <Divider
           style={{
@@ -121,35 +137,121 @@ const CreatePostPage = () => {
 
               )}
             </View>
-            <FAB
-              icon={
-                <Ionicons
-                  name='ios-image-outline'
-                  color='#fff'
-                  size={20}
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                alignItems: 'flex-end',
+              }}
+            >
+              <AddTag
+                visible={addPersonDialog}
+                setVisible={setAddPersonDialog}
+                setChoice={setAddPersonChoice}
+                content='¿A quién vas a añadir?'
+                tags={post.personTags}
+                setTags={_handleChange}
+                name='personTags'
+              />
+              <AddTag
+                visible={addTagDialog}
+                setVisible={setAddTagDialog}
+                setChoice={setAddTagChoice}
+                content='¿Sobre qué se trata esta publicación?'
+                tags={post.tags}
+                setTags={_handleChange}
+                name='tags'
+              />
+              <View
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+
+                }}
+              >
+                <FAB
+                  icon={
+                    <Ionicons
+                      name='ios-person-add'
+                      color='#fff'
+                      size={20}
+                    />
+                  }
+                  containerStyle={{
+                    position: 'relative',
+                    marginBottom: 5,
+                    right: '15%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                  }}
+                  color='rgba(200, 123, 255, 1)'
+                  onPress={() => {
+                    console.log('Add person tag')
+                    setAddPersonDialog(true)
+                  }}
                 />
-              }
-              containerStyle={{
-                position: 'relative',
-                marginBottom: 5,
-                right: '15%',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 40,
-                height: 40,
-              }}
-              color='rgba(90, 85, 220, 1)'
-              onPress={() => {
-                console.log('Upload image')
-                let image = pickImage()
-                image.then(res => {
-                  _handleChange('image', res)
-                  console.log(res)
-                }).catch(err => {
-                  console.log(err)
-                })
-              }}
-            />
+
+                <FAB
+                  icon={
+                    <AntDesign
+                      name='tags'
+                      color='#fff'
+                      size={20}
+                    />
+                  }
+                  containerStyle={{
+                    position: 'relative',
+                    marginBottom: 5,
+                    right: '15%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                  }}
+                  color='rgba(90, 123, 255, 1)'
+                  onPress={() => {
+                    console.log('Add post tag')
+                    setAddTagDialog(true)
+                  }}
+                />
+
+                <FAB
+                  icon={
+                    <Ionicons
+                      name='ios-image-outline'
+                      color='#fff'
+                      size={20}
+                    />
+                  }
+                  containerStyle={{
+                    position: 'relative',
+                    marginBottom: 5,
+                    right: '15%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 40,
+                    height: 40,
+                  }}
+                  color='rgba(90, 85, 220, 1)'
+                  onPress={() => {
+                    console.log('Upload image')
+                    let image = pickImage()
+                    image.then(res => {
+                      _handleChange('image', res)
+                      console.log(res)
+                    }).catch(err => {
+                      console.log(err)
+                    })
+                  }}
+                />
+              </View>
+            </View>
+
           </View>
           <CommentInput
             text={post.description}
@@ -183,7 +285,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'rgba(90, 85, 220, 1)',
-    
+
   },
   photoContainer: {
     width: '100%',
