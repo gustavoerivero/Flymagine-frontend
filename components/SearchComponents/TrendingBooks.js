@@ -2,14 +2,11 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Image, Button } from "react-native-elements";
 
-const Category = (props) => {
-
+const TrendingBooks = ({ title, autor, imageCover }) => {
   return (
-    <View>
-    
     <View style={styles.card}>
       <Button
-        icon={<Image source={{uri: props.image}} style={styles.image} />}
+        icon={ <Image source={{uri: imageCover}} style={styles.image} /> }
         buttonStyle={{
           flex: 3,
           justifyContent: "center",
@@ -20,50 +17,47 @@ const Category = (props) => {
         containerStyle={{
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
-          width: 130,
-          height: 95,
+          width: "100%",
+          height: 200,
         }}
         type="clear"
       />
 
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text style={styles.text}>{props.name}</Text>
+      <View style={{ flex: 1, marginTop: 5, }} >
+        <Text style={styles.title}>
+          {title}
+        </Text>
+        <Text style={styles.autor}>
+          {autor}
+        </Text>
       </View>
     </View>
-    
-    <Image source={props.image}/>
-    </View>
-    
   );
 };
 
 const styles = StyleSheet.create({
   image: {
-    width: 130,
-    height: 95,
+    width: 380,
+    height: 200,
     resizeMode: "cover",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
   },
-  text: {
-    fontWeight: "bold",
+  title: {
+    fontSize: 14, color: "black", fontWeight: "700"
+  },
+  autor:{
+    fontSize: 12,
+    color: "black",
+    fontWeight: "200",
+    fontStyle: "italic",
   },
   card: {
-    height: 130,
-    width: 130,
-    marginLeft: 10,
-    marginRight: 10,
-    borderWidth: 0.5,
-    borderColor: "#dddd",
-    borderRadius: 10,
+    width: "95%",
+    height: 250,
+    marginHorizontal: 10,
+    marginVertical: 5 
   },
 });
 
-export default Category;
+export default TrendingBooks;
