@@ -10,12 +10,12 @@ const TextField = ({ name, setText }) => {
     <View style={styles.item}>
       <Input
         placeholder={name}
-        placeholderTextColor='#ccc'
+        placeholderTextColor='rgba(50, 0, 105, .5)'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
         onChangeText={(text) => setText(text)}
         containerStyle={styles.input}
-        inputStyle={styles.label}     
+        inputStyle={styles.label}   
       />
     </View>
   )

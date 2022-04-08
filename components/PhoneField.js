@@ -1,12 +1,14 @@
 import React from 'react'
 import { View } from 'react-native'
-import { Input } from 'react-native-elements'
+import {
+  Input,
+} from 'react-native-elements'
 
-import EmailValidator from '../utilities/EmailValidator'
+import { phoneValidator } from '../utils/functions'
 
 import styles from './styled-components/styles'
 
-const EmailField = ({ name, value, setValues }) => {
+const PhoneField = ({ name, value, setValues }) => {
 
   return (
     <View style={styles.item}>
@@ -17,16 +19,17 @@ const EmailField = ({ name, value, setValues }) => {
         autoCapitalize='none'
         onChangeText={(text) => setValues(text)}
         containerStyle={styles.input}
-        inputStyle={styles.label}       
+        inputStyle={styles.label}
+
         errorMessage={
-          value.length === 0 || EmailValidator(value) ? null  : 'Ingrese un correo electrónico válido'
+          value.length === 0 || phoneValidator(value) ? null : 'Ingrese un número de teléfono válido'
         }
         errorStyle={{
-          paddingTop: 12,
-        }}             
+          paddingTop: 10,
+        }}
       />
     </View>
   )
 }
 
-export default EmailField
+export default PhoneField

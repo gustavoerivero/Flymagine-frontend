@@ -1,5 +1,6 @@
 import * as ImagePicker from 'expo-image-picker'
-import { Platform } from 'react-native';
+import { Platform } from 'react-native'
+import RegExp from '../utilities/RegEx';
 
 const handleChange = (data, setData, item, e) => {
 	let updatedValue = {};
@@ -49,10 +50,15 @@ const deleteValue = (data, setData, item) => {
 	}))
 }
 
+const phoneValidator = (phone) => {
+	return RegExp.regPhone.test(phone) ? true : false
+}
+
 module.exports = {
 	handleChange,
 	previousFourteenHours,
 	permisionFunction,
 	deleteValue,
-	pickImage
+	pickImage,
+	phoneValidator
 }

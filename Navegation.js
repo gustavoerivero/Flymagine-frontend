@@ -38,7 +38,7 @@ const Tab = createBottomTabNavigator()
 
 const Tabs = ({ route }) => {
 
-  const { user } = route.params.email
+  const { user } = route.params
 
   const [notifications, setNotifications] = useState(50)
 
