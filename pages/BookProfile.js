@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import {
-Tab, TabView, AirbnbRating
+    Tab, TabView, AirbnbRating
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
@@ -21,9 +21,11 @@ import { Entypo } from '@expo/vector-icons'
 import { Foundation } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons';
 
 
 import stylesProfile from '../components/styled-components/stylesProfile'
+import EditBook from './EditBook'
 
 const BookProfile = () => {
 
@@ -36,23 +38,32 @@ const BookProfile = () => {
     const [shouldShow3, setShouldShow3] = useState(true)
 
     return (
-        <View style={stylesProfile.container}>
+        <View style={[stylesProfile.container,  {paddingTop: 30,}]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Image
                     source={BookImage}
                     style={stylesProfile.image}
                     resizeMode='stretch'
                 />
-                <TouchableOpacity
-                    style={stylesProfile.button}
-                    activeOpacity={0.85}
-                >
-                    <Ionicons name="ios-settings-sharp" size={15} color="white" />
-                    <Text
-                        style={styles.textButton}>
-                        Editar libro
-                    </Text>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end', width: 100 }}>
+                    <TouchableOpacity
+                        style={stylesProfile.button}
+                        activeOpacity={0.85}
+                        onPress={() => Navegation.navigate(EditBook)}
+                    >
+                        <Ionicons name="ios-settings-sharp" size={15} color="white" />
+                        <Text
+                            style={styles.textButton}>
+                            Editar libro
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonE}
+                        activeOpacity={0.85}
+                    >
+                        <Ionicons name="trash-bin" size={20} color="white" />
+                    </TouchableOpacity>
+                </View>
             </View>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <View>
@@ -67,6 +78,12 @@ const BookProfile = () => {
                         <Ionicons name="person" size={12} color="black" />
                         <Text style={{ marginLeft: 5, marginBottom: 2.5, }}>
                             Autor del libro:
+                        </Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
+                        <FontAwesome name="calendar" size={12} color="black" />
+                        <Text style={{ marginLeft: 5, marginBottom: 2.5, }}>
+                            Fecha de registro:
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
@@ -90,7 +107,7 @@ const BookProfile = () => {
                     </TouchableOpacity>
                 ) : false}
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginLeft: 5 }}>
                 {shouldShow ? (
                     <TouchableOpacity
                         style={styles.buttonT}
@@ -210,6 +227,21 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginTop: 5,
     },
+    buttonE: {
+        backgroundColor: 'rgba(0, 0, 0, .5)',
+        borderWidth: 2,
+        borderColor: 'black',
+        borderRadius: 200,
+        width: '100%',
+        height: '100%',
+        marginRight: 10,
+        maxWidth: 40,
+        maxHeight: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginBottom: 15
+    }
 })
 
 export default BookProfile

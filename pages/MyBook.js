@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   button: {
     flexDirection: 'row',
-    backgroundColor: 'rgba(150, 129, 223, .75)',
+    backgroundColor: 'rgba(150, 129, 223, 1)',
     borderWidth: 2,
     borderColor: 'black',
     borderRadius: 25,

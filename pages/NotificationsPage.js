@@ -43,11 +43,11 @@ const NotificationsPage = () => {
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <Button
+        {/**<Button
           buttonStyle={styles.button}
           icon={<FontAwesome name="eye" size={15} color="black" />}
           onPress={() => read(notifications)}
-        />
+  />*/}
         <Button
           buttonStyle={styles.button}
           icon={<FontAwesome name="trash" size={15} color="black" />}
@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     width: '100%',
     maxWidth: 250,
-    marginLeft: .01,
+    marginTop: 5,
+    marginBottom: 5,
   },
   container: {
     display: 'flex',

@@ -6,7 +6,7 @@ const stylesProfile = StyleSheet.create({
         width: '100%',
         height: '100%',
         backgroundColor: '#9681DF',
-        paddingTop: 40,
+        paddingTop: 20,
         display: 'flex',
     },
     image: {

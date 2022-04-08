@@ -6,11 +6,12 @@ import {
     Image,
     ImageBackground,
     ScrollView,
-    Modal
+    Modal,
+    TouchableOpacity
 } from 'react-native'
 
 import {
-    Button, CheckBox, Icon, Input, Tab, TabView
+    Button, CheckBox, Icon,
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
@@ -21,7 +22,7 @@ import { Entypo } from '@expo/vector-icons';
 
 import { handleChange } from '../utils/functions'
 
-import stylesReaderUserProfile from '../components/styled-components/stylesProfile'
+import stylesProfile from '../components/styled-components/stylesProfile'
 import TextField from '../components/TextField'
 import EmailField from '../components/EmailField'
 import PasswordFieldUser from '../components/PasswordFieldUser'
@@ -53,29 +54,31 @@ const EditReaderUserProfile = () => {
 
     return (
         <ScrollView>
-            <View style={stylesReaderUserProfile.container}>
-                <Button
-                    buttonStyle={styles.button}
-                    icon={
-                        <ImageBackground
-                            source={Profile}
-                            style={styles.image}
-                        >
-                            <Icon
-                                type='ionicon'
-                                name='camera'
-                                color='#C4C4C4'
-                                size={30}
-                                containerStyle={styles.containerIcon}
-                            />
-                        </ImageBackground>
-                    }
-                />
+            <View style={stylesProfile.container}>
+                    <TouchableOpacity
+                        activeOpacity={0.85}
+                        style={styles.button}
+                    >
+                    <ImageBackground
+                        source={Profile}
+                        style={styles.image}
+                    >
+                        <Icon
+                            type='ionicon'
+                            name='camera'
+                            color='#C4C4C4'
+                            size={30}
+                            containerStyle={styles.containerIcon}
+                        />
+                    </ImageBackground>
+                    </TouchableOpacity>
                 <View style={{ backgroundColor: 'white', height: '100%', paddingTop: 10 }}>
                     <View style={styles.data}>
                         <Text style={styles.text}>
                             Datos básicos
                         </Text>
+                        <TouchableOpacity>
+                        </TouchableOpacity>
                         <TextField
                             name='Nombre'
                             setText={(text) => _handleChange("firstName", text)}

@@ -36,7 +36,7 @@ const WritterUserProfile = () => {
   const Navegation = useNavigation()
 
   return (
-    <View style={stylesProfile.container}>
+    <View style={[stylesProfile.container, {paddingTop: 50,}]}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Image
           source={Profile}
@@ -51,11 +51,12 @@ const WritterUserProfile = () => {
         <TouchableOpacity
           style={stylesProfile.button}
           activeOpacity={0.85}
+          onPress={() => Navegation.navigate(EditReaderUserProfile)}
         >
           <Ionicons name="ios-settings-sharp" size={15} color="white" />
           <Text
             style={styles.textButton}>
-            Editar libro
+            Editar perfil
           </Text>
         </TouchableOpacity>
       </View>

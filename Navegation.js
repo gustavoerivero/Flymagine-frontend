@@ -26,6 +26,7 @@ import MyFollow from './pages/MyFollow'
 import BookProfile from './pages/BookProfile'
 import RegisterBook from './pages/RegisterBook'
 import Book from './pages/Book'
+import EditBook from './pages/EditBook'
 
 import {
   Entypo,
@@ -96,8 +97,8 @@ const Tabs = ({ route }) => {
         }}
       />
       <Tab.Screen
-        name="ReaderUserProfile"
-        component={ReaderUserProfile}
+        name="WritterUserProfile"
+        component={WritterUserProfile}
         options={{
           headerShown: false,
           title: 'Perfil',
@@ -166,8 +167,8 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="WritterUserProfile"
-        component={WritterUserProfile}
+        name="ReaderUserProfile"
+        component={ReaderUserProfile}
         options={{
           title: 'Perfil'
         }}
@@ -227,6 +228,13 @@ function MyStack() {
       component={Book}
       options={{
         title: 'Perfil del libro'
+      }}
+      />
+      <Stack.Screen
+      name="EditBook"
+      component={EditBook}
+      options={{
+        title: 'Modificar libro'
       }}
       />
     </Stack.Navigator>

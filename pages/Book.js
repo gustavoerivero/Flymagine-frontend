@@ -39,7 +39,7 @@ const Book = () => {
     const [show, setShow] = useState(true)
 
     return (
-        <View style={stylesProfile.container}>
+        <View style={[stylesProfile.container,  {paddingTop: 30,}]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Image
                     source={BookImage}

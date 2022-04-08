@@ -5,7 +5,6 @@ import {
     Text,
     StyleSheet,
     ImageBackground,
-    ScrollView,
     TouchableOpacity
 } from 'react-native'
 
@@ -19,12 +18,16 @@ import Dialog from '../components/Dialog'
 import stylesProfile from '../components/styled-components/stylesProfile'
 import BookImage from '../assets/book.jpg'
 
+
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
-const RegisterBook = (selectedItems) => {
+
+
+const EditBook = (selectedItems) => {
 
     const [userData, setUserData] = useState({
         name: '',
@@ -40,7 +43,8 @@ const RegisterBook = (selectedItems) => {
 
     const onSelectedItemsChange = (selectedItems) => setUserData({ selectedItems })
 
-
+    const [shouldShow, setShouldShow] = useState(false);
+    const [shouldShow2, setShouldShow2] = useState(true);
     var items = [
         {
             id: '667atsas',
@@ -82,23 +86,24 @@ const RegisterBook = (selectedItems) => {
         <View>
             <View style={stylesProfile.container} >
 
-                <TouchableOpacity
-                    style={styles.button}
-                >
-                    <ImageBackground
-                        source={BookImage}
-                        style={styles.image}
-                        resizeMode='stretch'
-                    >
-                        <Icon
-                            type='ionicon'
-                            name="camera"
-                            size={24}
-                            color="white"
-                            containerStyle={styles.containerIcon} />
+                <Button
+                    buttonStyle={styles.button}
+                    icon={
+                        <ImageBackground
+                            source={BookImage}
+                            style={styles.image}
+                            resizeMode='stretch'
+                        >
+                            <Icon
+                                type='ionicon'
+                                name="camera"
+                                size={24}
+                                color="white"
+                                containerStyle={styles.containerIcon} />
 
-                    </ImageBackground>
-                </TouchableOpacity>
+                        </ImageBackground>
+                    } />
+
                 <View style={{ backgroundColor: 'white', paddingTop: 5 }}>
                     <TextField
                         name='Nombre'
@@ -109,14 +114,8 @@ const RegisterBook = (selectedItems) => {
                         multiline={true}
                         setText={(text) => _handleChange("sinopsis", text)}
                     />
-                    <DateField
-                        name='Fecha de registro'
-                        value={userData.registerDate}
-                        setValues={(text) => _handleChange("registerDate", text)}
-                    />
 
                     <MultiSelect
-                    fixedHeight={true}
                         hideTags
                         items={items}
                         uniqueKey="id"
@@ -136,16 +135,30 @@ const RegisterBook = (selectedItems) => {
                         searchInputStyle={{ color: '#CCC', }}
                         submitButtonColor="rgba(0, 0, 0, .5)"
                         submitButtonText="Guardar"
-                        styleDropdownMenuSubsection={{backgroundColor: 'transparent', height: 65,}}
+                        styleDropdownMenuSubsection={{ backgroundColor: 'transparent', height: 65, }}
                         styleDropdownMenu={styles.genero}
                     />
-                    <TouchableOpacity
-                        style={styles.buttonD}>
-                        <FontAwesome5 name="upload" size={24} color="rgba(50, 0, 105, .5)" />
-                        <Text>
-                            Subir archivo PDF
-                        </Text>
-                    </TouchableOpacity>
+                    {shouldShow ? (
+                        <TouchableOpacity
+                            style={styles.buttonD}
+                            onPress={() => [setShouldShow2(true), setShouldShow(false)]}>
+
+                            <FontAwesome5 name="upload" size={24} color="rgba(50, 0, 105, .5)" />
+                            <Text>
+                                Subir nuevo archivo PDF
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null}
+                    {shouldShow2 ? (
+                        <TouchableOpacity
+                            style={styles.buttonD}
+                            onPress={() => [setShouldShow2(false), setShouldShow(true)]}>
+                            <Ionicons name="md-trash-bin" size={24} color="rgba(50, 0, 105, .5)" />
+                            <Text>
+                                Eliminar archivo PDF
+                            </Text>
+                        </TouchableOpacity>
+                    ) : null}
                     <Button
                         title={'Guardar libro'}
                         buttonStyle={styles.saveButton}
@@ -162,7 +175,7 @@ const RegisterBook = (selectedItems) => {
                 content='¿Estás seguro que desea registrar este libro?'
                 toNavigate='MyBook'
             />
-        </View >
+        </View>
     )
 }
 
@@ -178,33 +191,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 8,
     },
-    imageBackground: {
-        flex: 1,
-        alignItems: 'center',
-    },
-    button: {
-        width: 170,
-        marginHorizontal: 2,
-        backgroundColor: '#9681DF'
-    },
 
-    text: {
-        color: 'white'
-    },
-    checkbox: {
-        backgroundColor: 'transparent',
-        width: '95%',
-        borderColor: 'transparent'
-    },
-    checkboxText: {
-        color: 'white'
-    },
-    buttonRecover: {
-        height: 35,
-        width: '100%',
-        margin: 0,
-        padding: 0
-    },
     image: {
         width: '100%',
         height: '100%',
@@ -212,12 +199,11 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: 'transparent',
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
         borderRadius: 200,
-        width: 125,
-        height: 125,
+        width: 200,
+        height: 200,
         marginBottom: 10,
-        marginLeft: 8
     },
 
     containerIcon: {
@@ -249,17 +235,17 @@ const styles = StyleSheet.create({
         width: '50%',
         alignSelf: 'center',
         margin: 10,
-        marginTop: 35
+        marginTop: 45
     },
     genero: {
-        marginHorizontal: 8, 
+        marginHorizontal: 8,
         borderWidth: 1,
-        backgroundColor: 'rgba(235, 235, 255, .75)', 
-        borderColor: 'grey', 
+        backgroundColor: 'rgba(235, 235, 255, .75)',
+        borderColor: 'grey',
         borderRadius: 5,
         height: 70,
         marginTop: 8
     }
 })
 
-export default RegisterBook
+export default EditBook

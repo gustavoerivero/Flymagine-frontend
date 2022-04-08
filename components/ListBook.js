@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     profileButton: {
         height: 50,
         width: 50,
+        borderRadius: 200
     },
     text:{
         fontWeight: 'bold',

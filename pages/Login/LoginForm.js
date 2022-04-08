@@ -115,11 +115,11 @@ const LoginForm = () => {
               title='Iniciar Sesión'
               buttonStyle={styles.button}
               onPress={() => {
-                if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {
+               /**  if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {*/
                   Navegation.navigate('SignIn', {
                     email: userData.email,
                   })
-                } else if (userData.email.length === 0 || userData.passwordHash.length === 0) {
+                /** } else if (userData.email.length === 0 || userData.passwordHash.length === 0) {
                   setMessage('Debes ingresar un correo electrónico y una contraseña')
                   setModalVisible(true)
                 } else if (!valid.email || !valid.passwordHash) {
@@ -129,7 +129,7 @@ const LoginForm = () => {
                 } else {
                   setMessage('Error desconocido')
                   setModalVisible(true)
-                }
+                }*/
               }}
             />
             <Button

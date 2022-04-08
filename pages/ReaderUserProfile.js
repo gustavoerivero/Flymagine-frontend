@@ -53,7 +53,7 @@ const ReaderUserProfile = () => {
           <Ionicons name="ios-settings-sharp" size={15} color="white" />
           <Text
             style={styles.textButton}>
-            Editar libro
+            Editar perfil
           </Text>
         </TouchableOpacity>
       </View>
