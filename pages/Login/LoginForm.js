@@ -20,6 +20,7 @@ import MakeItRain from 'react-native-make-it-rain'
 
 import EmailField from '../../components/LoginComponents/EmailField'
 import PasswordField from '../../components/LoginComponents/PasswordField'
+import Dialog from '../../components/Dialog'
 
 import { handleChange } from '../../utils/functions'
 
@@ -36,7 +37,18 @@ const LoginForm = () => {
     dataRemember: false
   })
 
+  const [valid, setValid] = useState({
+    email: false,
+    passwordHash: false
+  })
+
+  const [message, setMessage] = useState('')
+
+  const [modalVisible, setModalVisible] = useState(false)
+  const [choiceSelected, setChoiceSelected] = useState(false)
+
   const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
+  const validChange = (item, value) => handleChange(valid, setValid, item, value)
 
   return (
     <ImageBackground
@@ -73,11 +85,13 @@ const LoginForm = () => {
             name='Correo electrónico'
             value={userData.email}
             setValues={(text) => _handleChange("email", text)}
+            setIsValid={(value) => validChange("email", value)}
           />
           <PasswordField
             name='Contraseña'
             value={userData.passwordHash}
             setValues={(text) => _handleChange("passwordHash", text)}
+            setIsValid={(value) => validChange("passwordHash", value)}
           />
           <CheckBox
             center
@@ -91,12 +105,32 @@ const LoginForm = () => {
           <View
             style={styles.buttonContainer}
           >
+            <Dialog
+              visible={modalVisible}
+              setVisible={setModalVisible}
+              setChoice={setChoiceSelected}
+              content={message}
+            />
             <Button
               title='Iniciar Sesión'
               buttonStyle={styles.button}
-              onPress={() => Navegation.navigate("SignIn", {
-                email: userData.email,
-              })}
+              onPress={() => {
+                if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {
+                  Navegation.navigate('SignIn', {
+                    email: userData.email,
+                  })
+                } else if (userData.email.length === 0 || userData.passwordHash.length === 0) {
+                  setMessage('Debes ingresar un correo electrónico y una contraseña')
+                  setModalVisible(true)
+                } else if (!valid.email || !valid.passwordHash) {
+                  console.log(JSON.stringify(valid, null, 2))
+                  setMessage('Debes ingresar un correo electrónico y/o una contraseña válidos')
+                  setModalVisible(true)
+                } else {
+                  setMessage('Error desconocido')
+                  setModalVisible(true)
+                }
+              }}
             />
             <Button
               title='Regístrate'
