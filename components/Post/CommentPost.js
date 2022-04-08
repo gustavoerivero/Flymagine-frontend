@@ -127,6 +127,63 @@ const CommentPost = (data) => {
             )}
           </View>
         </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+
+          }}
+        >
+          {props.personTags.length > 0 && (
+            <View
+              style={{
+                marginLeft: 10,
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'flex-start',
+                alignItems: 'center',
+                marginBottom: 10,
+              }}
+            >
+              {props.personTags.map((tag) => (
+                <Chip
+                  key={tag.id}
+                  type='outlined'
+                  avatar={
+                    <Image
+                      source={{
+                        uri: tag.picture,
+                      }}
+                      style={{
+                        height: 15,
+                        width: 15,
+                      }}
+                    />
+                  }
+                  onPress={() => {
+                    console.log(`${tag.firstName} ${tag.lastName}'s profile`)
+                  }}
+                  style={{
+                    marginRight: 5,
+                    height: 20,
+                    justifyContent: 'center',
+                    backgroundColor: 'rgba(200, 90, 235, .5)',
+                  }}
+                  textStyle={{
+                    fontSize: 10,
+                    fontWeight: 'bold',
+                    color: '#fff',
+                  }}
+
+                >
+                  {tag.firstName + ' ' + tag.lastName}
+                </Chip>
+              ))}
+            </View>
+          )}
+        </View>
         <View style={styles.descriptionContainer}>
           <Text
             style={styles.content}
