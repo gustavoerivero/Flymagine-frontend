@@ -21,6 +21,9 @@ import ReaderUserProfile from './pages/ReaderUserProfile'
 import EditReaderUserProfile from './pages/EditReaderUserProfile'
 import WritterUserProfile from './pages/WritterUserProfile'
 import MyBook from './pages/MyBook'
+import MyFollower from './pages/MyFollower'
+import MyFollow from './pages/MyFollow'
+import BookProfile from './pages/BookProfile'
 
 import {
   Entypo,
@@ -188,7 +191,29 @@ function MyStack() {
           title: 'Editar comentario'
         }}
       />
+      <Stack.Screen
+      name="MyFollower"
+      component={MyFollower}
+      options={{
+        title: 'Seguidores'
+      }}
+      />
+      <Stack.Screen
+      name="MyFollow"
+      component={MyFollow}
+      options={{
+        title: 'Seguidos'
+      }}
+      />
+      <Stack.Screen
+      name="BookProfile"
+      component={BookProfile}
+      options={{
+        title: 'Perfil del libro'
+      }}
+      />
     </Stack.Navigator>
+    
   )
 }
 

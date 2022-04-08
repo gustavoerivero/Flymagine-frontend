@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  TouchableOpacity
 } from 'react-native'
 
 import {
@@ -21,10 +22,12 @@ import { Entypo } from '@expo/vector-icons'
 import { Foundation } from '@expo/vector-icons';
 
 
-import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
+import stylesProfile from '../components/styled-components/stylesProfile'
 import EditReaderUserProfile from './EditReaderUserProfile'
 import ReaderUserProfile from './ReaderUserProfile'
 import MyBook from './MyBook'
+import MyFollower from './MyFollower'
+import MyFollow from './MyFollow'
 
 const WritterUserProfile = () => {
 
@@ -33,26 +36,28 @@ const WritterUserProfile = () => {
   const Navegation = useNavigation()
 
   return (
-    <View style={stylesReaderUserProfile.container}>
+    <View style={stylesProfile.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Image
           source={Profile}
-          style={styles.image}
+          style={stylesProfile.image}
           resizeMode='contain'
         />
+        <Text
+          style={styles.textRol}
+          onPress={() => Navegation.navigate(ReaderUserProfile)}>
+          Cambiar Rol
+        </Text>
+        <TouchableOpacity
+          style={stylesProfile.button}
+          activeOpacity={0.85}
+        >
+          <Ionicons name="ios-settings-sharp" size={15} color="white" />
           <Text
-            style={styles.textRol}
-            onPress={() => Navegation.navigate(ReaderUserProfile)}>
-            Cambiar Rol
+            style={styles.textButton}>
+            Editar libro
           </Text>
-        <Button
-          title='Editar perfil'
-          icon={{ name: 'settings-sharp', type: 'ionicon', borderRadius: 200, size: 15, color: 'white' }}
-          buttonStyle={[styles.button, {marginBottom: 50, marginTop: 30,}]}
-          containerStyle={{ borderRadius: 200, marginRight: 5}}
-          onPress={() => Navegation.navigate(EditReaderUserProfile)}
-
-        />
+        </TouchableOpacity>
       </View>
       <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
         <Ionicons name="person" size={24} color="black" />
@@ -81,22 +86,27 @@ const WritterUserProfile = () => {
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Text style={styles.follow}
+          onPress={() => Navegation.navigate(MyFollower)}
         >
-          # Siguiendo
+          3  Siguiendo
         </Text>
         <Text style={styles.follow}
+          onPress={() => Navegation.navigate(MyFollow)}
         >
-          # Seguido
+          3  Seguidos
         </Text>
       </View>
-      <Button
-      title='Mis Libros'
-      titleStyle={{marginHorizontal: 5}}
-      buttonStyle={styles.button}
-      icon={<Foundation name="book-bookmark" size={15} color="white" style={{marginHorizontal: 5}}/>}
-      containerStyle={{ borderRadius: 200, marginLeft: 5, paddingBottom: 5 }}
-      onPress={() => Navegation.navigate(MyBook)}
-      />
+      <TouchableOpacity
+          style={styles.button2}
+          activeOpacity={0.85}
+          onPress={() => Navegation.navigate(MyBook)}
+        >
+          <Foundation name="book-bookmark" size={15} color="white" />
+          <Text
+            style={styles.textButton}>
+            Mis Libros
+          </Text>
+        </TouchableOpacity>
       <Tab
         value={index}
         onChange={(e) => setIndex(e)}
@@ -149,15 +159,7 @@ const WritterUserProfile = () => {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    height: '300%',
-    maxWidth: 150,
-    maxHeight: 125,
-    marginLeft: 5,
-    alignSelf: 'center',
-    marginBottom: 50,
-    marginTop: 20
-  },
+
   itemContainer: {
     backgroundColor: 'rgba(235, 235, 255, .1)',
     alignSelf: 'center',
@@ -173,18 +175,32 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginBottom: 5,
   },
-  button: {
+  button2: {
+    flexDirection: 'row',
     backgroundColor: 'rgba(0, 0, 0, .5)',
     borderWidth: 2,
     borderColor: 'black',
     borderRadius: 200,
     marginRight: 5,
     maxWidth: 120,
-    maxHeight: 40
+    maxHeight: 40,
+    height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 5
   },
   textRol: {
     alignSelf: 'flex-start',
     textDecorationLine: 'underline',
+  },
+  
+  textButton: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    marginLeft: 5,
   }
 })
 

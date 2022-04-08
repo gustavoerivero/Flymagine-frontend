@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  TouchableOpacity
 } from 'react-native'
 
 import { Button } from 'react-native-elements'
@@ -12,6 +13,8 @@ import { Button } from 'react-native-elements'
 import ListBook from '../components/ListBook'
 import dataBooks from '../utilities/data/books'
 import Container from '../components/Container'
+
+import { AntDesign } from '@expo/vector-icons';
 
 import {
   handleChange
@@ -27,29 +30,28 @@ const MyBook = () => {
 
   return (
     <View style={styles.container}>
-        <ScrollView>
-          {books?.map((myBook) => (
-            <ListBook
-              key={myBook.id}
-              name={myBook.book.name}
-              image={myBook.book.picture}
-            />
-          ))}
-        </ScrollView>
+      <TouchableOpacity
+        style={styles.button}
+        activeOpacity={0.85}
+      >
+        <AntDesign name="plus" size={24} color="black" style={styles.textButton}/>
+
+      </TouchableOpacity>
+      <ScrollView>
+        {books?.map((myBook) => (
+          <ListBook
+            key={myBook.id}
+            name={myBook.book.name}
+            image={myBook.book.picture}
+          />
+        ))}
+      </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: 'rgba(150, 129, 223, .75)',
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 200,
-    width: '100%',
-    maxWidth: 250,
-    marginLeft: .01,
-  },
+
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -62,6 +64,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9F7F8',
     paddingTop: 10
   },
+  button: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(150, 129, 223, .75)',
+    borderWidth: 2,
+    borderColor: 'black',
+    borderRadius: 25,
+    width: '100%',
+    height: 30,
+    maxWidth: 30,
+    alignSelf: 'flex-end',
+    marginBottom: 10,
+    marginRight: 5,
+    justifyContent: 'center'
+
+  },
+  textButton: {
+    alignSelf: 'center',
+    marginTop: 2,
+    fontWeight: 'bold',
+    fontSize: 17.5,
+  }
 })
 
 export default MyBook

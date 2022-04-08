@@ -1,0 +1,29 @@
+[
+    {
+        "id": "jasnfj12n4jn12j",
+        "follow": {
+            "id": "60d0fe4f5311236168a10a0b",
+            "firstName": "Elena",
+            "lastName": "Kyteler",
+            "picture": "https://randomuser.me/api/portraits/med/women/1.jpg"
+        }
+    },
+    {
+        "id": "2412bn1h24135274m12",
+        "follow": {
+            "id": "60d0fe4f5311236168a109ca",
+            "firstName": "Monica",
+            "lastName": "Puertas",
+            "picture": "https://randomuser.me/api/portraits/women/22.jpg"
+        }
+    },
+    {
+        "id": "2412bn1h24135274mm",
+        "follow": {
+            "id": "60d0fe4f53112988168a109ca",
+            "firstName": "Mario",
+            "lastName": "Lara",
+            "picture": "https://randomuser.me/api/portraits/men/10.jpg"
+        }
+    }
+]

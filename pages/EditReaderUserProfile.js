@@ -21,7 +21,7 @@ import { Entypo } from '@expo/vector-icons';
 
 import { handleChange } from '../utils/functions'
 
-import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
+import stylesReaderUserProfile from '../components/styled-components/stylesProfile'
 import TextField from '../components/TextField'
 import EmailField from '../components/EmailField'
 import PasswordFieldUser from '../components/PasswordFieldUser'
