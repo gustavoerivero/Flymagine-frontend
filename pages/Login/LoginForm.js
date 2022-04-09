@@ -115,6 +115,12 @@ const LoginForm = () => {
               title='Iniciar Sesión'
               buttonStyle={styles.button}
               onPress={() => {
+
+                Navegation.navigate('SignIn', {
+                  email: userData.email,
+                })
+
+                /**
                 if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {
                   Navegation.navigate('SignIn', {
                     email: userData.email,
@@ -130,6 +136,8 @@ const LoginForm = () => {
                   setMessage('Error desconocido')
                   setModalVisible(true)
                 }
+                */
+
               }}
             />
             <Button

@@ -32,8 +32,8 @@ const PasswordField = ({ name, value, setValues, setIsValid }) => {
           autoCapitalize='none'
           secureTextEntry={show ? false : true}
           onChangeText={(text) => {
-            setValues(text)
             valid()
+            setValues(text)
           }}
           containerStyle={styles.input}
           inputStyle={styles.label}
