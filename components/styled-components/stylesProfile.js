@@ -9,6 +9,17 @@ const stylesProfile = StyleSheet.create({
         paddingTop: 20,
         display: 'flex',
     },
+    bookImage: {
+      height: '100%',
+      maxWidth: 100,
+      maxHeight: 125,
+      marginLeft: 5,
+      alignSelf: 'center',
+      marginBottom: 75,
+      marginTop: 40,
+      borderRadius: 5,
+      marginLeft: 25,
+    },
     image: {
         height: '100%',
         maxWidth: 100,
