@@ -9,7 +9,11 @@ import {
 import { Divider } from '@rneui/themed'
 
 import styles from './styled-components/styles'
-import { Button, Image } from 'react-native-elements'
+import { 
+  Button, 
+  Image,
+  AirbnbRating,
+} from 'react-native-elements'
 
 import { Chip } from 'react-native-paper'
 
@@ -88,12 +92,12 @@ const Review = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Edit ${props.author}'s post`)
+                    console.log(`Edit ${props.author}'s review`)
                     setEditVisible(true)
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer editar esta publicación?'
+                  content='¿Está seguro de querer editar esta review?'
                   visible={editVisible}
                   setVisible={setEditVisible}
                   setChoice={setEditChoice}
@@ -111,12 +115,12 @@ const Review = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Delete ${props.author}'s post`)
+                    console.log(`Delete ${props.author}'s review`)
                     setDeleteVisible(true)
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer eliminar esta publicación?'
+                  content='¿Está seguro de querer eliminar esta review?'
                   visible={deleteVisible}
                   setVisible={setDeleteVisible}
                   setChoice={setDeleteChoice}
@@ -200,6 +204,25 @@ const Review = (props) => {
             />
           )}
         </View>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            marginLeft: 10,
+            marginBottom: 10,
+          }}
+        >
+          {props.rating && (
+            <AirbnbRating
+              count={5}
+              defaultRating={props.rating}
+              size={15}
+              showRating={false}
+              isDisabled={true}
+            />
+          )}
+        </View>
         <View>
           <Divider />
           <View
@@ -210,7 +233,7 @@ const Review = (props) => {
               width: '100%',
             }}
           >
-            {props.tags.map((tag, index) => (
+            {props.tags?.map((tag, index) => (
               <Chip
                 key={index}
                 style={{
