@@ -4,7 +4,7 @@ import { Input } from 'react-native-elements'
 
 import styles from './styled-components/styles'
 
-const TextField = ({ name, setText }) => {
+const TextField = ({ name, setText, multiline }) => {
 
   return (
     <View style={styles.item}>
@@ -15,7 +15,8 @@ const TextField = ({ name, setText }) => {
         autoCapitalize='none'
         onChangeText={(text) => setText(text)}
         containerStyle={styles.input}
-        inputStyle={styles.label}   
+        inputStyle={styles.label}
+        multiline={multiline}   
       />
     </View>
   )
