@@ -67,24 +67,8 @@ const EditBook = (selectedItems) => {
 
     <View>
       <View style={stylesProfile.container} >
-
-        <Button
-          buttonStyle={styles.button}
-          icon={
-            <ImageBackground
-              source={userData.image ? { uri: userData.image } : BookImage}
-              style={styles.image}
-              resizeMode='stretch'
-            >
-              <Icon
-                type='ionicon'
-                name="camera"
-                size={24}
-                color="white"
-                containerStyle={styles.containerIcon}
-              />
-            </ImageBackground>
-          }
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => {
             console.log('Upload image')
             let image = pickImage()
@@ -95,8 +79,22 @@ const EditBook = (selectedItems) => {
               console.log(err)
             })
           }}
-        />
-
+        >
+          <ImageBackground
+            source={userData.image ? { uri: userData.image } : BookImage}
+            style={styles.image}
+            imageStyle={styles.image}
+            resizeMode='stretch'
+          >
+            <Icon
+              type='ionicon'
+              name="camera"
+              size={24}
+              color="white"
+              containerStyle={styles.containerIcon}
+            />
+          </ImageBackground>
+        </TouchableOpacity>
         <View style={{ backgroundColor: 'white', paddingTop: 5 }}>
           <TextField
             name='Nombre'
@@ -144,23 +142,23 @@ const EditBook = (selectedItems) => {
                 Subir nuevo archivo PDF
               </Text>
             </TouchableOpacity>
-          ) : null}
-          {shouldShow2 ? (
-            <TouchableOpacity
-              style={styles.buttonD}
-              onPress={() => {
-                _handleChange('document', null)
-                console.log(userData.document)
-                setShouldShow2(false)
-                setShouldShow(true)
-              }}
-            >
-              <Ionicons name="md-trash-bin" size={24} color="rgba(50, 0, 105, .5)" />
-              <Text>
-                Eliminar archivo PDF
-              </Text>
-            </TouchableOpacity>
-          ) : null}
+          ) :
+            shouldShow2 ? (
+              <TouchableOpacity
+                style={styles.buttonD}
+                onPress={() => {
+                  _handleChange('document', null)
+                  console.log(userData.document)
+                  setShouldShow2(false)
+                  setShouldShow(true)
+                }}
+              >
+                <Ionicons name="md-trash-bin" size={24} color="rgba(50, 0, 105, .5)" />
+                <Text>
+                  Eliminar archivo PDF
+                </Text>
+              </TouchableOpacity>
+            ) : null}
           <Button
             title={'Guardar cambios'}
             buttonStyle={styles.saveButton}
@@ -203,8 +201,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignSelf: 'center',
     borderRadius: 200,
-    width: 200,
-    height: 200,
+    width: 100,
+    height: 100,
     marginBottom: 10,
   },
 

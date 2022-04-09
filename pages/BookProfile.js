@@ -34,10 +34,7 @@ import Dialog from '../components/Dialog'
 import ListReview from '../components/ListReview'
 import dataReviews from '../utilities/data/reviews'
 
-
 import Review from '../components/Post/Review'
-
-import dataReviews from '../utilities/data/reviews'
 
 const BookProfile = () => {
 
