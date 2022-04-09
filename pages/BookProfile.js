@@ -31,6 +31,9 @@ import {
 import stylesProfile from '../components/styled-components/stylesProfile'
 import EditBook from './EditBook'
 import Dialog from '../components/Dialog'
+import ListReview from '../components/ListReview'
+import dataReviews from '../utilities/data/reviews'
+
 
 import Review from '../components/Post/Review'
 
