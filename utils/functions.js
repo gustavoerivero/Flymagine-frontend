@@ -1,4 +1,5 @@
 import * as ImagePicker from 'expo-image-picker'
+import * as DocumentPicker from 'expo-document-picker'
 import { Platform } from 'react-native'
 import RegExp from '../utilities/RegEx';
 
@@ -54,11 +55,33 @@ const phoneValidator = (phone) => {
 	return RegExp.regPhone.test(phone) ? true : false
 }
 
+const selectOneFile = async () => {
+
+	await DocumentPicker.getDocumentAsync({
+		type: 'application/pdf',
+		allowsMultipleSelection: false
+	}).
+	then((result) => {
+		console.log(`Document selected: ${result.name}`)
+		console.log(`Document uri: ${result.uri}`)
+		console.log(`Document type: ${result.type}`)
+		console.log(`Document size: ${result.size}`)
+
+		return result
+
+	}).catch(error => {
+		console.log(`We have an error: ${error}`)
+		return null
+	})
+
+}
+
 module.exports = {
 	handleChange,
 	previousFourteenHours,
 	permisionFunction,
 	deleteValue,
 	pickImage,
-	phoneValidator
+	phoneValidator,
+	selectOneFile,
 }

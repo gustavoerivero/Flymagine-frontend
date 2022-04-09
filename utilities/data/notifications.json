@@ -1,50 +1,50 @@
 [
-    {
-      "id": "2412bn1h24135274mm",
-      "notificationDate": "2022-04-06T13:04:07.598Z",
-      "transmitter": {
-        "id": "60d0fe4f5311236168a109ca",
-        "firstName": "Avernis",
-        "lastName": "Blakthus",
-        "picture": "https://randomuser.me/api/portraits/men/22.jpg"
-      },
-      "text":"te ha empezado a seguir",
-      "check": "false"
+  {
+    "id": "2412bn1h24135274mm",
+    "notificationDate": "2022-04-06T13:04:07.598Z",
+    "transmitter": {
+      "id": "60d0fe4f5311236168a109ca",
+      "firstName": "Avernis",
+      "lastName": "Blakthus",
+      "picture": "https://randomuser.me/api/portraits/men/22.jpg"
     },
-    {
-      "id": "2412bn1h24135274m12",
-      "notificationDate": "2022-04-05T20:04:07.598Z",
-      "transmitter": {
-        "id": "60d0fe4f5311236168a109ca",
-        "firstName": "Monica",
-        "lastName": "Puertas",
-        "picture": "https://randomuser.me/api/portraits/women/22.jpg"
-      },
-      "text":"le ha gustado tu publicación",
-      "check": "false"
+    "text": "te ha empezado a seguir",
+    "check": "false"
+  },
+  {
+    "id": "2412bn1h24135274m12",
+    "notificationDate": "2022-04-05T20:04:07.598Z",
+    "transmitter": {
+      "id": "60d0fe4f5311236168a109ca",
+      "firstName": "Monica",
+      "lastName": "Puertas",
+      "picture": "https://randomuser.me/api/portraits/women/22.jpg"
     },
-    {
-      "id": "2412bn1g444135274m12",
-      "notificationDate": "2022-04-05T20:04:07.598Z",
-      "transmitter": {
-        "id": "60d0fe4f5311236168a109ca",
-        "firstName": "Monica",
-        "lastName": "Puertas",
-        "picture": "https://randomuser.me/api/portraits/women/22.jpg"
-      },
-      "text":"ha comentado tu publicación",
-      "check": "false"
+    "text": "le ha gustado tu publicación",
+    "check": "false"
+  },
+  {
+    "id": "2412bn1g444135274m12",
+    "notificationDate": "2022-04-05T20:04:07.598Z",
+    "transmitter": {
+      "id": "60d0fe4f5311236168a109ca",
+      "firstName": "Monica",
+      "lastName": "Puertas",
+      "picture": "https://randomuser.me/api/portraits/women/22.jpg"
     },
-    {
-      "id": "2412bn1h24135274nn",
-      "notificationDate": "2022-04-04T14:14:07.598Z",
-      "transmitter": {
-        "id": "60d0fe4f53112988168a109ca",
-        "firstName": "Mario",
-        "lastName": "Lara",
-        "picture": "https://randomuser.me/api/portraits/men/10.jpg"
-      },
-      "text":"ha subido un nuevo libro",
-      "check": "false"
-    }
+    "text": "ha comentado tu publicación",
+    "check": "false"
+  },
+  {
+    "id": "2412bn1h24135274nn",
+    "notificationDate": "2022-04-04T14:14:07.598Z",
+    "transmitter": {
+      "id": "60d0fe4f53112988168a109ca",
+      "firstName": "Mario",
+      "lastName": "Lara",
+      "picture": "https://randomuser.me/api/portraits/men/10.jpg"
+    },
+    "text": "ha subido un nuevo libro",
+    "check": "false"
+  }
 ]
