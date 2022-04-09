@@ -13,46 +13,52 @@ const ListFollower = (props) => {
 
     const [read, setRead] = useState(props.check)
     const [shouldShow, setShouldShow] = useState(true)
+    const [shouldShow2, setShouldShow2] = useState(true)
 
     return (
         <TouchableOpacity
             activeOpacity={0.9}>
-            <View style={styles.container}>
-                <View style={styles.photoContainer}>
-                    <Image
-                        source={{ uri: props.image }}
-                        style={styles.profileButton}
-                    />
-                </View>
-                <View style={styles.contentContainer}>
-                    <View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={styles.text}>
-                                {props.name}
-                            </Text>
-                            {shouldShow ? (
-                            <Text style={{marginRight: 5, marginTop: '7%' }}>
-                            {read === 'false' ? (
-                                <Text 
-                                style={{ color: 'blue'}}
-                                onPress={() => setShouldShow(false)}>
-                                    Seguir
-                                </Text>
-                            ) : null}
-                            </Text>
-                            ) : false}
-                        </View>
+            {shouldShow2 ? (
+                <View style={styles.container}>
+                    <View style={styles.photoContainer}>
+                        <Image
+                            source={{ uri: props.image }}
+                            style={styles.profileButton}
+                        />
                     </View>
-                    <TouchableOpacity
-                        style={styles.button}
-                    >
-                        <Text
-                            style={styles.textButton}>
-                            Eliminar
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={styles.contentContainer}>
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Text style={styles.text}>
+                                    {props.name}
+                                </Text>
+                                {shouldShow ? (
+                                    <Text style={{ marginRight: 5, marginTop: '7%' }}>
+                                        {read === 'false' ? (
+                                            <Text
+                                                style={{ color: 'blue' }}
+                                                onPress={() => setShouldShow(false)}>
+                                                Seguir
+                                            </Text>
+                                        ) : null}
+                                    </Text>
+                                ) : false}
+                            </View>
+                        </View>
+
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => setShouldShow2(false)}
+                        >
+                            <Text
+                                style={styles.textButton}>
+                                Eliminar
+                            </Text>
+                        </TouchableOpacity>
+
+                    </View>
                 </View>
-            </View>
+            ) : false}
         </TouchableOpacity>
     )
 }

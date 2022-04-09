@@ -26,6 +26,8 @@ import stylesProfile from '../components/styled-components/stylesProfile'
 import TextField from '../components/TextField'
 import EmailField from '../components/EmailField'
 import PasswordFieldUser from '../components/PasswordFieldUser'
+import Dialog from '../components/Dialog'
+import WritterUserProfile from '../pages/WritterUserProfile'
 
 const EditReaderUserProfile = () => {
 
@@ -43,7 +45,8 @@ const EditReaderUserProfile = () => {
     })
     const [index, setIndex] = React.useState(0);
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false)
+    const [choiceSelected, setChoiceSelected] = useState(false)
 
     const Navegation = useNavigation()
 
@@ -158,33 +161,15 @@ const EditReaderUserProfile = () => {
                         buttonStyle={styles.saveButton}
                         onPress={() => setModalVisible(true)}
                     />
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(!modalVisible)
-                        }}
-                    >
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>¿Seguro que desea cambiar los datos?
-                                </Text>
-                                <View style={styles.buttonContainer}>
-                                    <Button
-                                        title='Aceptar'
-                                        buttonStyle={styles.modalButton}
-                                        onPress={() => Navegation.navigate("Profile")}
-                                    />
-                                    <Button
-                                        title='Cancelar'
-                                        buttonStyle={styles.modalButton2}
-                                        onPress={() => setModalVisible(false)}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                    </Modal>
+                    <Dialog
+                    visible={modalVisible}
+                    setVisible={setModalVisible}
+                    setChoice={setChoiceSelected}
+                    cancelButton={true}
+                    content='¿Estás seguro que desea guardar los cambios realizados en su perfil?'
+                    toNavigate='WritterUserProfile'>
+                    
+                    </Dialog>
                 </View>
             </View>
         </ScrollView>

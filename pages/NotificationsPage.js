@@ -3,13 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
+  Modal,
   ScrollView,
 } from 'react-native'
 
 import { Button } from 'react-native-elements'
-
-import ModalDropdown from 'react-native-modal-dropdown';
 
 import Notification from '../components/Notification'
 import dataNotifications from '../utilities/data/notifications'
@@ -61,6 +59,7 @@ const NotificationsPage = () => {
           visible={modalVisible}
           setVisible={setModalVisible}
           setChoice={setChoiceSelected}
+          cancelButton={true}
           content='¿Seguro que desea eliminar la bandeja de entrada?'
         />
       </View>

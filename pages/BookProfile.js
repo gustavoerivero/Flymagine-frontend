@@ -26,6 +26,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import stylesProfile from '../components/styled-components/stylesProfile'
 import EditBook from './EditBook'
+import Dialog from '../components/Dialog'
 
 const BookProfile = () => {
 
@@ -36,6 +37,9 @@ const BookProfile = () => {
     const [shouldShow, setShouldShow] = useState(true)
     const [shouldShow2, setShouldShow2] = useState(true)
     const [shouldShow3, setShouldShow3] = useState(true)
+
+    const [modalVisible, setModalVisible] = useState(false)
+    const [choiceSelected, setChoiceSelected] = useState(false)
 
     return (
         <View style={[stylesProfile.container,  {paddingTop: 30,}]}>
@@ -60,6 +64,7 @@ const BookProfile = () => {
                     <TouchableOpacity
                         style={styles.buttonE}
                         activeOpacity={0.85}
+                        onPress={() => setModalVisible(true)}
                     >
                         <Ionicons name="trash-bin" size={20} color="white" />
                     </TouchableOpacity>
@@ -160,6 +165,14 @@ const BookProfile = () => {
                 <TabView.Item style={{ backgroundColor: '#C4C4C4', width: '100%' }}>
                 </TabView.Item>
             </TabView>
+            <Dialog
+                visible={modalVisible}
+                setVisible={setModalVisible}
+                setChoice={setChoiceSelected}
+                cancelButton={true}
+                content='¿Estás seguro que desea eliminar este libro?'
+                toNavigate='MyBook'
+            />
         </View>
     )
 }

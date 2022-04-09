@@ -6,12 +6,15 @@ import {
     StyleSheet,
     ImageBackground,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    KeyboardAwareScrollView
 } from 'react-native'
 
 import { Icon, Button } from 'react-native-elements'
 
 import MultiSelect from 'react-native-multiple-select';
+
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 
 import TextField from '../components/TextField'
 import DateField from '../components/DateField'
@@ -24,10 +27,10 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 
 
-const RegisterBook = (selectedItems) => {
+const RegisterBook = () => {
 
     const [userData, setUserData] = useState({
-        name: '',
+        nameBook: '',
         registerDate: '',
         sinopsis: '',
         selectedItems: []
@@ -41,7 +44,7 @@ const RegisterBook = (selectedItems) => {
     const onSelectedItemsChange = (selectedItems) => setUserData({ selectedItems })
 
 
-    var items = [
+    const items = [
         {
             id: '667atsas',
             name: 'Comedia'
@@ -79,7 +82,7 @@ const RegisterBook = (selectedItems) => {
 
     return (
 
-        <View>
+        <ScrollView>
             <View style={stylesProfile.container} >
 
                 <TouchableOpacity
@@ -102,42 +105,32 @@ const RegisterBook = (selectedItems) => {
                 <View style={{ backgroundColor: 'white', paddingTop: 5 }}>
                     <TextField
                         name='Nombre'
-                        setText={(text) => _handleChange("firstName", text)}
+                        setText={(text) => _handleChange("firstName", nameBook)}
                     />
                     <TextField
                         name='Sipnosis'
                         multiline={true}
-                        setText={(text) => _handleChange("sinopsis", text)}
+                        setText={(text) => _handleChange("sinopsis", sinopsis)}
                     />
                     <DateField
                         name='Fecha de registro'
                         value={userData.registerDate}
-                        setValues={(text) => _handleChange("registerDate", text)}
+                        setValues={(text) => _handleChange("registerDate", registerDate)}
                     />
-
-                    <MultiSelect
-                    fixedHeight={true}
-                        hideTags
+                    <SectionedMultiSelect
                         items={items}
+                        IconRenderer={Icon}
                         uniqueKey="id"
-                        selectedItems={[selectedItems]}
-                        selectText="Selecciona géneros"
-                        styleTextDropdownSelected={{ color: 'rgba(50, 0, 105, .5)', marginLeft: 18, fontSize: 17 }}
+                        subKey="children"
+                        selectText="Géneros literarios"
+                        showDropDowns={true}
+                        readOnlyHeadings={true}
                         onSelectedItemsChange={onSelectedItemsChange}
-                        searchInputPlaceholderText="Buscar géneros..."
-                        altFontFamily="ProximaNova-Light"
-                        tagRemoveIconColor="#CCC"
-                        tagBorderColor="#CCC"
-                        tagTextColor="#CCC"
-                        selectedItemTextColor="#CCC"
-                        selectedItemIconColor="#CCC"
-                        itemTextColor="#000"
-                        displayKey="name"
-                        searchInputStyle={{ color: '#CCC', }}
-                        submitButtonColor="rgba(0, 0, 0, .5)"
-                        submitButtonText="Guardar"
-                        styleDropdownMenuSubsection={{backgroundColor: 'transparent', height: 65,}}
-                        styleDropdownMenu={styles.genero}
+                        selectedItems={userData.selectedItems}
+                        searchPlaceholderText='Buscar género'
+                        confirmText='Confirmar'
+                        colors={{primary: 'purple', selectToggleTextColor: 'rgba(50, 0, 105, .5)',  }}
+                        styles={{selectToggle: styles.genero, selectToggleText: styles.selectText, }}
                     />
                     <TouchableOpacity
                         style={styles.buttonD}>
@@ -162,7 +155,7 @@ const RegisterBook = (selectedItems) => {
                 content='¿Estás seguro que desea registrar este libro?'
                 toNavigate='MyBook'
             />
-        </View >
+        </ScrollView >
     )
 }
 
@@ -252,13 +245,19 @@ const styles = StyleSheet.create({
         marginTop: 35
     },
     genero: {
-        marginHorizontal: 8, 
+        marginHorizontal: 8,
         borderWidth: 1,
-        backgroundColor: 'rgba(235, 235, 255, .75)', 
-        borderColor: 'grey', 
+        backgroundColor: 'rgba(235, 235, 255, .75)',
+        borderColor: 'grey',
         borderRadius: 5,
         height: 70,
-        marginTop: 8
+        marginTop: 8,
+    },
+    selectText: {
+        fontSize: 18,
+        marginLeft: 18,
+        marginTop: 47,
+        marginRight: 18,
     }
 })
 

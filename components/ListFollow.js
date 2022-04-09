@@ -9,6 +9,9 @@ import {
 
 const ListFollow = (props) => {
 
+    const [shouldShow, setShouldShow] = useState(true)
+    const [shouldShow2, setShouldShow2] = useState(false)
+
     return (
         <TouchableOpacity
             activeOpacity={0.9}>
@@ -28,14 +31,28 @@ const ListFollow = (props) => {
 
                         </View>
                     </View>
+                    {shouldShow ? (
                     <TouchableOpacity
                         style={styles.button}
+                        onPress={() => [setShouldShow2(true), setShouldShow(false)]}
                     >
                         <Text
                             style={styles.textButton}>
                             Dejar de seguir
                         </Text>
                     </TouchableOpacity>
+                    ) : false}
+                    {shouldShow2 ? (
+                    <TouchableOpacity
+                        style={[styles.button, {backgroundColor: '#3F4BFF'}]}
+                        onPress={() => [setShouldShow(true), setShouldShow2(false)]}
+                    >
+                        <Text
+                            style={[styles.textButton, {color: 'white'}]}>
+                            Seguir
+                        </Text>
+                    </TouchableOpacity>
+                    ) : false}
                 </View>
             </View>
         </TouchableOpacity>

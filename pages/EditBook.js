@@ -10,7 +10,7 @@ import {
 
 import { Icon, Button } from 'react-native-elements'
 
-import MultiSelect from 'react-native-multiple-select';
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'
 
 import TextField from '../components/TextField'
 import DateField from '../components/DateField'
@@ -115,28 +115,20 @@ const EditBook = (selectedItems) => {
                         setText={(text) => _handleChange("sinopsis", text)}
                     />
 
-                    <MultiSelect
-                        hideTags
+                    <SectionedMultiSelect
                         items={items}
+                        IconRenderer={Icon}
                         uniqueKey="id"
-                        selectedItems={[selectedItems]}
-                        selectText="Selecciona géneros"
-                        styleTextDropdownSelected={{ color: 'rgba(50, 0, 105, .5)', marginLeft: 18, fontSize: 17 }}
+                        subKey="children"
+                        selectText="Géneros literarios"
+                        showDropDowns={true}
+                        readOnlyHeadings={true}
                         onSelectedItemsChange={onSelectedItemsChange}
-                        searchInputPlaceholderText="Buscar géneros..."
-                        altFontFamily="ProximaNova-Light"
-                        tagRemoveIconColor="#CCC"
-                        tagBorderColor="#CCC"
-                        tagTextColor="#CCC"
-                        selectedItemTextColor="#CCC"
-                        selectedItemIconColor="#CCC"
-                        itemTextColor="#000"
-                        displayKey="name"
-                        searchInputStyle={{ color: '#CCC', }}
-                        submitButtonColor="rgba(0, 0, 0, .5)"
-                        submitButtonText="Guardar"
-                        styleDropdownMenuSubsection={{ backgroundColor: 'transparent', height: 65, }}
-                        styleDropdownMenu={styles.genero}
+                        selectedItems={userData.selectedItems}
+                        searchPlaceholderText='Buscar género'
+                        confirmText='Confirmar'
+                        colors={{primary: 'purple', selectToggleTextColor: 'rgba(50, 0, 105, .5)',  }}
+                        styles={{selectToggle: styles.genero, selectToggleText: styles.selectText, }}
                     />
                     {shouldShow ? (
                         <TouchableOpacity
@@ -160,7 +152,7 @@ const EditBook = (selectedItems) => {
                         </TouchableOpacity>
                     ) : null}
                     <Button
-                        title={'Guardar libro'}
+                        title={'Guardar cambios'}
                         buttonStyle={styles.saveButton}
                         onPress={() => setModalVisible(true)}
                     />
@@ -172,7 +164,7 @@ const EditBook = (selectedItems) => {
                 setVisible={setModalVisible}
                 setChoice={setChoiceSelected}
                 cancelButton={true}
-                content='¿Estás seguro que desea registrar este libro?'
+                content='¿Estás seguro que desea guardar los cambios realizados en este libro?'
                 toNavigate='MyBook'
             />
         </View>
@@ -244,7 +236,13 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         borderRadius: 5,
         height: 70,
-        marginTop: 8
+        marginTop: 8,
+    },
+    selectText: {
+        fontSize: 18,
+        marginLeft: 18,
+        marginTop: 47,
+        marginRight: 18,
     }
 })
 
