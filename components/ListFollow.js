@@ -7,18 +7,14 @@ import {
     TouchableOpacity
 } from 'react-native'
 
-import { useNavigation } from '@react-navigation/native'
-import BookProfile from '../pages/BookProfile'
+const ListFollow = (props) => {
 
-const ListBook = (props) => {
-
-    const Navegation = useNavigation()
+    const [shouldShow, setShouldShow] = useState(true)
+    const [shouldShow2, setShouldShow2] = useState(false)
 
     return (
         <TouchableOpacity
-            activeOpacity={0.9}
-            onPress={() => Navegation.navigate(BookProfile)}
-            >
+            activeOpacity={0.9}>
             <View style={styles.container}>
                 <View style={styles.photoContainer}>
                     <Image
@@ -28,12 +24,35 @@ const ListBook = (props) => {
                 </View>
                 <View style={styles.contentContainer}>
                     <View>
-                        <View style={{ flexDirection: 'row'}}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Text style={styles.text}>
                                 {props.name}
                             </Text>
+
                         </View>
                     </View>
+                    {shouldShow ? (
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={() => [setShouldShow2(true), setShouldShow(false)]}
+                    >
+                        <Text
+                            style={styles.textButton}>
+                            Dejar de seguir
+                        </Text>
+                    </TouchableOpacity>
+                    ) : false}
+                    {shouldShow2 ? (
+                    <TouchableOpacity
+                        style={[styles.button, {backgroundColor: '#3F4BFF'}]}
+                        onPress={() => [setShouldShow(true), setShouldShow2(false)]}
+                    >
+                        <Text
+                            style={[styles.textButton, {color: 'white'}]}>
+                            Seguir
+                        </Text>
+                    </TouchableOpacity>
+                    ) : false}
                 </View>
             </View>
         </TouchableOpacity>
@@ -81,14 +100,30 @@ const styles = StyleSheet.create({
     profileButton: {
         height: 50,
         width: 50,
-        borderRadius: 200
+        borderRadius: 50,
     },
-    text:{
+    text: {
         fontWeight: 'bold',
         marginRight: 5,
         fontSize: 20,
         marginTop: '6%'
+    },
+    button: {
+        backgroundColor: 'transparent',
+        borderWidth: 2,
+        borderColor: 'black',
+        borderRadius: 10,
+        width: '100%',
+        height: 25,
+        maxWidth: 100,
+        maxHeight: 100,
+        alignSelf: 'flex-end'
+    },
+    textButton: {
+        alignSelf: 'center',
+        marginTop: 2,
+        fontWeight: 'bold',
     }
 })
 
-export default ListBook
+export default ListFollow

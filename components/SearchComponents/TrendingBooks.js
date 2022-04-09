@@ -1,6 +1,9 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Image, Button } from "react-native-elements";
+import Navegation from "../../Navegation";
+import Book from "../../pages/MyBook";
+import { useNavigation } from '@react-navigation/native';
 
 const TrendingBooks = ({ title, autor, imageCover }) => {
   return (
@@ -21,6 +24,7 @@ const TrendingBooks = ({ title, autor, imageCover }) => {
           height: 200,
         }}
         type="clear"
+        onPress={() => Navegation.navigate(Book)}
       />
 
       <View style={{ flex: 1, marginTop: 5, }} >

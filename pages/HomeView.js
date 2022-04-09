@@ -1,9 +1,9 @@
 import React, {
   useState,
-  useEffect
 } from 'react'
 import {
-  ScrollView
+  ScrollView,
+  Text,
 } from 'react-native'
 
 import Container from '../components/Container'
@@ -17,10 +17,12 @@ const HomeView = ({ params }) => {
   const [signIn, setSignIn] = useState('Adam Meddler')
 
   const [posts, setPosts] = useState(dataPosts || [])
+
   return (
     <Container>
+
       <ScrollView>
-        {posts?.map((post) => (
+        {posts.length > 0 && posts ? posts?.map((post, id) => (
           <Post
             key={post.id}
             signIn={signIn}
@@ -32,8 +34,23 @@ const HomeView = ({ params }) => {
             likes={post.likes}
             comments={post.comments}
             tags={post.tags}
+            personTags={post.personTags}
+            id={id}
+            posts={posts}
+            setPosts={setPosts}
           />
-        ))}
+        )) :
+          <Text
+            style={{
+              fontSize: 12,
+              color: 'rgba(110, 45, 220, .5)',
+              textAlign: 'center',
+              marginVertical: 10,
+            }}
+          >
+            No hay publicaciones disponibles en este momento...
+          </Text>
+        }
       </ScrollView>
     </Container>
   )

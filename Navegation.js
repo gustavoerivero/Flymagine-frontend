@@ -21,6 +21,12 @@ import ReaderUserProfile from './pages/ReaderUserProfile'
 import EditReaderUserProfile from './pages/EditReaderUserProfile'
 import WritterUserProfile from './pages/WritterUserProfile'
 import MyBook from './pages/MyBook'
+import MyFollower from './pages/MyFollower'
+import MyFollow from './pages/MyFollow'
+import BookProfile from './pages/BookProfile'
+import RegisterBook from './pages/RegisterBook'
+import Book from './pages/Book'
+import EditBook from './pages/EditBook'
 
 import {
   Entypo,
@@ -33,7 +39,7 @@ const Tab = createBottomTabNavigator()
 
 const Tabs = ({ route }) => {
 
-  const { user } = route.params.email
+  const { user } = route.params
 
   const [notifications, setNotifications] = useState(50)
 
@@ -91,8 +97,8 @@ const Tabs = ({ route }) => {
         }}
       />
       <Tab.Screen
-        name="ReaderUserProfile"
-        component={ReaderUserProfile}
+        name="WritterUserProfile"
+        component={WritterUserProfile}
         options={{
           headerShown: false,
           title: 'Perfil',
@@ -161,8 +167,8 @@ function MyStack() {
         }}
       />
       <Stack.Screen
-        name="WritterUserProfile"
-        component={WritterUserProfile}
+        name="ReaderUserProfile"
+        component={ReaderUserProfile}
         options={{
           title: 'Perfil'
         }}
@@ -188,7 +194,51 @@ function MyStack() {
           title: 'Editar comentario'
         }}
       />
+      <Stack.Screen
+      name="MyFollower"
+      component={MyFollower}
+      options={{
+        title: 'Seguidores'
+      }}
+      />
+      <Stack.Screen
+      name="MyFollow"
+      component={MyFollow}
+      options={{
+        title: 'Seguidos'
+      }}
+      />
+      <Stack.Screen
+      name="BookProfile"
+      component={BookProfile}
+      options={{
+        title: 'Perfil del libro'
+      }}
+      />
+      
+      <Stack.Screen
+      name="RegisterBook"
+      component={RegisterBook}
+      options={{
+        title: 'Registrar libro'
+      }}
+      />
+      <Stack.Screen
+      name="Book"
+      component={Book}
+      options={{
+        title: 'Perfil del libro'
+      }}
+      />
+      <Stack.Screen
+      name="EditBook"
+      component={EditBook}
+      options={{
+        title: 'Modificar libro'
+      }}
+      />
     </Stack.Navigator>
+    
   )
 }
 

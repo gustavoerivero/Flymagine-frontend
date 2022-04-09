@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  TouchableOpacity
 } from 'react-native'
 
 import {
@@ -14,14 +15,16 @@ import { useNavigation } from '@react-navigation/native'
 
 import Profile from '../assets/profile-default.png'
 
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Entypo } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'
+import { FontAwesome } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
+import { Entypo } from '@expo/vector-icons'
 
-import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
+import stylesProfile from '../components/styled-components/stylesProfile'
 import EditReaderUserProfile from './EditReaderUserProfile'
 import WritterUserProfile from './WritterUserProfile'
+import MyFollower from './MyFollower'
+import MyFollow from './MyFollow'
 
 const ReaderUserProfile = () => {
 
@@ -30,26 +33,29 @@ const ReaderUserProfile = () => {
   const Navegation = useNavigation()
 
   return (
-    <View style={stylesReaderUserProfile.container}>
+    <View style={stylesProfile.container}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Image
           source={Profile}
-          style={styles.image}
+          style={stylesProfile.image}
           resizeMode='contain'
         />
-          <Text
-            style={styles.textRol}
-            onPress={() => Navegation.navigate(WritterUserProfile)}>
-            Cambiar Rol
-          </Text>
-        <Button
-          title='Editar perfil'
-          icon={{ name: 'settings-sharp', type: 'ionicon', borderRadius: 200, size: 15, color: 'white' }}
-          buttonStyle={styles.button}
-          containerStyle={{ borderRadius: 200, marginRight: 5}}
+        <Text
+          style={styles.textRol}
+          onPress={() => Navegation.navigate(WritterUserProfile)}>
+          Cambiar Rol
+        </Text>
+        <TouchableOpacity
+          style={stylesProfile.button}
+          activeOpacity={0.85}
           onPress={() => Navegation.navigate(EditReaderUserProfile)}
-
-        />
+        >
+          <Ionicons name="ios-settings-sharp" size={15} color="white" />
+          <Text
+            style={styles.textButton}>
+            Editar perfil
+          </Text>
+        </TouchableOpacity>
       </View>
       <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
         <Ionicons name="person" size={24} color="black" />
@@ -78,12 +84,14 @@ const ReaderUserProfile = () => {
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
         <Text style={styles.follow}
+          onPress={() => Navegation.navigate(MyFollower)}
         >
-          # Siguiendo
+          3  Seguidores
         </Text>
         <Text style={styles.follow}
+          onPress={() => Navegation.navigate(MyFollow)}
         >
-          # Seguido
+          3  Seguidos
         </Text>
       </View>
       <Tab
@@ -138,15 +146,6 @@ const ReaderUserProfile = () => {
 }
 
 const styles = StyleSheet.create({
-  image: {
-    height: '300%',
-    maxWidth: 150,
-    maxHeight: 125,
-    marginLeft: 5,
-    alignSelf: 'center',
-    marginBottom: 50,
-    marginTop: 30
-  },
   itemContainer: {
     backgroundColor: 'rgba(235, 235, 255, .1)',
     alignSelf: 'center',
@@ -162,20 +161,16 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     marginBottom: 5,
   },
-  button: {
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 200,
-    marginRight: 5,
-    marginBottom: 50,
-    marginTop: 30,
-    maxWidth: 120,
-    maxHeight: 40
-  },
   textRol: {
     alignSelf: 'flex-start',
     textDecorationLine: 'underline',
+  },
+  textButton: {
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    fontSize: 15,
+    color: 'white',
+    marginLeft: 5,
   }
 })
 

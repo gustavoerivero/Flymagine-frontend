@@ -13,35 +13,34 @@ import { Button, Image } from 'react-native-elements'
 
 import { Chip } from 'react-native-paper'
 
-import Dialog from '../Dialog'
-
 import {
   parseDate,
   parseTime,
 } from '../../utilities/Parsers'
 
 import {
-  previousFourteenHours
+  previousFourteenHours,
 } from '../../utils/functions'
 
-const CommentPost = (data) => {
+import { useNavigation } from '@react-navigation/native'
+import Dialog from '../Dialog'
 
-  const [props, setProps] = useState(data.props)
+const Review = (props) => {
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
+  const [comments, setComments] = useState(props.comments.length)
 
   const [editChoice, setEditChoice] = useState(false)
   const [editVisible, setEditVisible] = useState(false)
 
   const [deleteVisible, setDeleteVisible] = useState(false)
-  const [deleteChocie, setDeleteChoice] = useState(false)
+  const [deleteChoice, setDeleteChoice] = useState(false)
+
+  const Navegation = useNavigation()
 
   return (
-    <View style={[styles.container, {
-      padding: 10,
-      paddingTop: 45,
-    }]}>
+    <View style={styles.container}>
       <View style={styles.photoContainer}>
         <Button
           buttonStyle={styles.profileButton}
@@ -126,6 +125,7 @@ const CommentPost = (data) => {
               </>
             )}
           </View>
+
         </View>
         <View
           style={{
@@ -133,7 +133,7 @@ const CommentPost = (data) => {
             flexDirection: 'row',
             justifyContent: 'flex-start',
             alignItems: 'center',
-
+            marginBottom: 10,
           }}
         >
           {props.personTags.length > 0 && (
@@ -144,7 +144,6 @@ const CommentPost = (data) => {
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
-                marginBottom: 10,
               }}
             >
               {props.personTags.map((tag) => (
@@ -254,11 +253,39 @@ const CommentPost = (data) => {
                 console.log(`${props.author}'s post liked`)
               }}
             />
+            <Button
+              containerStyle={{
+                borderRadius: 50,
+              }}
+              buttonStyle={{
+                backgroundColor: '#fff',
+                borderRadius: 5,
+                height: 30,
+                width: 50
+              }}
+              icon={{
+                name: 'comment',
+                type: 'material-community',
+                color: '#aaa',
+                size: 15,
+              }}
+              title={comments}
+              titleStyle={{
+                fontSize: 10,
+                color: '#aaa',
+              }}
+              onPress={() => Navegation.navigate("CommentPage", { props: props })}
+            />
           </View>
         </View>
       </View>
+      <Divider
+        color='black'
+        inset={true}
+        width={1}
+      />
     </View>
   )
 }
 
-export default CommentPost
+export default Review

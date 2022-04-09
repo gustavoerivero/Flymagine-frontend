@@ -126,7 +126,7 @@ const SearchPage = () => {
         </View>
 
         <View>
-          <ScrollView scrollEventThrottle={16}>
+          <ScrollView scrollEventThrottle={16} showsVerticalScrollIndicator={false}>
             {search.length === 0 ? (
               <View>
                 <View
@@ -200,26 +200,14 @@ const SearchPage = () => {
 
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", width: "95%", alignItems: 'center',}} >
                   <View style={{flex:1}}>
-                  <Text style={{ flex:1, color: "black", fontSize: 25, fontWeight: "700", paddingLeft: 10, }} > Porque leiste: </Text>
-                  <Text style={{ flex:1, color: "black", fontSize: 18, fontWeight: "500", paddingLeft: 10, fontStyle: 'italic'}} > Cocina facil con Elmo. </Text>
-                  </View>
-                  
-                  <Button
-                    icon={<FontAwesome name="plus" color={"black"} size={20} />}
-                    buttonStyle={styles.button}
-                    containerStyle={{ borderRadius: 50 }}
-                    type="clear"
-                  />
+                    <Text style={{ flex:1, color: "black", fontSize: 25, fontWeight: "700", paddingLeft: 10, }} > Porque leiste: </Text>
+                    <Text style={{ flex:1, color: "black", fontSize: 18, fontWeight: "500", paddingLeft: 10, fontStyle: 'italic'}} > Cocina facil con Elmo. </Text>
+                  </View> 
+                  <Button icon={<FontAwesome name="plus" color={"black"} size={20} />} buttonStyle={styles.button} containerStyle={{ borderRadius: 50 }} type="clear" />
                 </View>
-
                 <View style={{ height: 130, marginTop: 20, marginBottom: 20}}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {category?.map((category) => (
-                      <Category name={category.name} image={category.image} />
-                    ))}
+                  <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                    {category?.map((category) => ( <Category name={category.name} image={category.image} /> ))}
                   </ScrollView>
                 </View>
 

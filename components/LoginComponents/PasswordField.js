@@ -10,9 +10,18 @@ import PasswordValidator from '../../utilities/PasswordValidator'
 
 import styles from './styled-components/login-styles'
 
-const PasswordField = ({ name, value, setValues }) => {
+const PasswordField = ({ name, value, setValues, setIsValid }) => {
 
   const [show, setShow] = useState(false)
+
+  const valid = () => {
+    if (PasswordValidator(value)) {
+      setIsValid(true)
+    } else {
+      setIsValid(false)
+    }
+    console.log(PasswordValidator(value))
+  }
 
   return (
       <View style={styles.item}>
@@ -22,7 +31,10 @@ const PasswordField = ({ name, value, setValues }) => {
           underlineColorAndroid={'transparent'}
           autoCapitalize='none'
           secureTextEntry={show ? false : true}
-          onChangeText={(text) => setValues(text)}
+          onChangeText={(text) => {
+            valid()
+            setValues(text)
+          }}
           containerStyle={styles.input}
           inputStyle={styles.label}
           rightIcon={

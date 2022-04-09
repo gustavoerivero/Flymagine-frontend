@@ -3,13 +3,11 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
+  Modal,
   ScrollView,
 } from 'react-native'
 
 import { Button } from 'react-native-elements'
-
-import ModalDropdown from 'react-native-modal-dropdown';
 
 import Notification from '../components/Notification'
 import dataNotifications from '../utilities/data/notifications'
@@ -43,11 +41,11 @@ const NotificationsPage = () => {
         </Text>
       </View>
       <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-        <Button
+        {/**<Button
           buttonStyle={styles.button}
           icon={<FontAwesome name="eye" size={15} color="black" />}
           onPress={() => read(notifications)}
-        />
+  />*/}
         <Button
           buttonStyle={styles.button}
           icon={<FontAwesome name="trash" size={15} color="black" />}
@@ -61,6 +59,7 @@ const NotificationsPage = () => {
           visible={modalVisible}
           setVisible={setModalVisible}
           setChoice={setChoiceSelected}
+          cancelButton={true}
           content='¿Seguro que desea eliminar la bandeja de entrada?'
         />
       </View>
@@ -90,7 +89,8 @@ const styles = StyleSheet.create({
     borderRadius: 200,
     width: '100%',
     maxWidth: 250,
-    marginLeft: .01,
+    marginTop: 5,
+    marginBottom: 5,
   },
   container: {
     display: 'flex',

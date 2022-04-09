@@ -6,11 +6,12 @@ import {
     Image,
     ImageBackground,
     ScrollView,
-    Modal
+    Modal,
+    TouchableOpacity
 } from 'react-native'
 
 import {
-    Button, CheckBox, Icon, Input, Tab, TabView
+    Button, CheckBox, Icon,
 } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
@@ -21,10 +22,12 @@ import { Entypo } from '@expo/vector-icons';
 
 import { handleChange } from '../utils/functions'
 
-import stylesReaderUserProfile from '../components/styled-components/stylesReaderUserProfile'
+import stylesProfile from '../components/styled-components/stylesProfile'
 import TextField from '../components/TextField'
 import EmailField from '../components/EmailField'
 import PasswordFieldUser from '../components/PasswordFieldUser'
+import Dialog from '../components/Dialog'
+import WritterUserProfile from '../pages/WritterUserProfile'
 
 const EditReaderUserProfile = () => {
 
@@ -42,7 +45,8 @@ const EditReaderUserProfile = () => {
     })
     const [index, setIndex] = React.useState(0);
 
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false)
+    const [choiceSelected, setChoiceSelected] = useState(false)
 
     const Navegation = useNavigation()
 
@@ -53,29 +57,31 @@ const EditReaderUserProfile = () => {
 
     return (
         <ScrollView>
-            <View style={stylesReaderUserProfile.container}>
-                <Button
-                    buttonStyle={styles.button}
-                    icon={
-                        <ImageBackground
-                            source={Profile}
-                            style={styles.image}
-                        >
-                            <Icon
-                                type='ionicon'
-                                name='camera'
-                                color='#C4C4C4'
-                                size={30}
-                                containerStyle={styles.containerIcon}
-                            />
-                        </ImageBackground>
-                    }
-                />
+            <View style={stylesProfile.container}>
+                    <TouchableOpacity
+                        activeOpacity={0.85}
+                        style={styles.button}
+                    >
+                    <ImageBackground
+                        source={Profile}
+                        style={styles.image}
+                    >
+                        <Icon
+                            type='ionicon'
+                            name='camera'
+                            color='#C4C4C4'
+                            size={30}
+                            containerStyle={styles.containerIcon}
+                        />
+                    </ImageBackground>
+                    </TouchableOpacity>
                 <View style={{ backgroundColor: 'white', height: '100%', paddingTop: 10 }}>
                     <View style={styles.data}>
                         <Text style={styles.text}>
                             Datos básicos
                         </Text>
+                        <TouchableOpacity>
+                        </TouchableOpacity>
                         <TextField
                             name='Nombre'
                             setText={(text) => _handleChange("firstName", text)}
@@ -155,33 +161,15 @@ const EditReaderUserProfile = () => {
                         buttonStyle={styles.saveButton}
                         onPress={() => setModalVisible(true)}
                     />
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(!modalVisible)
-                        }}
-                    >
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>¿Seguro que desea cambiar los datos?
-                                </Text>
-                                <View style={styles.buttonContainer}>
-                                    <Button
-                                        title='Aceptar'
-                                        buttonStyle={styles.modalButton}
-                                        onPress={() => Navegation.navigate("Profile")}
-                                    />
-                                    <Button
-                                        title='Cancelar'
-                                        buttonStyle={styles.modalButton2}
-                                        onPress={() => setModalVisible(false)}
-                                    />
-                                </View>
-                            </View>
-                        </View>
-                    </Modal>
+                    <Dialog
+                    visible={modalVisible}
+                    setVisible={setModalVisible}
+                    setChoice={setChoiceSelected}
+                    cancelButton={true}
+                    content='¿Estás seguro que desea guardar los cambios realizados en su perfil?'
+                    toNavigate='WritterUserProfile'>
+                    
+                    </Dialog>
                 </View>
             </View>
         </ScrollView>

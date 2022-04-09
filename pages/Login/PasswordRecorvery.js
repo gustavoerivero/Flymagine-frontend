@@ -22,6 +22,9 @@ const PasswordRecovery = () => {
   const [modalVisible, setModalVisible] = useState(false)
   const [choiceSelected, setChoiceSelected] = useState(false)
 
+  const [message, setMessage] = useState('')
+  const [valid, setValid] = useState(false)
+
   return (
     <ImageBackground
       style={styles.imageBackground}
@@ -37,6 +40,7 @@ const PasswordRecovery = () => {
         name='Correo electrónico'
         value={email}
         setValues={setEmail}
+        setIsValid={(value) => setValid(value)}
       />
       <View
         style={styles.buttonContainer}
@@ -45,13 +49,23 @@ const PasswordRecovery = () => {
           visible={modalVisible}
           setVisible={setModalVisible}
           setChoice={setChoiceSelected}
-          content='Se ha enviado un correo electrónico a la dirección proporcionada con las instrucciones para recuperar su contraseña.'
-          toNavigate='PasswordRecovery2'
+          content={message}
+          toNavigate={
+            valid ? 'PasswordRecovery2' : null
+          }
         />
         <Button
           title='Recuperar contraseña'
           buttonStyle={styles.button}
-          onPress={() => setModalVisible(true)}
+          onPress={() => {
+            if (valid) {
+              setMessage('Se ha enviado un correo electrónico a la dirección proporcionada con las instrucciones para recuperar su contraseña.')
+              setModalVisible(true)
+            } else {
+              setMessage('Por favor, ingrese una dirección de correo electrónico válida.')
+              setModalVisible(true)
+            }
+          }}
         />
       </View>
     </ImageBackground>

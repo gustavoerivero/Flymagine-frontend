@@ -1,5 +1,6 @@
 import * as ImagePicker from 'expo-image-picker'
-import { Platform } from 'react-native';
+import { Platform } from 'react-native'
+import RegExp from '../utilities/RegEx';
 
 const handleChange = (data, setData, item, e) => {
 	let updatedValue = {};
@@ -31,7 +32,7 @@ const pickImage = async () => {
 	let result = await ImagePicker.launchImageLibraryAsync({
 		mediaTypes: ImagePicker.MediaTypeOptions.All,
 		allowsEditing: true,
-		aspect: [4, 3],
+		aspect: [1, 1],
 		quality: 1
 	}).catch(error => {
 		console.log(`Error: ${error}`)
@@ -42,9 +43,22 @@ const pickImage = async () => {
 	}
 }
 
+const deleteValue = (data, setData, item) => {
+	setData(data => ({
+		...data,
+		[item]: ''
+	}))
+}
+
+const phoneValidator = (phone) => {
+	return RegExp.regPhone.test(phone) ? true : false
+}
+
 module.exports = {
 	handleChange,
 	previousFourteenHours,
 	permisionFunction,
-	pickImage
+	deleteValue,
+	pickImage,
+	phoneValidator
 }
