@@ -1,11 +1,13 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Image, Button } from "react-native-elements";
-import Navegation from "../../Navegation";
-import Book from "../../pages/MyBook";
+import Book from "../../pages/Book";
 import { useNavigation } from '@react-navigation/native';
 
 const TrendingBooks = ({ title, autor, imageCover }) => {
+  
+  const Navegation = useNavigation()
+
   return (
     <View style={styles.card}>
       <Button
