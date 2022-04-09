@@ -23,10 +23,16 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FontAwesome } from '@expo/vector-icons';
 
+import {
+    handleChange
+} from '../utils/functions'
 
 import stylesProfile from '../components/styled-components/stylesProfile'
 import EditBook from './EditBook'
 import Dialog from '../components/Dialog'
+import ListReview from '../components/ListReview'
+import dataReviews from '../utilities/data/reviews'
+
 
 const BookProfile = () => {
 
@@ -41,8 +47,12 @@ const BookProfile = () => {
     const [modalVisible, setModalVisible] = useState(false)
     const [choiceSelected, setChoiceSelected] = useState(false)
 
+    const [reviews, setReviews] = useState(dataReviews)
+    const _handleChange = (item, value) => handleChange(reviews, setReviews, item, value)
+    const [data, setData] = useState([])
+
     return (
-        <View style={[stylesProfile.container,  {paddingTop: 30,}]}>
+        <View style={[stylesProfile.container, { paddingTop: 30, }]}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Image
                     source={BookImage}
@@ -163,6 +173,18 @@ const BookProfile = () => {
 
             <TabView>
                 <TabView.Item style={{ backgroundColor: '#C4C4C4', width: '100%' }}>
+                    {reviews?.map((myReview) => (
+                        <ListReview
+                            key={myReview.id}
+                            author={myReview.owner.firstName + ' ' + myReview.owner.lastName}
+                            avatar={myReview.owner.picture}
+                            description={myReview.text}
+                            date={myReview.publishDate}
+                            likes={myReview.likes}
+                            comments={myReview.comments}
+                        />
+                    ))}
+
                 </TabView.Item>
             </TabView>
             <Dialog

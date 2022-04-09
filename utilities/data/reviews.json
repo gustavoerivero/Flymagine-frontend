@@ -1,0 +1,30 @@
+[
+    {
+        "id": "60d21bf91241241rc10e9c",
+        "text": "Me gustó mucho el libro, tiene un gran ambiente y desarrollo de personajes",
+        "publishDate": "2022-04-09T13:45:55.297Z",
+        "likes": 4,
+        "comments": [],
+        "owner": {
+            "id": "60d0fe4f5311236168a10a0b",
+            "title": "mr",
+            "firstName": "Adam",
+            "lastName": "Meddler",
+            "picture": "https://randomuser.me/api/portraits/med/men/1.jpg"
+        }
+    },
+    {
+        "id": "60d21bf967dhouiu8992e610e9c",
+        "text": "No quedé muy satisfecha con el final, pudo haber sido algo mejor",
+        "publishDate": "2022-04-09T14:10:55.297Z",
+        "likes": 0,
+        "comments": [],
+        "owner": {
+          "id": "60d0fe4f5311236168a10a0b",
+          "title": "miss",
+          "firstName": "Rebbeca",
+          "lastName": "Baden",
+          "picture": "https://randomuser.me/api/portraits/med/women/3.jpg"
+        }
+    }
+]
