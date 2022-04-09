@@ -11,6 +11,11 @@ import { Button } from 'react-native-elements'
 
 import { FontAwesome } from '@expo/vector-icons';
 
+import { useNavigation } from '@react-navigation/native';
+import ReaderUserProfile from '../pages/ReaderUserProfile';
+import Book from '../pages/Book';
+
+
 import {
     parseDate,
     parseTime,
@@ -19,12 +24,18 @@ import { clickProps } from 'react-native-web/dist/cjs/modules/forwardedProps'
 
 const Notification = (props) => {
 
+    const Navegation = useNavigation()
+    const [page, setPage] = useState(props.page)
     const [read, setRead] = useState(props.check)
 
     return (
         <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => setRead('true')}>
+            onPress={() => {setRead('true')
+            if (page==='profile')
+            Navegation.navigate(ReaderUserProfile)
+            if (page==='profileBook')
+            Navegation.navigate(Book)}}>
             <View style={styles.container}>
                 <View style={styles.photoContainer}>
                     <Image

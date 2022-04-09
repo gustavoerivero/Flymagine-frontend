@@ -9,7 +9,8 @@
       "picture": "https://randomuser.me/api/portraits/men/22.jpg"
     },
     "text": "te ha empezado a seguir",
-    "check": "false"
+    "check": "false",
+    "page" : "profile"
   },
   {
     "id": "2412bn1h24135274m12",
@@ -21,7 +22,8 @@
       "picture": "https://randomuser.me/api/portraits/women/22.jpg"
     },
     "text": "le ha gustado tu publicación",
-    "check": "false"
+    "check": "false",
+    "page" : "null"
   },
   {
     "id": "2412bn1g444135274m12",
@@ -33,7 +35,8 @@
       "picture": "https://randomuser.me/api/portraits/women/22.jpg"
     },
     "text": "ha comentado tu publicación",
-    "check": "false"
+    "check": "false",
+    "page" : "null"
   },
   {
     "id": "2412bn1h24135274nn",
@@ -45,6 +48,8 @@
       "picture": "https://randomuser.me/api/portraits/men/10.jpg"
     },
     "text": "ha subido un nuevo libro",
-    "check": "false"
+    "check": "false",
+    "page" : "profileBook"
+
   }
 ]
