@@ -24,9 +24,9 @@ const EmailField = ({ name, value, setValues, setIsValid }) => {
         placeholderTextColor='#ccc'
         underlineColorAndroid={'transparent'}
         autoCapitalize='none'
-        onChangeText={(text) => {
-          setValues(text)
+        onChangeText={(text) => {          
           valid()
+          setValues(text)
         }}
         containerStyle={styles.input}
         inputStyle={styles.label}       
