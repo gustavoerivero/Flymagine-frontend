@@ -9,7 +9,11 @@ import {
 import { Divider } from '@rneui/themed'
 
 import styles from './styled-components/styles'
-import { Button, Image } from 'react-native-elements'
+import { 
+  Button, 
+  Image,
+  AirbnbRating,
+} from 'react-native-elements'
 
 import { Chip } from 'react-native-paper'
 
@@ -88,12 +92,12 @@ const Review = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Edit ${props.author}'s post`)
+                    console.log(`Edit ${props.author}'s review`)
                     setEditVisible(true)
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer editar esta publicación?'
+                  content='¿Está seguro de querer editar esta review?'
                   visible={editVisible}
                   setVisible={setEditVisible}
                   setChoice={setEditChoice}
@@ -111,12 +115,12 @@ const Review = (props) => {
                   }}
                   type='clear'
                   onPress={() => {
-                    console.log(`Delete ${props.author}'s post`)
+                    console.log(`Delete ${props.author}'s review`)
                     setDeleteVisible(true)
                   }}
                 />
                 <Dialog
-                  content='¿Está seguro de querer eliminar esta publicación?'
+                  content='¿Está seguro de querer eliminar esta review?'
                   visible={deleteVisible}
                   setVisible={setDeleteVisible}
                   setChoice={setDeleteChoice}
@@ -127,62 +131,6 @@ const Review = (props) => {
           </View>
 
         </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            marginBottom: 10,
-          }}
-        >
-          {props.personTags.length > 0 && (
-            <View
-              style={{
-                marginLeft: 10,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-              }}
-            >
-              {props.personTags.map((tag) => (
-                <Chip
-                  key={tag.id}
-                  type='outlined'
-                  avatar={
-                    <Image
-                      source={{
-                        uri: tag.picture,
-                      }}
-                      style={{
-                        height: 15,
-                        width: 15,
-                      }}
-                    />
-                  }
-                  onPress={() => {
-                    console.log(`${tag.firstName} ${tag.lastName}'s profile`)
-                  }}
-                  style={{
-                    marginRight: 5,
-                    height: 20,
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(200, 90, 235, .5)',
-                  }}
-                  textStyle={{
-                    fontSize: 10,
-                    fontWeight: 'bold',
-                    color: '#fff',
-                  }}
-
-                >
-                  {tag.firstName + ' ' + tag.lastName}
-                </Chip>
-              ))}
-            </View>
-          )}
-        </View>
         <View style={styles.descriptionContainer}>
           <Text
             style={styles.content}
@@ -190,40 +138,26 @@ const Review = (props) => {
             {props.description}
           </Text>
         </View>
-        <View>
-          {props.image !== "" && (
-            <Image
-              source={{
-                uri: props.image
-              }}
-              style={styles.image}
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            marginLeft: 10,
+            marginBottom: 10,
+          }}
+        >
+          {props.rating && (
+            <AirbnbRating
+              count={5}
+              defaultRating={props.rating}
+              size={15}
+              showRating={false}
+              isDisabled={true}
             />
           )}
         </View>
         <View>
-          <Divider />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            {props.tags.map((tag, index) => (
-              <Chip
-                key={index}
-                style={{
-                  margin: 2,
-                }}
-                onPress={() => {
-                  console.log(`Tag ${tag}`)
-                }}
-              >
-                {tag}
-              </Chip>
-            ))}
-          </View>
           <Divider />
           <View style={styles.actionsContainer}>
             <Button
