@@ -25,12 +25,16 @@ const Notification = (props) => {
     const Navegation = useNavigation()
     const [read, setRead] = useState(props.check)
     const [page, setPage] = useState(props.page)
+    
 
     return (
         <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => { setRead(true)
-             console.log(props.page)}}>
+             if(page==='profile')
+             Navegation.navigate(ReaderUserProfile)
+             if(page==='profileBook')
+             Navegation.navigate(Book)}}>
             <View style={styles.container}>
                 <View style={styles.photoContainer}>
                     <Image
