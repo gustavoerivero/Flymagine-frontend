@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     Image,
+    ScrollView,
     TouchableOpacity,
 } from 'react-native'
 
@@ -23,6 +24,9 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { FontAwesome } from '@expo/vector-icons'
 
+import Review from '../components/Post/Review'
+import dataReviews from '../utilities/data/reviews'
+
 
 import stylesProfile from '../components/styled-components/stylesProfile'
 
@@ -37,6 +41,10 @@ const Book = () => {
     const [shouldShow3, setShouldShow3] = useState(true)
     const [shouldShow4, setShouldShow4] = useState(false)
     const [show, setShow] = useState(true)
+
+    const [signIn, setSignIn] = useState('Adam Meddler')
+
+    const [reviews, setReviews] = useState(dataReviews || [])
 
     return (
         <View style={[stylesProfile.container,  {paddingTop: 30,}]}>
@@ -155,8 +163,40 @@ const Book = () => {
             </Tab>
 
             <TabView>
-                <TabView.Item style={{ backgroundColor: '#C4C4C4', width: '100%' }}>
-                </TabView.Item>
+            <TabView.Item style={{ backgroundColor: '#fff', width: '100%' }}>
+          <ScrollView>
+            {reviews.length > 0 && reviews ? reviews?.map((review, id) => (
+              <Review
+                key={review.id}
+                signIn={signIn}
+                author={review.owner.firstName + ' ' + review.owner.lastName}
+                avatar={review.owner.picture}
+                image={review.image}
+                description={review.text}
+                date={review.publishDate}
+                likes={review.likes}
+                comments={review.comments}
+                tags={review.tags}
+                personTags={review.personTags}
+                id={id}
+                rating={review.rating}
+                posts={reviews}
+                setPosts={setReviews}
+              />
+            )) :
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: 'rgba(110, 45, 220, .5)',
+                  textAlign: 'center',
+                  marginVertical: 10,
+                }}
+              >
+                No hay reviews disponibles en este momento...
+              </Text>
+            }
+          </ScrollView>
+        </TabView.Item>
             </TabView>
         </View>
     )

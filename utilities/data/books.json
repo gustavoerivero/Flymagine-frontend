@@ -8,5 +8,35 @@
         "tags":[],
         "rating": "4"
       }
+    },
+    {
+      "id": "dsajfalkdjfflkm",
+      "book": {
+        "id": "ldfasdfñvñ233sadf2f",
+        "name": "Harry Potter: La Piedra Filosofal",
+        "picture": "https://static.wixstatic.com/media/133080_1eff8425790440ea8e9a7d781454e399~mv2.jpg/v1/fill/w_401,h_600,al_c,q_90/133080_1eff8425790440ea8e9a7d781454e399~mv2.jpg",
+        "tags":[],
+        "rating": "5"
+      }
+    },
+    {
+      "id": "df25g5h110j4tt",
+      "book": {
+        "id": "sad225ddaee44400",
+        "name": "Amor en tiempos de Covid",
+        "picture": "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/lead-1586822345.jpg",
+        "tags":[],
+        "rating": "5"
+      }
+    },
+    {
+      "id": "dfadfsdfadfa",
+      "book": {
+        "id": "sadfasdfsaa21212",
+        "name": "Querido Death Note: Perdido en el Avila",
+        "picture": "https://scontent-mia3-1.xx.fbcdn.net/v/t31.18172-8/11741209_10207468077165098_6391764828211030434_o.jpg?_nc_cat=104&ccb=1-5&_nc_sid=cdbe9c&_nc_ohc=Ty174j3xcNgAX86bL1p&_nc_oc=AQnC1CWmhCvx5YUG6pZpPXIIcRf5-EbtNFvRkGJjEAXj_RARJmVGv7jQ80dYOrXwX3M&_nc_ht=scontent-mia3-1.xx&oh=00_AT-fU_2xNpSFiaLNJujG84vOxiN28ybymtav6d9T8m5uBQ&oe=6276DE30",
+        "tags":[],
+        "rating": "5"
+      }
     }
 ]
