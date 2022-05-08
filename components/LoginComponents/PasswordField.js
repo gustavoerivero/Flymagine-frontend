@@ -6,7 +6,7 @@ import {
   Button
 } from 'react-native-elements'
 
-import PasswordValidator from '../../utilities/PasswordValidator'
+import { passwordValidator } from '../../utils/functions'
 
 import styles from './styled-components/login-styles'
 
@@ -15,12 +15,12 @@ const PasswordField = ({ name, value, setValues, setIsValid }) => {
   const [show, setShow] = useState(false)
 
   const valid = () => {
-    if (PasswordValidator(value)) {
+    if (passwordValidator(value)) {
       setIsValid(true)
     } else {
       setIsValid(false)
     }
-    console.log(PasswordValidator(value))
+    console.log(passwordValidator(value))
   }
 
   return (
@@ -51,7 +51,7 @@ const PasswordField = ({ name, value, setValues, setIsValid }) => {
             />
           }          
           errorMessage={
-            value.length === 0 || PasswordValidator(value) ? null  : 'Ingrese una contraseña válida'
+            value.length === 0 || passwordValidator(value) ? null  : 'Ingrese una contraseña válida'
           }
           errorStyle={{
             paddingTop: 5,

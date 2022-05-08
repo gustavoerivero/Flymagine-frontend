@@ -6,7 +6,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import LoginScreen from "./pages/Login/LoginForm";
+import LoginScreen from "./pages/Login/LoginPage";
 import RegisterScreen from "./pages/Login/RegisterForm";
 import PasswordRecoveryScreen from "./pages/Login/PasswordRecorvery";
 import PasswordRecoveryStep2Screen from "./pages/Login/PasswordRecoveryStep2";

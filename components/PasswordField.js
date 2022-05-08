@@ -6,7 +6,7 @@ import {
   Button
 } from 'react-native-elements'
 
-import PasswordValidator from '../utilities/PasswordValidator'
+import { passwordValidator } from '../utils/functions'
 
 import styles from './styled-components/styles'
 
@@ -39,7 +39,7 @@ const PasswordField = ({ name, value, setValues }) => {
           />
         }
         errorMessage={
-          value.length === 0 || PasswordValidator(value) ? null : 'Ingrese una contraseña válida'
+          value.length === 0 || passwordValidator(value) ? null : 'Ingrese una contraseña válida'
         }
         errorStyle={{
           paddingTop: 5,
