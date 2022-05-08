@@ -8,6 +8,9 @@ import {
   Image,
 } from 'react-native-elements'
 
+//Colors
+import COLORS from './styled-components/Colors'
+
 import FlymagineIcon from '../assets/favicon.png'
 
 const TopBar = ({ reload }) => {
@@ -43,11 +46,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 75,
     width: '100%',
-    backgroundColor: 'rgba(134, 48, 197, 1)',
-    borderBottomColor: 'rgba(134, 48, 197, .75)',
+    backgroundColor: COLORS.primary,
     borderBottomWidth: 1,
-    shadowColor: 'rgba(134, 48, 197, .5)',
-    shadowOpacity: 1,
+    shadowColor: COLORS.gray5,
+    shadowOpacity: 0.75,
     shadowOffset: {
       width: 0,
       height: 5,

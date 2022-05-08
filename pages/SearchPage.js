@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 
 import { Image, Input, Button } from "react-native-elements";
@@ -9,13 +9,15 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 import FlymagineIcon from "../assets/favicon.png";
 import { SearchBar } from "@rneui/themed";
-import Category from "../components/SearchComponents/Category";
-import TrendingBooks from "../components/SearchComponents/TrendingBooks";
+import MiniCard from "../components/SearchComponents/MiniCard";
+import BooksCard from "../components/SearchComponents/BooksCard";
 
 import ListSearchBook from "../components/ListSearchBook";
 import dataBooks from "../utilities/data/books";
 import dataCategory from "../utilities/data/category";
 import dataTrending from "../utilities/data/trendingBooks";
+import { useNavigation } from "@react-navigation/native";
+
 
 const SearchPage = () => {
   const [search, setSearch] = useState("");
@@ -29,9 +31,18 @@ const SearchPage = () => {
 
   const [trend, setTrend] = useState(dataTrending);
 
+  const nav = useNavigation();
+
+  useEffect(()=>{
+    nav.setOptions({
+      fontSize:40,
+      color: 'blue',
+    }
+    )
+  }, [nav])
+
   return (
     <View style={styles.container}>
-      <View style={styles.statusbar}></View>
       <KeyboardAwareScrollView>
         <View style={styles.header}>
           <View style={{ flex: 1, flexDirection: "row" }}>
@@ -110,7 +121,7 @@ const SearchPage = () => {
                     showsHorizontalScrollIndicator={false}
                   >
                     {category?.map((category) => (
-                      <Category name={category.name} image={category.image} />
+                      <MiniCard name={category.name} image={category.image} />
                     ))}
                   </ScrollView>
                 </View>
@@ -137,7 +148,7 @@ const SearchPage = () => {
 
                 <View>
                   {trend?.map((trend) => (
-                    <TrendingBooks
+                    <BooksCard
                       imageCover={trend.image}
                       title={trend.title}
                       autor={trend.autor}
@@ -194,7 +205,7 @@ const SearchPage = () => {
                     showsHorizontalScrollIndicator={false}
                   >
                     {category?.map((category) => (
-                      <Category name={category.name} image={category.image} />
+                      <MiniCard name={category.name} image={category.image} />
                     ))}
                   </ScrollView>
                 </View>

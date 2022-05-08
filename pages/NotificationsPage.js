@@ -31,11 +31,12 @@ const NotificationsPage = () => {
 
   const _handleChange = (item, value) => handleChange(notifications, setNotifications, item, value)
 
+  if (choiceSelected==false){
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text 
-          style={styles.headerText}          
+        <Text
+          style={styles.headerText}
         >
           Notificaciones
         </Text>
@@ -51,8 +52,7 @@ const NotificationsPage = () => {
           icon={<FontAwesome name="trash" size={15} color="black" />}
           onPress={() => {
             setModalVisible(true)
-            if (choiceSelected)
-              setShouldShow(false)
+
           }}
         />
         <Dialog
@@ -79,7 +79,32 @@ const NotificationsPage = () => {
         </ScrollView>
       ) : false}
     </View>
-  )
+  )}
+  if (choiceSelected==true){
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text
+            style={styles.headerText}
+          >
+            Notificaciones
+          </Text>
+        </View>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          {/**<Button
+            buttonStyle={styles.button}
+            icon={<FontAwesome name="eye" size={15} color="black" />}
+            onPress={() => read(notifications)}
+    />*/}
+          <Button
+            buttonStyle={styles.button}
+            icon={<FontAwesome name="trash" size={15} color="black" />}
+          />
+        </View>
+          <ScrollView>
+          </ScrollView>
+      </View>
+    )}
 }
 
 const styles = StyleSheet.create({
@@ -119,7 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'rgba(90, 85, 220, 1)',
-    
+
   },
 })
 
