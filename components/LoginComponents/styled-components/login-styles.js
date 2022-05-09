@@ -8,13 +8,14 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
     borderWidth: 1,
     borderRadius: 5,
-    backgroundColor: 'rgba(40, 10, 57, .5)',
+    backgroundColor: 'rgba(40, 10, 57, .25)',
     margin: 8,
     padding: 8,
     width: '95%',
   },
   input: {
     height: 50,
+    backgroundColor: 'rgba(40, 10, 57, .25)',
   },
   label: {
     color: 'white'

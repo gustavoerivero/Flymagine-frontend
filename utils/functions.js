@@ -51,6 +51,14 @@ const deleteValue = (data, setData, item) => {
 	}))
 }
 
+const emailValidator = (email) => {
+	return RegExp.regEmail.test(email) ? true : false
+}
+
+const passwordValidator = (password) => {
+	return RegExp.regPassword.test(password) ? true : false
+}
+
 const phoneValidator = (phone) => {
 	return RegExp.regPhone.test(phone) ? true : false
 }
@@ -82,6 +90,8 @@ module.exports = {
 	permisionFunction,
 	deleteValue,
 	pickImage,
+	emailValidator,
+	passwordValidator,
 	phoneValidator,
 	selectOneFile,
 }

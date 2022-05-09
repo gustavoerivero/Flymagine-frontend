@@ -73,6 +73,7 @@ const NotificationsPage = () => {
               date={notification.notificationDate}
               text={notification.text}
               check={notification.check}
+              page={notification.page}
             />
           ))}
         </ScrollView>

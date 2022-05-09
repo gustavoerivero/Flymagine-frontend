@@ -11,7 +11,7 @@ import {
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import TobBar from './TopBar'
+import ToPBar from './TopBar'
 
 const Container = ({ children }) => {
 
@@ -20,7 +20,7 @@ const Container = ({ children }) => {
 
   return (
     <ScrollView>
-      <TobBar
+      <ToPBar
         reload={reload}
       />
       <View

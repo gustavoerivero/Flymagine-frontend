@@ -6,10 +6,12 @@ import {
   Text,
 } from 'react-native'
 
+//Components
+import StatusBar from "../components/StatusBar";
 import Container from '../components/Container'
-
 import Post from '../components/Post/Post'
 
+//Data
 import dataPosts from '../utilities/data/posts'
 
 const HomeView = ({ params }) => {
@@ -20,7 +22,7 @@ const HomeView = ({ params }) => {
 
   return (
     <Container>
-
+ <StatusBar />
       <ScrollView>
         {posts.length > 0 && posts ? posts?.map((post, id) => (
           <Post

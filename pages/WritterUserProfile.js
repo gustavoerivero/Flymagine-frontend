@@ -34,7 +34,7 @@ const WritterUserProfile = () => {
   const [index, setIndex] = React.useState(0);
 
   const Navegation = useNavigation()
-
+  
   return (
     <View style={[stylesProfile.container, {paddingTop: 50,}]}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
