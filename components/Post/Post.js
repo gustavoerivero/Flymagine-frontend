@@ -25,7 +25,7 @@ import {
 import { useNavigation } from '@react-navigation/native'
 import Dialog from '../Dialog'
 
-const Post = (props) => {
+const  Post = (props) => {
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(props.likes)
