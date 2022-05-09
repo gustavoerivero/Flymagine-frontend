@@ -33,7 +33,7 @@ import Flymagine from '../../assets/adaptive-icon.png'
 import StyledField from '../../components/LoginComponents/StyledField'
 
 import {
-  loginDefaultValues,
+  loginDefaultvalue,
   loginSchema,
 } from '../../utils/formValidations/loginFormValidations'
 import {
@@ -45,7 +45,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import useCustomToast from '../../hooks/useCustomToast'
 import useLoaging from '../../hooks/useLoading'
 import { authAPI } from '../../services/authAPI'
-import useAuthContext from '../../context/AuthContext'
+import useAuthContext from '../../hooks/useAuthContext'
 
 const LoginForm = () => {
 
@@ -61,13 +61,13 @@ const LoginForm = () => {
   } = useForm({
     mode: 'onChange',
     resolver: yupResolver(loginSchema),
-    defaultValues: loginDefaultValues,
+    defaultvalue: loginDefaultvalue,
   })
 
-  const onSubmit = async (values) => {
+  const onSubmit = async (value) => {
     startLoading()
     try {
-      const response = await authAPI.login(values)
+      const response = await authAPI.login(value)
       const token = response?.data?.token
 
       if (token) {
@@ -76,13 +76,13 @@ const LoginForm = () => {
           type: 'LOGIN',
           payload: {
             user: {
-              email: values.email,
-              id: values.id,
+              email: value.email,
+              id: value.id,
             },
           },
         })
       }
-      reset(loginDefaultValues)
+      reset(loginDefaultvalue)
     } catch (error) {
       console.log(error?.response?.data)
       showErrorToast('Error al iniciar sesión')
@@ -94,11 +94,6 @@ const LoginForm = () => {
 
   const [show, setShow] = useState(false)
 
-  const initialValues = {
-    email: '',
-    password: ''
-  }
-
   const [message, setMessage] = useState('')
 
   const [modalVisible, setModalVisible] = useState(false)
@@ -108,7 +103,6 @@ const LoginForm = () => {
     <View style={styles.container} >
       <Box
         alignItems='center'
-
         rounded='lg'
         bg='rgba(224, 218, 227, 1)'
         opacity={0.8}
@@ -128,136 +122,137 @@ const LoginForm = () => {
           }}
           resizeMode='contain'
         />
-        <Formik
-          initialValues={initialValues}
-          onSubmit={(values, actions) => {
-            console.log(values)
-          }}
-        >
-          {({ handleChange, values, handleSubmit }) => (
-            <>
-              <VStack alignItems='center' space={4} mt={8}>
-                <FormControl
-                  isRequired
-                  isInvalid={
-                    !emailValidator(values.email) && values.email !== ''
+        <VStack alignItems='center' space={4} mt={8}>
+          <Controller
+            name='email'
+            control={control}
+            render={({ field: { onChange, value = '', ...field } }) => (
+              <FormControl
+                isRequired
+                isInvalid={
+                  !emailValidator(value) && value !== ''
+                }
+              >
+                <StyledField
+                  placeholder='Correo electrónico'
+                  onChangeText={onChange}
+                  {...field}
+                  InputLeftElement={
+                    <Icon
+                      as={
+                        <MaterialIcons
+                          name='person'
+                        />
+                      }
+                      size={5}
+                      ml='4'
+                      color='muted.900'
+                    />
                   }
-                >
-                  <StyledField
-                    placeholder='Correo electrónico'
-                    value={values.email}
-                    onChangeText={handleChange('email')}
-                    InputLeftElement={
-                      <Icon
-                        as={
-                          <MaterialIcons
-                            name='person'
-                          />
-                        }
-                        size={5}
-                        ml='4'
-                        color='muted.900'
+                />
+                {emailValidator(value) ? null : (
+                  <FormControl.ErrorMessage
+                    leftIcon={
+                      <WarningOutlineIcon
+                        size='xs'
                       />
                     }
-                  />
-                  {emailValidator(values.email) ? null : (
-                    <FormControl.ErrorMessage
-                      leftIcon={
-                        <WarningOutlineIcon
-                          size='xs'
-                        />
-                      }
-                    >
-                      El correo electrónico no es válido
-                    </FormControl.ErrorMessage>
-                  )}
-                </FormControl>
-                <FormControl
-                  isRequired
-                  isInvalid={
-                    !passwordValidator(values.password) && values.password !== ''
-                  }
-                >
-                  <StyledField
-                    placeholder='Contraseña'
-                    value={values.password}
-                    onChangeText={handleChange('password')}
-                    InputLeftElement={
-                      <Icon as={
-                        <MaterialIcons
-                          name='lock'
-                        />
-                      }
-                        size={5}
-                        ml='4'
-                        color='muted.900'
+                  >
+                    El correo electrónico no es válido
+                  </FormControl.ErrorMessage>
+                )}
+              </FormControl>
+            )}
+          />
+
+          <Controller
+            name='password'
+            control={control}
+            render={({ field: { onChange, value = '',...field } }) => (
+              <FormControl
+                isRequired
+                isInvalid={
+                  !passwordValidator(value) && value !== ''
+                }
+              >
+                <StyledField
+                  placeholder='Contraseña'
+                  {...field}
+                  onChangeText={onChange}
+                  InputLeftElement={
+                    <Icon as={
+                      <MaterialIcons
+                        name='lock'
                       />
                     }
-                    InputRightElement={
-                      <Icon as={
-                        <MaterialIcons
-                          name={show ? 'visibility' : 'visibility-off'}
-                        />
-                      }
-                        size={5}
-                        mr='4'
-                        color={show ? 'purple.900' : 'muted.900'}
-                        onPress={() => setShow(!show)} />
+                      size={5}
+                      ml='4'
+                      color='muted.900'
+                    />
+                  }
+                  InputRightElement={
+                    <Icon as={
+                      <MaterialIcons
+                        name={show ? 'visibility' : 'visibility-off'}
+                      />
                     }
-                    secureTextEntry={!show}
-                  />
-                  {passwordValidator(values.password) ? null : (
-                    <FormControl.ErrorMessage
-                      leftIcon={
-                        <WarningOutlineIcon
-                          size='xs'
-                        />
-                      }
-                    >
-                      La contraseña ingresada no es válida
-                    </FormControl.ErrorMessage>
-                  )}
-                </FormControl>
+                      size={5}
+                      mr='4'
+                      color={show ? 'purple.900' : 'muted.900'}
+                      onPress={() => setShow(!show)} />
+                  }
+                  secureTextEntry={!show}
+                />
+                {passwordValidator(value) ? null : (
+                  <FormControl.ErrorMessage
+                    leftIcon={
+                      <WarningOutlineIcon
+                        size='xs'
+                      />
+                    }
+                  >
+                    La contraseña ingresada no es válida
+                  </FormControl.ErrorMessage>
+                )}
+              </FormControl>
+            )}
+          />
+          <Checkbox colorScheme="purple">
+            <Text style={{ color: 'rgb(14, 0, 20)' }}>
+              Recordar datos de acceso
+            </Text>
+          </Checkbox>
 
-                <Checkbox colorScheme="purple">
-                  <Text style={{ color: 'rgb(14, 0, 20)' }}>
-                    Recordar datos de acceso
-                  </Text>
-                </Checkbox>
-
-                <HStack>
-                  <Button
-                    title='Iniciar sesión'
-                    buttonStyle={styles.button}
-                    onPress={() => {
-                      /**  if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {*/
-                      Navegation.navigate('SignIn', {
-                        email: userData.email,
-                      })
-                      /** } else if (userData.email.length === 0 || userData.passwordHash.length === 0) {
-                        setMessage('Debes ingresar un correo electrónico y una contraseña')
-                        setModalVisible(true)
-                      } else if (!valid.email || !valid.passwordHash) {
-                        console.log(JSON.stringify(valid, null, 2))
-                        setMessage('Debes ingresar un correo electrónico y/o una contraseña válidos')
-                        setModalVisible(true)
-                      } else {
-                        setMessage('Error desconocido')
-                        setModalVisible(true)
-                      }*/
-                      handleSubmit()
-                    }}
-                  />
-                  <Button
-                    title='Registrarse'
-                    buttonStyle={[styles.button, { backgroundColor: 'rgba(187, 103, 220, .75)' }]}
-                    onPress={() => Navegation.navigate('Register')}
-                  />
-                </HStack>
-              </VStack>
-            </>
-          )}
-        </Formik>
+          <HStack>
+            <Button
+              title='Iniciar sesión'
+              buttonStyle={styles.button}
+              onPress={() => {
+                /**  if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {*/
+                Navegation.navigate('SignIn', {
+                  email: 'gustavoerivero12@gmail.com',
+                })
+                /** } else if (userData.email.length === 0 || userData.passwordHash.length === 0) {
+                  setMessage('Debes ingresar un correo electrónico y una contraseña')
+                  setModalVisible(true)
+                } else if (!valid.email || !valid.passwordHash) {
+                  console.log(JSON.stringify(valid, null, 2))
+                  setMessage('Debes ingresar un correo electrónico y/o una contraseña válidos')
+                  setModalVisible(true)
+                } else {
+                  setMessage('Error desconocido')
+                  setModalVisible(true)
+                }*/
+                handleSubmit(onSubmit)
+              }}
+            />
+            <Button
+              title='Registrarse'
+              buttonStyle={[styles.button, { backgroundColor: 'rgba(187, 103, 220, .75)' }]}
+              onPress={() => Navegation.navigate('Register')}
+            />
+          </HStack>
+        </VStack>
 
         <Dialog
           visible={modalVisible}

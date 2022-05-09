@@ -8,7 +8,7 @@ const StyledField = ({ style = {}, ...props }) => {
   return (
     <Input
       style={inputStyle}
-      bgColor='rgba(40, 10, 57, .25)'
+      bgColor='rgba(158, 132, 173, .25)'
       borderColor='grey'
       placeholderTextColor='rgba(40, 10, 57, .5)'
       h={50}
