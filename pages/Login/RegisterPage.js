@@ -3,7 +3,7 @@ import {
   StyleSheet,
   ImageBackground
 } from 'react-native'
-import RegisterForm from '../../components/LoginComponents/RegisterForm'
+import RegisterForm from '../../components/LoginComponents/forms/RegisterForm'
 
 import Bibliothecary from '../../assets/images/Bibliothecary.jpg'
 

@@ -1,35 +1,32 @@
 import React, { useState } from 'react'
-import { handleChange } from '../../utils/functions'
+import { handleChange } from '../../../utils/functions'
 import {
   View,
   StyleSheet,
   ScrollView,
 } from 'react-native'
 
-import { Button } from 'react-native-elements'
-
-import { Card } from '@rneui/themed'
-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import DateDialog from '../DateDialog'
-import Dialog from '../../components/Dialog'
+import DateDialog from '../../DateDialog'
+import Dialog from '../../Dialog'
 import {
   Box,
+  Button,
   Text,
   VStack,
   FormControl,
   Icon,
   WarningOutlineIcon,
   IconButton,
-  Link,
   HStack,
   Divider,
 } from 'native-base'
 import {
-  MaterialIcons
+  MaterialIcons,
+  Entypo,
 } from '@expo/vector-icons'
-import StyledField from './StyledField'
+import StyledField from '../StyledField'
 import {
   Controller,
   useForm,
@@ -40,7 +37,8 @@ import {
   phoneValidator,
   emailValidator,
   passwordValidator,
-} from '../../utils/functions'
+} from '../../../utils/functions'
+import StyledArea from '../StyledArea'
 
 const RegisterForm = () => {
 
@@ -82,7 +80,7 @@ const RegisterForm = () => {
             alignItems='center'
             rounded='lg'
             bg='rgba(224, 218, 227, 1)'
-            opacity={0.8}
+            opacity={0.95}
             shadow={2}
             borderColor='coolGray.300'
             borderWidth={1}
@@ -101,6 +99,17 @@ const RegisterForm = () => {
               >
                 Formulario de Registro
               </Text>
+
+              <Text
+                fontSize={10}
+                color='purple.900'
+                opacity={0.8}
+                textAlign='center'
+              >
+                Por favor, rellene los siguientes campos para registrarse y 
+                formar parte de Flymagine
+              </Text>
+
 
               <Controller
                 name='firstName'
@@ -231,9 +240,12 @@ const RegisterForm = () => {
                     isRequired
                   >
                     <FormControl.Label>Dirección de vivienda</FormControl.Label>
-                    <StyledField
+                    <StyledArea
                       placeholder='Dirección de vivienda'
                       onChangeText={onChange}
+                      minHeight={50}
+                      h={ 50 + 15 * Math.floor((value.length-1)/18) }
+                      mb={4}
                       {...field}
                       InputLeftElement={
                         <Icon
@@ -468,8 +480,8 @@ const RegisterForm = () => {
                 >
                   ¿Lector o escritor?
                 </Text>
-                <HStack 
-                  space={2} 
+                <HStack
+                  space={2}
                   alignContent='flex-start'
                 >
                   <Box
@@ -518,17 +530,24 @@ const RegisterForm = () => {
                         </Text>
                       </Box>
                       <Button
-                        title='¡A leer!'
-                        onPress={() => _handleChange("type", "reader")}
-                        buttonStyle={{
-                          backgroundColor: 'rgba(127, 153, 220, 1)',
-                          borderRadius: 5,
-                          width: '100%',
-                        }}
-                        titleStyle={{
-                          color: 'white'
-                        }}
-                      />
+                        bgColor={userData.type !== 'reader' ? 'rgba(127, 153, 220, .75)' : 'rgba(89, 127, 227, 1)'}
+                        width={110}
+                        justifyContent='center'
+                        onPress={() => _handleChange('type', 'reader')}
+                        rightIcon={
+                          <Icon
+                            as={
+                              <MaterialIcons
+                                name='book'
+                              />
+                            }
+                            size={5}
+                            color={userData.type !== 'reader' ? 'muted.500' : 'muted.900'}
+                          />
+                        }
+                      >
+                        ¡A leer!
+                      </Button>
                     </VStack>
                   </Box>
 
@@ -554,7 +573,7 @@ const RegisterForm = () => {
                           color: 'rgba(0, 0, 0, .9)',
                         }}
                       >
-                        Lector
+                        Escritor
                       </Text>
                       <Box>
                         <Text
@@ -578,24 +597,32 @@ const RegisterForm = () => {
                         </Text>
                       </Box>
                       <Button
-                        title='¡A escribir!'
-                        onPress={() => _handleChange("type", "writter")}
-                        buttonStyle={{
-                          backgroundColor: 'rgba(245, 66, 239, .5)',
-                          borderRadius: 5,
-                          width: '100%',
-                        }}
-                        titleStyle={{
-                          color: 'white'
-                        }}
-                      />
+                        bgColor={userData.type !== 'writter' ? 'rgba(245, 66, 239, .5)' : 'rgba(245, 66, 239, .75)'}
+                        width={110}
+                        justifyContent='center'
+                        onPress={() => _handleChange('type', 'writter')}
+                        leftIcon={
+                          <Icon
+                            as={
+                              <Entypo
+                                name='pencil'
+                              />
+                            }
+                            size={5}
+                            color={userData.type !== 'writter' ? 'muted.500' : 'muted.900'}
+                          />
+                        }
+                      >
+                        ¡A escribir!
+                      </Button>
+
                     </VStack>
                   </Box>
 
                 </HStack>
               </Box>
-              <Text textAlign='center'>
-                Al registrarse, acepta los términos y condiciones de la App.
+              <Text textAlign='center' fontSize={10}>
+                Al registrarse, acepta los términos y condiciones de la aplicación.
               </Text>
             </VStack>
 
@@ -606,19 +633,20 @@ const RegisterForm = () => {
                 visible={modalVisible}
                 setVisible={setModalVisible}
                 setChoice={setChoiceSelected}
-                content='¡Ya tienes tu cuenta personal en Flymagine! ¡Inicia sesión para continuar!'
-                toNavigate='Login'
+                content={userData.type === null ?
+                  'Por favor, llene todos los campos solicitados' :
+                  '¿Estás seguro que deseas registrarte con estos datos?'
+                }
+                cancelButton={userData.type === null ? false : true}
+                toNavigate={userData.type !== null ? 'Login' : null}
               />
               <Button
-                title='Regístrate'
-                buttonStyle={styles.button}
-                containerStyle={{
-                  marginBottom: 50,
-                }}
                 onPress={() => {
                   setModalVisible(true)
                 }}
-              />
+              >
+                Regístrate
+              </Button>
             </View>
           </Box>
         </View>

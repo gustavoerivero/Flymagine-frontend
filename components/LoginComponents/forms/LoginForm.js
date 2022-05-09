@@ -23,29 +23,29 @@ import { useNavigation } from '@react-navigation/native'
 
 import { Formik } from 'formik'
 
-import Dialog from '../../components/Dialog'
+import Dialog from '../../Dialog'
 import {
   emailValidator,
   passwordValidator,
-} from '../../utils/functions'
+} from '../../../utils/functions'
 
-import Flymagine from '../../assets/adaptive-icon.png'
-import StyledField from '../../components/LoginComponents/StyledField'
+import Flymagine from '../../../assets/adaptive-icon.png'
+import StyledField from '../StyledField'
 
 import {
   loginDefaultvalue,
   loginSchema,
-} from '../../utils/formValidations/loginFormValidations'
+} from '../../../utils/formValidations/loginFormValidations'
 import {
   Controller,
   useForm,
 } from 'react-hook-form'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { yupResolver } from '@hookform/resolvers/yup'
-import useCustomToast from '../../hooks/useCustomToast'
-import useLoaging from '../../hooks/useLoading'
-import { authAPI } from '../../services/authAPI'
-import useAuthContext from '../../hooks/useAuthContext'
+import useCustomToast from '../../../hooks/useCustomToast'
+import useLoaging from '../../../hooks/useLoading'
+import { authAPI } from '../../../services/authAPI'
+import useAuthContext from '../../../hooks/useAuthContext'
 
 const LoginForm = () => {
 
@@ -105,7 +105,7 @@ const LoginForm = () => {
         alignItems='center'
         rounded='lg'
         bg='rgba(224, 218, 227, 1)'
-        opacity={0.8}
+        opacity={0.95}
         shadow={2}
         borderColor='coolGray.300'
         borderWidth={1}

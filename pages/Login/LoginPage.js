@@ -6,7 +6,7 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import MakeItRain from 'react-native-make-it-rain'
 
-import LoginForm from '../../components/LoginComponents/LoginForm'
+import LoginForm from '../../components/LoginComponents/forms/LoginForm'
 import Bibliothecary from '../../assets/images/Bibliothecary.jpg'
 
 const LoginPage = () => {
