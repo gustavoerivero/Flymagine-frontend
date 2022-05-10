@@ -94,7 +94,7 @@ const BottomNavigation = () => {
         },
       }}
     >
-      {bottomRoutes.map((name, component, Icon) => (
+      {bottomRoutes.map(({ name, component, Icon }) => (
         <Tab.Screen
           key={name}
           name={name}

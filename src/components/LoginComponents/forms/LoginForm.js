@@ -84,7 +84,7 @@ const LoginForm = ({ navigation }) => {
       console.log('Response: ', response?.Message)
       reset(loginDefaultvalue)
     } catch (error) {
-      console.log('Error: ', error?.response?.Data)
+      console.log('Error: ', error?.response)
       showErrorToast(error?.response?.Data?.OK !== '0' ? 'Datos incorrectos' : 'Error al iniciar sesión')
     }
     stopLoading()

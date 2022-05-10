@@ -22,7 +22,7 @@ const HomeView = ({ navigation }) => {
 
   return (
     <Container>
- <StatusBar />
+      <StatusBar />
       <ScrollView>
         {posts.length > 0 && posts ? posts?.map((post, id) => (
           <Post
