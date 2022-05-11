@@ -28,7 +28,6 @@ import {
 } from '../../../utils/functions'
 
 import { useNavigation } from '@react-navigation/native'
-import PasswordField from '../PasswordField'
 import StyledField from '../StyledField'
 import { handleChange } from '../../../utils/functions'
 

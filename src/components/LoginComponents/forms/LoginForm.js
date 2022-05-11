@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
 } from 'react-native'
-
 import { Button } from 'react-native-elements'
 import {
   Box,
@@ -42,6 +41,8 @@ import useCustomToast from '../../../hooks/useCustomToast'
 import useLoading from '../../../hooks/useLoading'
 import { authAPI } from '../../../services/authAPI'
 import useAuthContext from '../../../hooks/useAuthContext'
+import { loginData } from '../../../adapters/User'
+import COLORS from '../../../components/styled-components/Colors'
 
 const LoginForm = ({ navigation }) => {
 
@@ -63,10 +64,9 @@ const LoginForm = ({ navigation }) => {
   const onSubmit = async (value) => {
     startLoading()
     try {
-      const response = await authAPI.login(value)
+      const response = await authAPI.login(loginData(value))
       
       const token = response?.Data?.token
-      console.log(token)
 
       if (token) {
         await AsyncStorage.setItem('@token', token)
@@ -75,13 +75,12 @@ const LoginForm = ({ navigation }) => {
           payload: {
             user: {
               email: value.email,
-              id: value.id,
+              id: response?.Data?.id,
             },
           },
         })
       }
-      console.log(response)
-      console.log('Response: ', response?.Message)
+      console.log(`${value.email} logged in`)
       reset(loginDefaultvalue)
     } catch (error) {
       console.log('Error: ', error?.response)
@@ -228,31 +227,10 @@ const LoginForm = ({ navigation }) => {
               disabled={!isValid || isLoading}
               isLoading={isLoading}
               onPress={handleSubmit(onSubmit)}
-                //() => {
-                /**  if (userData.email.length > 0 && userData.passwordHash.length > 0 && valid.email && valid.passwordHash) {*/
-                
-                /** } else if (userData.email.length === 0 || userData.passwordHash.length === 0) {
-                  setMessage('Debes ingresar un correo electrónico y una contraseña')
-                  setModalVisible(true)
-                } else if (!valid.email || !valid.passwordHash) {
-                  console.log(JSON.stringify(valid, null, 2))
-                  setMessage('Debes ingresar un correo electrónico y/o una contraseña válidos')
-                  setModalVisible(true)
-                } else {
-                  setMessage('Error desconocido')
-                  setModalVisible(true)
-                }*/
-                //handleSubmit(onSubmit)
-                /**
-                 * Navegation.navigate('SignIn', {
-                  email: 'gustavoerivero12@gmail.com',
-                })
-                */
-              //}}
             />
             <Button
               title='Registrarse'
-              buttonStyle={[styles.button, { backgroundColor: 'rgba(187, 103, 220, .75)' }]}
+              buttonStyle={[styles.button, { backgroundColor: COLORS.button.secundary }]}
               onPress={() => navigation?.navigate('Register')}
             />
           </HStack>
@@ -306,7 +284,7 @@ const styles = StyleSheet.create({
   button: {
     width: 170,
     marginHorizontal: 2,
-    backgroundColor: '#9681DF'
+    backgroundColor: COLORS.button.primary
   },
   text: {
     color: 'rgb(14, 0, 20)'

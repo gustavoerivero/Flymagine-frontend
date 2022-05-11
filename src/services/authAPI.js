@@ -7,30 +7,30 @@ export const authAPI = {
     let {
       firstName,
       lastName,
+      phone,
+      address,
+      birthday,
       email,
       password,
-      photo,
       biography,
-      address,
-      phone,
-      birthday,
+      idRole
     } = form
 
     const [year, month, day] = new Date(birthday)
       ?.toISOString()
       ?.split('T')[0]
-      .split('-')
+      ?.split('-')
 
     const { data } = await http.post(BASE_URL, {
       firstName,
       lastName,
+      phone,
+      address,
+      birthday: `${day}/${month}/${year}`,
       email,
       password,
-      photo,
       biography,
-      address,
-      phone,
-      birthday: `${day}/${month}/${year}`,
+      idRole      
     })
     return data
   },

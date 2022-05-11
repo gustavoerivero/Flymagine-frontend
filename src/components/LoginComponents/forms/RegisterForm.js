@@ -32,6 +32,14 @@ import {
   useForm,
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
+import useCustomToast from '../../../hooks/useCustomToast'
+import useLoading from '../../../hooks/useLoading'
+import {
+  registerSchema,
+  registerDefaultValue,
+} from '../../../utils/formValidations/registerUserFormValidation'
+import { authAPI } from '../../../services/authAPI'
+import { registerData } from '../../../adapters/User'
 
 import {
   phoneValidator,
@@ -39,38 +47,66 @@ import {
   passwordValidator,
 } from '../../../utils/functions'
 import StyledArea from '../StyledArea'
+import COLORS from '../../../components/styled-components/Colors'
 
 const RegisterForm = ({ navigation }) => {
+
+  const [showDatePicker, setShowDatePicker] = useState(false)
 
   const [showDialog, setShowDialog] = useState(false)
   const [show, setShow] = useState(false)
   const [show2, setShow2] = useState(false)
+  
+  const { showErrorToast } = useCustomToast()
+  const { isLoading, startLoading, stopLoading } = useLoading()
 
   const {
     control,
     handleSubmit,
-    formState: { isValid },
+    setValue,
+
+    formState: { isValid, errors },
     reset,
   } = useForm({
-    mode: 'onChange',
+    mode: 'onBlur',
+    resolver: yupResolver(registerSchema),
+    defaultvalue: registerDefaultValue,
   })
 
-  const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    address: '',
-    birthDate: '',
-    email: '',
-    passwordHash: '',
-    repeatPassword: '',
-    type: null
-  })
+  const onChange = (_, selectedDate)  => {
+    setShowDatePicker(false)
+    const date = selectedDate || new Date()
+    setValue('birthday', date)
+  }
 
-  const _handleChange = (item, value) => handleChange(userData, setUserData, item, value)
+  const onSubmit = async (data) => {
+    startLoading()
+    try {
+
+      const response = await authAPI.register(registerData(data))
+
+      if(response?.OK === 1) {
+        stopLoading()
+        setShowDialog(true)
+        console.log(`User registered successfully`)
+        navigation?.navigate('Login')
+      }
+
+      reset(registerDefaultValue)
+
+    } catch (error) { 
+      console.log('Error: ', error?.response)
+      showErrorToast('Error al registrar usuario')
+    }
+    stopLoading()
+  }
 
   const [modalVisible, setModalVisible] = useState(false)
   const [choiceSelected, setChoiceSelected] = useState(false)
+
+  const [userData, setUserData] = useState({
+    type: null,
+  })
 
   return (
     <ScrollView>
@@ -110,13 +146,16 @@ const RegisterForm = ({ navigation }) => {
                 formar parte de Flymagine
               </Text>
 
-
               <Controller
                 name='firstName'
                 control={control}
-                render={({ field: { onChange, value = '', ...field } }) => (
+                render={({ 
+                  field: { onChange, ...field },
+                  fieldState: { error }
+                }) => (
                   <FormControl
                     isRequired
+                    isInvalid={Boolean(error?.message)}
                   >
                     <FormControl.Label>Nombre</FormControl.Label>
                     <StyledField
@@ -136,17 +175,17 @@ const RegisterForm = ({ navigation }) => {
                         />
                       }
                     />
-                    {value === '' ? null : (
+                    
                       <FormControl.ErrorMessage
-                        leftIcon={
-                          <WarningOutlineIcon
-                            size='xs'
-                          />
-                        }
-                      >
-                        El nombre es necesario
-                      </FormControl.ErrorMessage>
-                    )}
+                      leftIcon={
+                        <WarningOutlineIcon
+                          size='xs'
+                        />
+                      }
+                    >
+                      {error?.message}
+                    </FormControl.ErrorMessage>
+                      
                   </FormControl>
                 )}
               />
@@ -154,13 +193,17 @@ const RegisterForm = ({ navigation }) => {
               <Controller
                 name='lastName'
                 control={control}
-                render={({ field: { onChange, value = '', ...field } }) => (
+                render={({ 
+                  field: { onChange, ...field },
+                  fieldState: { error }
+                }) => (
                   <FormControl
                     isRequired
+                    isInvalid={Boolean(error?.message)}
                   >
                     <FormControl.Label>Apellido</FormControl.Label>
                     <StyledField
-                      placeholder='Nombre'
+                      placeholder='Apellido'
                       onChangeText={onChange}
                       {...field}
                       InputLeftElement={
@@ -176,7 +219,6 @@ const RegisterForm = ({ navigation }) => {
                         />
                       }
                     />
-                    {value === '' ? null : (
                       <FormControl.ErrorMessage
                         leftIcon={
                           <WarningOutlineIcon
@@ -184,9 +226,8 @@ const RegisterForm = ({ navigation }) => {
                           />
                         }
                       >
-                        El apellido es necesario
+                        {error?.message}
                       </FormControl.ErrorMessage>
-                    )}
                   </FormControl>
                 )}
               />
@@ -204,6 +245,7 @@ const RegisterForm = ({ navigation }) => {
                       placeholder='Número de teléfono'
                       onChangeText={onChange}
                       {...field}
+                      value={value}
                       InputLeftElement={
                         <Icon
                           as={
@@ -244,6 +286,7 @@ const RegisterForm = ({ navigation }) => {
                       placeholder='Dirección de vivienda'
                       onChangeText={onChange}
                       minHeight={50}
+                      value={value}
                       h={ 50 + 15 * Math.floor((value.length-1)/18) }
                       mb={4}
                       {...field}
@@ -318,6 +361,7 @@ const RegisterForm = ({ navigation }) => {
                       placeholder='Correo electrónico'
                       onChangeText={onChange}
                       {...field}
+                      value={value}
                       InputLeftElement={
                         <Icon
                           as={
@@ -360,6 +404,7 @@ const RegisterForm = ({ navigation }) => {
                     <StyledField
                       placeholder='Contraseña'
                       {...field}
+                      value={value}
                       onChangeText={onChange}
                       InputLeftElement={
                         <Icon as={
@@ -414,6 +459,7 @@ const RegisterForm = ({ navigation }) => {
                     <StyledField
                       placeholder='Repita la contraseña'
                       {...field}
+                      value={value}
                       onChangeText={onChange}
                       InputLeftElement={
                         <Icon as={
@@ -450,6 +496,37 @@ const RegisterForm = ({ navigation }) => {
                         La contraseña ingresada no es válida
                       </FormControl.ErrorMessage>
                     )}
+                  </FormControl>
+                )}
+              />
+
+              <Controller
+                name='biography'
+                control={control}
+                render={({ field: { onChange, value = '', ...field } }) => (
+                  <FormControl>
+                    <FormControl.Label>Biografía</FormControl.Label>
+                    <StyledArea
+                      placeholder='Biografía'
+                      onChangeText={onChange}
+                      value={value}
+                      minHeight={50}
+                      h={ 50 + 15 * Math.floor((value.length-1)/18) }
+                      mb={4}
+                      {...field}
+                      InputLeftElement={
+                        <Icon
+                          as={
+                            <MaterialIcons
+                              name='history-edu'
+                            />
+                          }
+                          size={5}
+                          ml='4'
+                          color='muted.900'
+                        />
+                      }
+                    />
                   </FormControl>
                 )}
               />
@@ -530,10 +607,10 @@ const RegisterForm = ({ navigation }) => {
                         </Text>
                       </Box>
                       <Button
-                        bgColor={userData.type !== 'reader' ? 'rgba(127, 153, 220, .75)' : 'rgba(89, 127, 227, 1)'}
+                        bgColor={COLORS.button.secundary}
                         width={110}
                         justifyContent='center'
-                        onPress={() => _handleChange('type', 'reader')}
+                        onPress={console.log('Lector')}
                         rightIcon={
                           <Icon
                             as={
@@ -542,7 +619,7 @@ const RegisterForm = ({ navigation }) => {
                               />
                             }
                             size={5}
-                            color={userData.type !== 'reader' ? 'muted.500' : 'muted.900'}
+                            color={'muted.900'}
                           />
                         }
                       >
@@ -597,10 +674,10 @@ const RegisterForm = ({ navigation }) => {
                         </Text>
                       </Box>
                       <Button
-                        bgColor={userData.type !== 'writter' ? 'rgba(245, 66, 239, .5)' : 'rgba(245, 66, 239, .75)'}
+                        bgColor={COLORS.button.terciary}
                         width={110}
                         justifyContent='center'
-                        onPress={() => _handleChange('type', 'writter')}
+                        onPress={console.log('Escritor')}
                         leftIcon={
                           <Icon
                             as={
@@ -609,7 +686,7 @@ const RegisterForm = ({ navigation }) => {
                               />
                             }
                             size={5}
-                            color={userData.type !== 'writter' ? 'muted.500' : 'muted.900'}
+                            color={'muted.900'}
                           />
                         }
                       >
@@ -642,9 +719,10 @@ const RegisterForm = ({ navigation }) => {
                 navigation={navigation}
               />
               <Button
-                onPress={() => {
-                  setModalVisible(true)
-                }}
+                bgColor={COLORS.button.primary}
+                disabled={!isValid || isLoading}
+                isLoading={isLoading}
+                onPress={handleSubmit(onSubmit)}                
               >
                 Regístrate
               </Button>

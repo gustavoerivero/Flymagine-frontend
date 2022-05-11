@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  View,
   StyleSheet,
 } from 'react-native'
 
@@ -25,7 +24,6 @@ import {
 } from 'react-hook-form'
 
 import StyledField from '../StyledField'
-import EmailField from '../EmailField'
 import Dialog from '../../Dialog'
 
 import {

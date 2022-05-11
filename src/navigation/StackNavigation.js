@@ -26,6 +26,7 @@ import EditBook from '../pages/Book/EditBook'
 
 import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
+import COLORS from '../components/styled-components/Colors'
 
 const Stack = createNativeStackNavigator()
 
@@ -177,6 +178,12 @@ const StackNavigation = () => {
   return (
     <Stack.Navigator
       initialRouteName={stackRoutes[0].name}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: COLORS.primary,
+        },
+        headerTintColor: COLORS.secundary,
+      }}
     >
       {stackRoutes
         .filter(({ requireAuth }) => requireAuth === isAuthenticated)

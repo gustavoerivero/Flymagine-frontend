@@ -7,13 +7,17 @@ import {
   Button,
   Image,
 } from 'react-native-elements'
+import useAuthContext from '../hooks/useAuthContext'
 
 //Colors
 import COLORS from './styled-components/Colors'
 
 import FlymagineIcon from '../../assets/favicon.png'
 
-const TopBar = ({ reload }) => {
+const TopBar = () => {
+
+  const { dispatch } = useAuthContext()
+
   return (
     <View
       style={styles.container}
@@ -30,7 +34,10 @@ const TopBar = ({ reload }) => {
           borderRadius: 50,
         }}
         type='clear'
-        onPress={reload}
+        onPress={() => {
+          console.log('pressed')
+          dispatch({ type: 'LOGOUT' })
+        }}
       />
     </View>
   )

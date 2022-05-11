@@ -3,7 +3,6 @@ import React, {
   useCallback
 } from 'react'
 import {
-  Text,
   ScrollView,
   View,
   StyleSheet,
@@ -11,18 +10,13 @@ import {
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import ToPBar from './TopBar'
+import TopBar from './TopBar'
 
 const Container = ({ children }) => {
 
-  const [key, setKey] = useState(0)
-  const reload = useCallback(() => setKey((prevKey) => prevKey + 1), [])
-
   return (
     <ScrollView>
-      <ToPBar
-        reload={reload}
-      />
+      <TopBar />
       <View
         style={styles.children}
       >
