@@ -24,7 +24,7 @@ import {
   passwordValidator,
 } from '../../../utils/functions'
 
-import Flymagine from '../../../../assets/adaptive-icon.png'
+import Flymagine from '../../../../assets/Flymagine_Complete.png'
 import StyledField from '../StyledField'
 
 import {
@@ -106,15 +106,15 @@ const LoginForm = ({ navigation }) => {
         shadow={2}
         borderColor='coolGray.300'
         borderWidth={1}
-        mt='60%'
+        mt='50%'
         p={3}
         py={5}
       >
         <Image
           source={Flymagine}
           style={{
-            width: 100,
-            height: 100,
+            width: 150,
+            height: 150,
             opacity: 0.8,
           }}
           resizeMode='contain'
@@ -134,6 +134,7 @@ const LoginForm = ({ navigation }) => {
                   placeholder='Correo electrónico'
                   onChangeText={onChange}
                   {...field}
+                  borderColor={!emailValidator(value) && value !== '' ? 'red.500' : 'grey'}
                   InputLeftElement={
                     <Icon
                       as={
@@ -143,7 +144,7 @@ const LoginForm = ({ navigation }) => {
                       }
                       size={5}
                       ml='4'
-                      color='muted.900'
+                      color={!emailValidator(value) && value !== '' ? 'red.500' : 'muted.900'}
                     />
                   }
                 />
@@ -175,7 +176,8 @@ const LoginForm = ({ navigation }) => {
                 <StyledField
                   placeholder='Contraseña'
                   {...field}
-                  onChangeText={onChange}
+                  onChangeText={onChange}                  
+                  borderColor={!passwordValidator(value) && value !== '' ? 'red.500' : 'grey'}
                   InputLeftElement={
                     <Icon as={
                       <MaterialIcons
@@ -184,7 +186,7 @@ const LoginForm = ({ navigation }) => {
                     }
                       size={5}
                       ml='4'
-                      color='muted.900'
+                      color={!passwordValidator(value) && value !== '' ? 'red.500' : 'muted.900'}
                     />
                   }
                   InputRightElement={

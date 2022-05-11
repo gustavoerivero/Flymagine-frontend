@@ -35,11 +35,15 @@ export const authAPI = {
     return data
   },
   login: async (form = {}) => {
-    const { data } = await http.post(BASE_URL + '/login', form)
+    const { data } = await http.post(`${BASE_URL}/login`, form)
     return data
   },
   requestPasswordReset: async (form) => {
     const { data } = await http.post('passwordreset', form)
     return data
   },
+  setPreferences: async (id, preference) => {
+    const { data } = await http.post(`${BASE_URL}/${id}/set-preference`, preference)
+    return data
+  }
 }

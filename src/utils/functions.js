@@ -18,6 +18,12 @@ const previousFourteenHours = (date) => {
 	return currentDate - postDate < 86400000
 }
 
+const legalAge = (date) => {
+	let currentDate = new Date()
+	let postDate = new Date(date)
+	return currentDate - postDate > 18 * 31536000000
+}
+
 const permisionFunction = async () => {
 	if (Platform.OS !== 'web') {
 		const {
@@ -93,5 +99,6 @@ module.exports = {
 	emailValidator,
 	passwordValidator,
 	phoneValidator,
+	legalAge,
 	selectOneFile,
 }
