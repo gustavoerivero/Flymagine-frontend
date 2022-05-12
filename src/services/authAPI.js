@@ -2,48 +2,26 @@ import { http } from './http'
 
 const BASE_URL = 'user'
 
-export const authAPI = {
-  register: async (form = {}) => {
-    let {
-      firstName,
-      lastName,
-      phone,
-      address,
-      birthday,
-      email,
-      password,
-      biography,
-      idRole
-    } = form
+const registerUser = async (data) => {
+  const response = await http.post(`${BASE_URL}/`, data)
+  return response.data
+}
 
-    const [year, month, day] = new Date(birthday)
-      ?.toISOString()
-      ?.split('T')[0]
-      ?.split('-')
+const login = async (form = {}) => {
+  const { data } = await http.post(`${BASE_URL}/login`, form)
+  return data
+}
 
-    const { data } = await http.post(BASE_URL, {
-      firstName,
-      lastName,
-      phone,
-      address,
-      birthday: `${day}/${month}/${year}`,
-      email,
-      password,
-      biography,
-      idRole      
-    })
-    return data
-  },
-  login: async (form = {}) => {
-    const { data } = await http.post(`${BASE_URL}/login`, form)
-    return data
-  },
-  requestPasswordReset: async (form) => {
-    const { data } = await http.post('passwordreset', form)
-    return data
-  },
-  setPreferences: async (id, preference) => {
-    const { data } = await http.post(`${BASE_URL}/${id}/set-preference`, preference)
-    return data
-  }
+const setPreferences = async (id, data) => {
+  const response = await http.post(`${BASE_URL}/${id}/preferences`, data)
+  return response.data
+}
+
+module.exports = {
+  // User
+  registerUser,
+  login,
+
+  // Preferences
+  setPreferences,
 }

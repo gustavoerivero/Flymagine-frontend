@@ -41,15 +41,15 @@ import {
   registerSchema,
   registerDefaultValue,
 } from '../../../utils/formValidations/registerUserFormValidation'
-import { authAPI } from '../../../services/authAPI'
-import { literaryGenreAPI } from '../../../services/literaryGenre/literaryGenre'
+import { registerUser, setPreferences } from '../../../services/authAPI'
+import { getAllLiteraryGenre } from '../../../services/literaryGenre/literaryGenre'
 import { personalPreferencesData, registerData } from '../../../adapters/User'
 
 import COLORS from '../../../components/styled-components/Colors'
 
 const RegisterForm = ({ navigation }) => {
 
-  const { showErrorToast } = useCustomToast()
+  const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
   const [showDatePicker, setShowDatePicker] = useState(false)
@@ -59,7 +59,7 @@ const RegisterForm = ({ navigation }) => {
   const [literaryGenres, setLiteraryGenres] = useState([])
 
   useEffect(() => {
-    literaryGenreAPI.getAll()
+    getAllLiteraryGenre()
       .then(response => {
         setLiteraryGenres(response)
       })
@@ -91,33 +91,22 @@ const RegisterForm = ({ navigation }) => {
   const onSubmit = async (values) => {
     startLoading()
     try {
-      console.log('Values: ', JSON.stringify(values, null, 2))
-      const { Data } = await authAPI.register(registerData(values))
-      console.log(Data)
 
-      const addGenres = async () => {
-        try {
-          const genres = values?.literaryGenres
-          const userId = Data?._id
-          const promises = genres.map(genre => authAPI.setPreferences(userId, personalPreferencesData(genre)))
-          const { Data } = await Promise.all(promises)
-          return Data
-        } catch (error) {
-          console.log(`Error: ${error}`)
-          showErrorToast('Error al agregar los géneros literarios')
-          return error
-        }
-      }
+      const response = await registerUser(registerData(values))
 
-      console.log(addGenres)
+      const responsePreferences = await setPreferences(response?.Data?._id, personalPreferencesData(values))
 
-      console.log(`${values.email} registrado`)
+      console.log(responsePreferences)
 
+      showSuccessToast('¡Bienvenido a Flymagine!')
 
       reset(registerDefaultValue)
       setShowPassword(false)
       setShowConfirmPassword(false)
       setValue('literaryGenres', [])
+      
+      navigation?.navigate('Login')
+
     } catch (error) {
       showErrorToast(error?.message)
       console.log(error)
@@ -635,11 +624,13 @@ const RegisterForm = ({ navigation }) => {
                             activeOpacity={.7}
                             onPress={() => {
                               const newValue = [...value]
-                              if (newValue.includes(item._id)) {
-                                newValue.splice(newValue.indexOf(item._id), 1)
+
+                              if (newValue.find((genre) => genre?.name === item?.name)) {
+                                newValue.splice(newValue.findIndex((genre) => genre?.name === item?.name), 1)
                               } else {
-                                newValue.push(item._id)
+                                newValue.push(item)
                               }
+
                               console.log(newValue)
                               onChange(newValue)
                               onBlur()
@@ -651,11 +642,15 @@ const RegisterForm = ({ navigation }) => {
                                 borderRadius: 30,
                                 borderWidth: 1,
                                 borderColor: 'white',
-                                backgroundColor: value.includes(item._id) ? COLORS.primary : "#fff",
+                                backgroundColor:
+                                  value.find((genre) => genre?._id === item?._id)
+                                    ? COLORS.primary : "#fff",
                               }}
                             >
                               <Text
-                                color={value.includes(item._id) ? 'white' : 'purple.900'}
+                                color={
+                                  value.find((genre) => genre?._id === item?._id)
+                                    ? 'white' : 'purple.900'}
                               >
                                 {item?.name}
                               </Text>

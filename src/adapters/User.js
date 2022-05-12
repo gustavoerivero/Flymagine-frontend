@@ -20,9 +20,7 @@ const registerData = (values) => {
 }
 
 const personalPreferencesData = (values) => {
-  return {
-    idLiteraryGenre: values.idLiteraryGenre,
-  }
+  return values.literaryGenres
 }
 
 module.exports = {

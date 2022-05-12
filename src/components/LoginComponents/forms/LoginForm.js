@@ -39,7 +39,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useCustomToast from '../../../hooks/useCustomToast'
 import useLoading from '../../../hooks/useLoading'
-import { authAPI } from '../../../services/authAPI'
+import { login } from '../../../services/authAPI'
 import useAuthContext from '../../../hooks/useAuthContext'
 import { loginData } from '../../../adapters/User'
 import COLORS from '../../../components/styled-components/Colors'
@@ -64,7 +64,7 @@ const LoginForm = ({ navigation }) => {
   const onSubmit = async (value) => {
     startLoading()
     try {
-      const response = await authAPI.login(loginData(value))
+      const response = await login(loginData(value))
       
       const token = response?.Data?.token
 

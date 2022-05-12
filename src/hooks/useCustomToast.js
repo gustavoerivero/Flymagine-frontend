@@ -32,7 +32,7 @@ const Toast = ({ id, text = 'r' }) => (
 const useCustomToast = () => {
   const toast = useToast()
 
-  const showSuccesToast = (text = '') => {
+  const showSuccessToast = (text = '') => {
     toast.show({
       render: ({ id }) => {
         return <Toast id={id} text={text} />
@@ -47,7 +47,7 @@ const useCustomToast = () => {
   }
 
   return {
-    showSuccesToast,
+    showSuccessToast,
     showErrorToast,
   }
 }
