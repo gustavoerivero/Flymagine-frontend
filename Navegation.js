@@ -6,10 +6,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import LoginScreen from "./pages/Login/LoginForm";
-import RegisterScreen from "./pages/Login/RegisterForm";
-import PasswordRecoveryScreen from "./pages/Login/PasswordRecorvery";
-import PasswordRecoveryStep2Screen from "./pages/Login/PasswordRecoveryStep2";
+import LoginScreen from "./pages/Login/LoginPage";
+import RegisterScreen from "./pages/Login/RegisterPage";
+import PasswordRecoveryScreen from "./pages/Login/PasswordRecorveryRequestPage";
+import PasswordRecoveryStep2Screen from "./pages/Login/PasswordResetPage";
 
 //Pages
 import HomeView from "./pages/HomeView";

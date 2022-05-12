@@ -1,20 +1,19 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Input } from 'react-native-elements'
-
-import EmailValidator from '../../utilities/EmailValidator'
+import { emailValidator } from '../../utils/functions'
 
 import styles from './styled-components/login-styles'
 
 const EmailField = ({ name, value, setValues, setIsValid }) => {
 
   const valid = () => {
-    if (EmailValidator(value)) {
+    if (emailValidator(value)) {
       setIsValid(true)
     } else {
       setIsValid(false)
     }
-    console.log(EmailValidator(value))
+    console.log(emailValidator(value))
   }
 
   return (
