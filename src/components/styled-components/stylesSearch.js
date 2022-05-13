@@ -1,31 +1,31 @@
-import { StyleSheet } from "react-native";
-import COLORS from "./Colors";
+import { StyleSheet } from 'react-native'
+import COLORS from './Colors'
 
 const stylesSearch = StyleSheet.create({
   container: {
-    display: "flex",
+    display: 'flex',
     flex: 1,
-    flexDirection: "column",
-    flexWrap: "nowrap",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    alignContent: "center",
-    width: "100%",
-    minHeight: "100%",
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+    alignContent: 'center',
+    width: '100%',
+    minHeight: '100%',
     backgroundColor: COLORS.base,
-    paddingBottom: "14%",
+    paddingBottom: '14%',
   },
   header: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginBottom: 5,
   },
   titleSectionPlus: {
     flex: 1,
-    //flexDirection: "row",
-    justifyContent: "space-between",
-    width: "95%",
+    //flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '95%',
     paddingHorizontal: 10,
     marginTop: 10,
   },
@@ -37,43 +37,43 @@ const stylesSearch = StyleSheet.create({
   title: {
     color: COLORS.primary,
     fontSize: 20,
-    fontWeight: "700",
+    fontWeight: '700',
   },
   subtitle: {
     fontSize: 30,
     color: COLORS.secundary,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     paddingLeft: 10,
     paddingBottom: 10,
   },
   description: {
     color: COLORS.gray3,
-    fontWeight: "100",
+    fontWeight: '100',
     marginTop: 10,
   },
   name: {
     flex: 1,
     color: COLORS.gray3,
     fontSize: 15,
-    fontWeight: "200",
+    fontWeight: '200',
     paddingLeft: 5,
-    fontStyle: "italic",
+    fontStyle: 'italic',
   },
   image: {
     height: 70,
     width: 70,
   },
   button: {
-    backgroundColor: "transparent",
-    borderColor: "transparent",
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
     borderWidth: 0,
     borderRadius: 50,
     //paddingRight: 20
   },
 
   searchBarContainer: {
-    width: "95%",
-    backgroundColor: "transparent",
+    width: '95%',
+    backgroundColor: 'transparent',
     marginTop: 5,
   },
   label: {
@@ -97,4 +97,4 @@ const stylesSearch = StyleSheet.create({
   }
 });
 
-export default stylesSearch;
+export default stylesSearch
