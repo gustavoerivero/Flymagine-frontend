@@ -8,8 +8,13 @@ import HomeView from '../pages/HomeView'
 import SearchPage from '../pages/Search'
 import PostPage from '../pages/PostPage'
 import NotificationsPage from '../pages/NotificationsPage'
+import EditReaderUserProfile from '../pages/User/EditReaderUserProfile'
 import ProfilePage from '../pages/ProfilePage'
 import { View, StyleSheet } from 'react-native'
+
+
+import ReaderUserProfile from '../pages/User/ReaderUserProfile'
+
 
 const Tab = createBottomTabNavigator()
 
@@ -54,7 +59,7 @@ const bottomRoutes = [
   },
   {
     name: 'Notifications',
-    component: NotificationsPage,
+    component: EditReaderUserProfile,
     requireAuth: true,
     Icon: ({ color, size }) => (
       <Ionicons

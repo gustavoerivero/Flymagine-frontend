@@ -1,13 +1,11 @@
 import React from 'react'
-import {
-  View,
-  Text,
-} from 'react-native'
+import { View } from 'native-base'
+import ProfileScreen from '../components/ProfileComponents/screens/ProfileScreen'
 
-const ProfilePage = () => {
+const ProfilePage = ({ navigation }) => {
   return (
     <View>
-      <Text>ProfilePage</Text>
+      <ProfileScreen navigation={navigation} />
     </View>
   )
 }

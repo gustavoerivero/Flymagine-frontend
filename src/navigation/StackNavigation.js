@@ -16,6 +16,7 @@ import ReaderUserProfile from '../pages/User/ReaderUserProfile'
 import EditReaderUserProfile from '../pages/User/EditReaderUserProfile'
 import MyFollower from '../pages/User/MyFollower'
 import MyFollow from '../pages/User/MyFollow'
+import UserProfilePage from '../pages/User/UserProfilePage'
 
 // Book Pages
 import MyBook from '../pages/Book/MyBook'
@@ -27,6 +28,7 @@ import EditBook from '../pages/Book/EditBook'
 import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
 import COLORS from '../components/styled-components/Colors'
+import EditProfile from '../pages/User/EditProfile'
 
 const Stack = createNativeStackNavigator()
 
@@ -69,6 +71,22 @@ const stackRoutes = [
     requireAuth: true,
     options: {
       headerShown: false,
+    }
+  },  
+  {
+    name: 'UserProfile',
+    component: UserProfilePage,
+    requireAuth: true,
+    options: {
+      title: 'Perfil de Usuario',
+    }
+  },
+  {
+    name: 'EditProfile',
+    component: EditProfile,
+    requireAuth: true,
+    options: {
+      title: 'Edita tu perfil',
     }
   },
   {

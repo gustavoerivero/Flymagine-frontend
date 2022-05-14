@@ -1,58 +1,45 @@
-import React, {
-  useState,
-} from 'react'
-import {
-  ScrollView,
-  Text,
-} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { ScrollView } from 'react-native'
+import { VStack } from 'native-base'
 
 //Components
-import StatusBar from "../components/StatusBar";
+import StatusBar from "../components/StatusBar"
 import Container from '../components/Container'
 import Post from '../components/Post/Post'
 
-//Data
-import dataPosts from '../utilities/data/posts'
+import { getPosts } from '../services/post/postAPI'
 
 const HomeView = ({ navigation }) => {
 
-  const [signIn, setSignIn] = useState('Adam Meddler')
+  const [posts, setPosts] = useState([])
 
-  const [posts, setPosts] = useState(dataPosts || [])
+  useEffect(() => {
+    getPosts()
+      .then(res => {
+        setPosts(res.reverse())
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
 
   return (
     <Container>
       <StatusBar />
       <ScrollView>
-        {posts.length > 0 && posts ? posts?.map((post, id) => (
-          <Post
-            key={post.id}
-            signIn={signIn}
-            author={post.owner.firstName + ' ' + post.owner.lastName}
-            avatar={post.owner.picture}
-            image={post.image}
-            description={post.text}
-            date={post.publishDate}
-            likes={post.likes}
-            comments={post.comments}
-            tags={post.tags}
-            personTags={post.personTags}
-            id={id}
-            posts={posts}
-            setPosts={setPosts}
-          />
-        )) :
-          <Text
-            style={{
-              fontSize: 12,
-              color: 'rgba(110, 45, 220, .5)',
-              textAlign: 'center',
-              marginVertical: 10,
-            }}
-          >
-            No hay publicaciones disponibles en este momento...
-          </Text>
-        }
+        <VStack
+          space={2}
+        >
+          { posts?.length > 0 && posts ? posts.map((post, index) => (
+              <Post
+                key={index}
+                post={post}
+                navigation={navigation}
+              />
+            )) : null
+          }          
+        </VStack>
+
       </ScrollView>
     </Container>
   )
