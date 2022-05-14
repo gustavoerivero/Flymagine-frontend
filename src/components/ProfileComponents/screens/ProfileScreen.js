@@ -7,19 +7,22 @@ import useAuthContext from '../../../hooks/useAuthContext'
 import { getUserById } from '../../../services/user/userAPI'
 import TabContainerProfile from '../components/TabContainerProfile'
 
-const ProfileScreen = ({ navigation }) => {
+import { getPostByUser } from '../../../services/post/postAPI'
+
+const ProfileScreen = ({ navigation, userData }) => {
 
   const [userInfo, setUserInfo] = useState(null)
+
+  const [posts, setPosts] = useState([])
 
   const {
     state: { user }
   } = useAuthContext()
 
   useEffect(() => {
-    getUserById(user?.id)
+    getUserById(userData || user?.id)
       .then(res => {
         setUserInfo(res?.Data)
-        console.log(userInfo)
       })
       .catch(err => {
         console.log(err)

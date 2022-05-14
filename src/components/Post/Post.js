@@ -39,8 +39,9 @@ import COLORS from '../styled-components/Colors'
 import { useWindowDimensions } from 'react-native'
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
-import { getUserById } from '../../services/user/userAPI'
+import { getUserById, getOnlyUser } from '../../services/user/userAPI'
 import { deletePost } from '../../services/post/postAPI'
+import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
 
 const Post = ({
   navigation,
@@ -53,13 +54,15 @@ const Post = ({
     state: { user }
   } = useAuthContext()
 
+  const [userLogged, setUserLogged] = useState(null)
   const [userPost, setUserPost] = useState(null)
   const [personTags, setPersonTags] = useState([])
   const [hashtags, setHashtags] = useState([])
 
   const [isLiked, setIsLiked] = useState(false)
+  const [postReactionInfo, setPostReactionInfo] = useState([])
   const [likes, setLikes] = useState(0)
-  const [comments, setComments] = useState(0)
+  const [comments, setComments] = useState(null)
 
   const [editVisible, setEditVisible] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(false)
@@ -75,10 +78,44 @@ const Post = ({
     }
   }
 
+  const likePost = async () => {
+    try {
+      const newValue = postReactionInfo
+      if (newValue?.find((value) => userLogged._id === value?._id)) {
+        newValue?.splice(newValue?.findIndex((reactionUser) => userLogged?._id === reactionUser?._id), 1)
+      } else {
+        newValue?.push(userLogged)
+      }
+
+      setPostReactionInfo(newValue)
+      await postReactionsByPost(post?._id, postReactionInfo)
+      setLikes(postReactionInfo?.length)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   useEffect(() => {
+    getOnlyUser(user?.id)
+      .then(log => {
+        setUserLogged(log?.Data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
     getUserById(post?.idUser)
       .then(res => {
         setUserPost(res?.Data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    getReactionsByPost(post?._id)
+      .then(res => {
+        setPostReactionInfo(res?.Data[0]?.users || [])
+        setLikes(res?.Data[0]?.users?.length || 0)
+        setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
       })
       .catch(error => {
         console.log(error)
@@ -97,6 +134,12 @@ const Post = ({
         <TouchableOpacity
           onPress={() => {
             console.log(`${userPost?.firstName + ' ' + userPost?.lastName}'s profile`)
+            console.log(userPost._id)
+            if(userPost?._id === user?.id){
+              navigation.navigate('Profile')
+            } else {
+              navigation.navigate('UserProfile', { user: userPost._id })
+            }
           }}
         >
           <Avatar
@@ -300,7 +343,12 @@ const Post = ({
               <TouchableOpacity
                 onPress={() => {
                   setIsLiked(!isLiked)
-                  setLikes(isLiked ? likes - 1 : likes + 1)
+                  likePost()
+                  if (isLiked) {
+                    setLikes(likes - 1)
+                  } else {
+                    setLikes(likes + 1)
+                  }
                 }}
               >
                 <HStack space={1} alignItems='center' >
@@ -323,7 +371,7 @@ const Post = ({
                     color={'gray.400'}
                   />
                   <Text fontSize='xs' color={'gray.400'} >
-                    {comments}
+                    {0}
                   </Text>
                 </HStack>
               </TouchableOpacity>

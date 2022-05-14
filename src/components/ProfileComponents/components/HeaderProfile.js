@@ -14,8 +14,13 @@ import {
   FontAwesome5,
   MaterialCommunityIcons,
 } from '@expo/vector-icons'
+import useAuthContext from '../../../hooks/useAuthContext'
 
-const HeaderProfile = ({ userInfo }) => {
+const HeaderProfile = ({ userInfo, navigation }) => {
+
+  const {
+    state: { user },
+  } = useAuthContext()
 
   return (
     <Box
@@ -38,7 +43,6 @@ const HeaderProfile = ({ userInfo }) => {
               }}
               borderColor='white'
               borderWidth={3}
-              onPress={() => console.log('Avatar')}
             >
               {userInfo && (userInfo?.firstName[0] + userInfo?.lastName[0])}
             </Avatar>
@@ -67,21 +71,26 @@ const HeaderProfile = ({ userInfo }) => {
               </Text>
             </HStack>
           </VStack>
-          <VStack>
-            <IconButton
-              borderRadius='full'
-              variant='solid'
-              shadow={true}
-              icon={
-                <MaterialCommunityIcons
-                  name='account-edit'
-                  size={24}
-                  color='white'
-                />
-              }
-              onPress={() => console.log('Editar perfil')}
-            />
-          </VStack>
+          {userInfo?._id === user?.id && (
+            <VStack>
+              <IconButton
+                borderRadius='full'
+                variant='solid'
+                shadow={true}
+                icon={
+                  <MaterialCommunityIcons
+                    name='account-edit'
+                    size={24}
+                    color='white'
+                  />
+                }
+                onPress={() => {
+                  navigation?.navigate('EditProfile')
+                }}
+              />
+            </VStack>
+          )}
+
         </HStack>
       </Stack>
     </Box>
