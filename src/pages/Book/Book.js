@@ -1,286 +1,242 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
-    View,
+  View,
+  StyleSheet,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+
+import { Tab, TabView, AirbnbRating } from "react-native-elements";
+
+import { useNavigation } from "@react-navigation/native";
+
+import {
+  Ionicons,
+  MaterialIcons,
+  Entypo,
+  Foundation,
+  AntDesign,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
+
+import {
+    Avatar,
+    Box,
     Text,
-    StyleSheet,
-    Image,
-    ScrollView,
-    TouchableOpacity,
-} from 'react-native'
+    VStack,
+    FormControl,
+    Icon,
+    WarningOutlineIcon,
+    HStack,
+    FlatList,
+    Badge,
+  } from 'native-base'
 
-import {
-    Tab, TabView, AirbnbRating
-} from 'react-native-elements'
+//Image
+import BookImage from "../../../assets/book.jpg";
 
-import { useNavigation } from '@react-navigation/native'
+//Components
+import Review from "../../components/Post/Review";
 
-import BookImage from '../../../assets/book.jpg'
+//Data
+import dataReviews from "../../utilities/data/reviews";
 
-import { 
-    Ionicons, 
-    MaterialIcons,
-    Entypo,
-    Foundation,
-    AntDesign,
-    MaterialCommunityIcons,
-    FontAwesome
-} from '@expo/vector-icons'
+//Colors
+import COLORS from "../../components/styled-components/Colors";
 
-import Review from '../../components/Post/Review'
-import dataReviews from '../../utilities/data/reviews'
+//Styles
+import stylesProfile from "../../components/styled-components/stylesProfile";
+import stylesBook from "../../components/styled-components/stylesBook";
 
+const Book = (props) => {
+  const [index, setIndex] = React.useState(0);
 
-import stylesProfile from '../../components/styled-components/stylesProfile'
+  const Navegation = useNavigation();
 
-const Book = () => {
+  const [shouldShow, setShouldShow] = useState(true);
+  const [shouldShow2, setShouldShow2] = useState(true);
+  const [shouldShow3, setShouldShow3] = useState(true);
+  const [shouldShow4, setShouldShow4] = useState(false);
+  const [show, setShow] = useState(true);
 
-    const [index, setIndex] = React.useState(0);
+  const [signIn, setSignIn] = useState("Adam Meddler");
 
-    const Navegation = useNavigation()
+  const [reviews, setReviews] = useState(dataReviews || []);
 
-    const [shouldShow, setShouldShow] = useState(true)
-    const [shouldShow2, setShouldShow2] = useState(true)
-    const [shouldShow3, setShouldShow3] = useState(true)
-    const [shouldShow4, setShouldShow4] = useState(false)
-    const [show, setShow] = useState(true)
+  return (
+    <View style={[stylesBook.container]}>
+      <View style={stylesBook.bookDetailsContainer}>
+        <Image
+          source={BookImage}
+          style={stylesBook.image}
+          resizeMode="stretch"
+        />
+        <View style={stylesBook.bookDetails}>
+          <View style={stylesBook.detailLine}>
+            <Text style={[stylesBook.detailText, {fontSize: 20, fontWeight:"700", marginLeft: 0}]}>
+              Nombre del libro dasda adsda sdas sadas 
+            </Text>
+          </View>
+          <View style={stylesBook.detailLine}>
+            <Ionicons name="person" size={12} color={COLORS.base} />
+            <Text style={stylesBook.detailText}>
+              Autor del libro:
+            </Text>
+          </View>
+          <View style={stylesBook.detailLine}>
+            <MaterialIcons name="description" size={12} color="black" />
+            <Text style={{ marginLeft: 5, marginBottom: 2.5 }}>Sinopsis:</Text>
+          </View>
+          <View style={stylesBook.detailLine}>
+            <Entypo name="book" size={12} color="black" />
+            <Text style={stylesBook.detailLine}>Géneros:</Text>
+          </View>
+        </View>
+      </View>
 
-    const [signIn, setSignIn] = useState('Adam Meddler')
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <TouchableOpacity
+          style={stylesBook.buttonF}
+          activeOpacity={0.85}
+          onPress={() => setShow(!show)}
+        >
+          <MaterialIcons
+            name="favorite"
+            size={20}
+            color={show ? "white" : "red"}
+          />
+        </TouchableOpacity>
 
-    const [reviews, setReviews] = useState(dataReviews || [])
+        {shouldShow2 ? (
+          <TouchableOpacity
+            style={stylesBook.buttonD}
+            onPress={() => [
+              setShouldShow(true),
+              setShouldShow2(false),
+              setShouldShow3(true),
+              setShouldShow4(false),
+            ]}
+          >
+            <AntDesign name="pdffile1" size={24} color="red" />
+          </TouchableOpacity>
+        ) : (
+          false
+        )}
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+        {shouldShow ? (
+          <TouchableOpacity
+            style={stylesBook.buttonT}
+            activeOpacity={0.85}
+            onPress={() => [
+              setShouldShow(false),
+              setShouldShow2(true),
+              setShouldShow3(false),
+              setShouldShow4(false),
+            ]}
+          >
+            <Ionicons name="time" size={15} color="white" />
+            <Text style={stylesBook.textButton}>Por leer</Text>
+          </TouchableOpacity>
+        ) : (
+          false
+        )}
+        {shouldShow3 ? (
+          <TouchableOpacity
+            style={stylesBook.buttonT}
+            activeOpacity={0.85}
+            onPress={() => [
+              setShouldShow(true),
+              setShouldShow2(true),
+              setShouldShow3(false),
+              setShouldShow4(true),
+            ]}
+          >
+            <Ionicons name="checkmark-done-sharp" size={15} color="white" />
+            <Text style={stylesBook.textButton}>Leído</Text>
+          </TouchableOpacity>
+        ) : (
+          false
+        )}
+      </View>
+      {shouldShow4 ? (
+        <TouchableOpacity style={stylesBook.buttonT} activeOpacity={0.85}>
+          <FontAwesome
+            name="pencil-square-o"
+            size={15}
+            color="white"
+            style={{ marginLeft: 2 }}
+          />
+          <Text style={stylesBook.textButton}>Escribir review</Text>
+        </TouchableOpacity>
+      ) : (
+        false
+      )}
+      <View style={{ alignSelf: "flex-start", marginBottom: 5 }}>
+        <AirbnbRating count={5} showRating={false} size={15} />
+      </View>
+      <Tab
+        indicatorStyle={{
+          backgroundColor: "black",
+          height: 3,
+        }}
+      >
+        <Tab.Item
+          title="Review"
+          titleStyle={stylesBook.text}
+          containerStyle={stylesBook.itemContainer}
+          icon={
+            <MaterialCommunityIcons
+              name="comment-text-multiple-outline"
+              size={24}
+              color={COLORS.base}
+            />
+          }
+        />
+      </Tab>
 
-    return (
-        <View style={[stylesProfile.container,  {paddingTop: 30,}]}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Image
-                    source={BookImage}
-                    style={stylesProfile.image}
-                    resizeMode='stretch'
-                />
-                <TouchableOpacity
-                    style={styles.buttonF}
-                    activeOpacity={0.85}
-                    onPress={() => setShow(!show)}
-                >
-                    <MaterialIcons name="favorite" size={20} color={show? 'white':'red'} />
-                </TouchableOpacity>
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View>
-                    <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
-                        <Foundation name="book-bookmark" size={24} color="black" />
-                        <Text
-                            style={{ fontSize: 24, fontWeight: 'bold', marginLeft: 5, marginBottom: 5 }}>
-                            "Nombre del libro"
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
-                        <Ionicons name="person" size={12} color="black" />
-                        <Text style={{ marginLeft: 5, marginBottom: 2.5, }}>
-                            Autor del libro:
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
-                        <MaterialIcons name="description" size={12} color="black" />
-                        <Text style={{ marginLeft: 5, marginBottom: 2.5, }}>
-                            Sinopsis:
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', paddingLeft: 5 }}>
-                        <Entypo name="book" size={12} color="black" />
-                        <Text style={{ marginLeft: 5, marginBottom: 5 }}>
-                            Géneros:
-                        </Text>
-                    </View>
-                </View>
-                {shouldShow2 ? (
-                    <TouchableOpacity
-                        style={styles.buttonD}
-                        onPress={() => [setShouldShow(true), setShouldShow2(false), 
-                        setShouldShow3(true), setShouldShow4(false)]}>
-                        <AntDesign name="pdffile1" size={24} color="red" />
-                    </TouchableOpacity>
-                ) : false}
-            </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                {shouldShow ? (
-                    <TouchableOpacity
-                        style={styles.buttonT}
-                        activeOpacity={0.85}
-                        onPress={() => [setShouldShow(false), setShouldShow2(true), 
-                            setShouldShow3(false), setShouldShow4(false)] }
-                    >
-                        <Ionicons name="time" size={15} color="white" />
-                        <Text
-                            style={styles.textButton}>
-                            Por leer
-                        </Text>
-                    </TouchableOpacity>
-                ) : false}
-                {shouldShow3 ? (
-                    <TouchableOpacity
-                        style={styles.buttonT}
-                        activeOpacity={0.85}
-                        onPress={() => [setShouldShow(true), setShouldShow2(true), 
-                            setShouldShow3(false), setShouldShow4(true)]}
-                    >
-                        <Ionicons name="checkmark-done-sharp" size={15} color="white" />
-                        <Text
-                            style={styles.textButton}>
-                            Leído
-                        </Text>
-                    </TouchableOpacity>
-                ) : false}
-            </View>
-            {shouldShow4 ? (
-                <TouchableOpacity
-                    style={styles.buttonT}
-                    activeOpacity={0.85}
-                >
-                    <FontAwesome name="pencil-square-o" size={15} color="white" style={{marginLeft: 2}} />
-                    <Text
-                        style={styles.textButton}>
-                        Escribir review
-                    </Text>
-                </TouchableOpacity>
-            ) : false}
-            <View style={{ alignSelf: 'flex-start', marginBottom: 5 }}>
-                <AirbnbRating
-                    count={5}
-                    showRating={false}
-                    size={15}
-                />
-            </View>
-            <Tab
-                indicatorStyle={{
-                    backgroundColor: 'black',
-                    height: 3,
-                }}
-            >
-                <Tab.Item
-                    title='Review'
-                    titleStyle={styles.text}
-                    containerStyle={styles.itemContainer}
-                    icon={<MaterialCommunityIcons name="comment-text-multiple-outline" size={24} color="black" />}
-                />
-            </Tab>
-
-            <TabView>
-            <TabView.Item style={{ backgroundColor: '#fff', width: '100%' }}>
+      <TabView>
+        <TabView.Item style={{ backgroundColor: "#fff", width: "100%" }}>
           <ScrollView>
-            {reviews.length > 0 && reviews ? reviews?.map((review, id) => (
-              <Review
-                key={review.id}
-                signIn={signIn}
-                author={review.owner.firstName + ' ' + review.owner.lastName}
-                avatar={review.owner.picture}
-                image={review.image}
-                description={review.text}
-                date={review.publishDate}
-                likes={review.likes}
-                comments={review.comments}
-                tags={review.tags}
-                personTags={review.personTags}
-                id={id}
-                rating={review.rating}
-                posts={reviews}
-                setPosts={setReviews}
-              />
-            )) :
+            {reviews.length > 0 && reviews ? (
+              reviews?.map((review, id) => (
+                <Review
+                  key={review.id}
+                  signIn={signIn}
+                  author={review.owner.firstName + " " + review.owner.lastName}
+                  avatar={review.owner.picture}
+                  image={review.image}
+                  description={review.text}
+                  date={review.publishDate}
+                  likes={review.likes}
+                  comments={review.comments}
+                  tags={review.tags}
+                  personTags={review.personTags}
+                  id={id}
+                  rating={review.rating}
+                  posts={reviews}
+                  setPosts={setReviews}
+                />
+              ))
+            ) : (
               <Text
                 style={{
                   fontSize: 12,
-                  color: 'rgba(110, 45, 220, .5)',
-                  textAlign: 'center',
+                  color: "rgba(110, 45, 220, .5)",
+                  textAlign: "center",
                   marginVertical: 10,
                 }}
               >
                 No hay reviews disponibles en este momento...
               </Text>
-            }
+            )}
           </ScrollView>
         </TabView.Item>
-            </TabView>
-        </View>
-    )
-}
+      </TabView>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({
-
-    itemContainer: {
-        backgroundColor: 'rgba(235, 235, 255, .1)',
-        alignSelf: 'center',
-        borderWidth: .25,
-        borderRadius: 2,
-    },
-    text: {
-        fontSize: 12,
-        color: 'black'
-    },
-    follow: {
-        fontSize: 18,
-        fontStyle: 'italic',
-        marginBottom: 5,
-    },
-    textRol: {
-        alignSelf: 'flex-start',
-        textDecorationLine: 'underline',
-    },
-    textButton: {
-        alignSelf: 'center',
-        fontWeight: 'bold',
-        fontSize: 15,
-        color: 'white',
-        marginLeft: 5,
-    },
-    buttonF: {
-        backgroundColor: 'rgba(0, 0, 0, .5)',
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 200,
-        width: '100%',
-        height: '100%',
-        marginRight: 10,
-        maxWidth: 35,
-        maxHeight: 35,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'flex-start'
-    },
-    buttonD: {
-        backgroundColor: 'rgba(255, 255 ,255, .75)',
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 200,
-        width: '100%',
-        height: '100%',
-        marginRight: 10,
-        marginBottom: 5,
-        marginTop: 5,
-        maxWidth: 50,
-        maxHeight: 50,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center'
-    },
-    buttonT: {
-        flexDirection: 'row',
-        backgroundColor: 'rgba(0, 0, 0, .5)',
-        borderWidth: 2,
-        borderColor: 'black',
-        borderRadius: 200,
-        marginRight: 5,
-        maxWidth: 110,
-        maxHeight: 35,
-        height: '100%',
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 20,
-    },
-    rating: {
-        marginBottom: 5,
-        marginTop: 5,
-    },
-})
-
-export default Book
+export default Book;

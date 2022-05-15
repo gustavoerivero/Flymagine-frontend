@@ -12,6 +12,15 @@ import EditReaderUserProfile from '../pages/User/EditReaderUserProfile'
 import ProfilePage from '../pages/ProfilePage'
 import { View, StyleSheet } from 'react-native'
 
+//Pruebas
+import Book from '../pages/Book/Book' //Perfil del Libro con opcion Favorito
+import BookProfile from '../pages/Book/BookProfile' //Perfil del Libro con opcion a edicion y eliminar
+import BookEdit from '../pages/Book/EditBook' //Edicion del libro
+import MyBook from '../pages/Book/MyBook' //Mis libros, con opcion de Agregar un libro
+import RegisterBook from '../pages/Book/RegisterBook' //Pagina de Registro de un libro nuevo
+
+
+
 
 import ReaderUserProfile from '../pages/User/ReaderUserProfile'
 
@@ -59,7 +68,7 @@ const bottomRoutes = [
   },
   {
     name: 'Notifications',
-    component: EditReaderUserProfile,
+    component: Book,
     requireAuth: true,
     Icon: ({ color, size }) => (
       <Ionicons
