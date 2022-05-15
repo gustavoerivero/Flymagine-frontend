@@ -135,7 +135,7 @@ const Post = ({
           onPress={() => {
             console.log(`${userPost?.firstName + ' ' + userPost?.lastName}'s profile`)
             console.log(userPost._id)
-            if(userPost?._id === user?.id){
+            if (userPost?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
               navigation.navigate('UserProfile', { user: userPost._id })

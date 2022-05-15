@@ -7,13 +7,9 @@ import useAuthContext from '../../../hooks/useAuthContext'
 import { getUserById } from '../../../services/user/userAPI'
 import TabContainerProfile from '../components/TabContainerProfile'
 
-import { getPostByUser } from '../../../services/post/postAPI'
-
 const ProfileScreen = ({ navigation, userData }) => {
 
   const [userInfo, setUserInfo] = useState(null)
-
-  const [posts, setPosts] = useState([])
 
   const {
     state: { user }
@@ -21,7 +17,7 @@ const ProfileScreen = ({ navigation, userData }) => {
 
   useEffect(() => {
     getUserById(userData || user?.id)
-      .then(res => {
+      .then(res => {        
         setUserInfo(res?.Data)
       })
       .catch(err => {
