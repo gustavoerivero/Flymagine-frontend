@@ -51,7 +51,7 @@ const HeaderProfile = ({ userInfo, navigation }) => {
               bold
               color={'purple.900'}
             >
-              {userInfo?.firstName + ' ' + userInfo?.lastName}
+              {userInfo && (userInfo?.firstName + ' ' + userInfo?.lastName)}
             </Text>
 
             <HStack

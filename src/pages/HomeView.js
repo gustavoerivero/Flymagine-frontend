@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ScrollView } from 'react-native'
+import { ScrollView, RefreshControl } from 'react-native'
 import { VStack } from 'native-base'
 
 //Components
@@ -9,9 +9,27 @@ import Post from '../components/Post/Post'
 
 import { getPosts } from '../services/post/postAPI'
 
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout))
+}
+
 const HomeView = ({ navigation }) => {
 
   const [posts, setPosts] = useState([])
+
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(2000).then(() => setRefreshing(false))
+    getPosts()
+      .then(res => {
+        setPosts(res.reverse())
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }, [])
 
   useEffect(() => {
     getPosts()
@@ -26,18 +44,24 @@ const HomeView = ({ navigation }) => {
   return (
     <Container>
       <StatusBar />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
         <VStack
           space={2}
         >
-          { posts?.length > 0 && posts ? posts.map((post, index) => (
-              <Post
-                key={index}
-                post={post}
-                navigation={navigation}
-              />
-            )) : null
-          }          
+          {posts && posts.map((post, index) => (
+            <Post
+              key={index}
+              post={post}
+              navigation={navigation}
+            />
+          ))}
         </VStack>
 
       </ScrollView>
