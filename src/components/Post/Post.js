@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   AlertDialog,
   Button,
@@ -42,6 +42,7 @@ import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'
 import { deletePost } from '../../services/post/postAPI'
 import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
+import { useFocusEffect } from '@react-navigation/native'
 
 const Post = ({
   navigation,
@@ -96,31 +97,33 @@ const Post = ({
     }
   }
 
-  useEffect(() => {
-    getOnlyUser(user?.id)
-      .then(log => {
-        setUserLogged(log?.Data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    getUserById(post?.idUser)
-      .then(res => {
-        setUserPost(res?.Data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    getReactionsByPost(post?._id)
-      .then(res => {
-        setPostReactionInfo(res?.Data[0]?.users || [])
-        setLikes(res?.Data[0]?.users?.length || 0)
-        setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      getOnlyUser(user?.id)
+        .then(log => {
+          setUserLogged(log?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      getUserById(post?.idUser)
+        .then(res => {
+          setUserPost(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      getReactionsByPost(post?._id)
+        .then(res => {
+          setPostReactionInfo(res?.Data[0]?.users || [])
+          setLikes(res?.Data[0]?.users?.length || 0)
+          setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }, [])
+  )
 
   return (
     <Box

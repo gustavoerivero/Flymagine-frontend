@@ -46,7 +46,7 @@ const pickImage = async () => {
 	})
 
 	if (!result.cancelled) {
-		return result.uri
+		return result
 	}
 }
 

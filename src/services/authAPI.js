@@ -12,8 +12,6 @@ const login = async (form = {}) => {
   return data
 }
 
-
-
 module.exports = {
   // User
   registerUser,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
 import {
   View,
@@ -15,6 +15,7 @@ import COLORS from '../../styled-components/Colors'
 import useAuthContext from '../../../hooks/useAuthContext'
 import { getPostByUser } from '../../../services/post/postAPI'
 import Post from '../../Post/Post'
+import { useFocusEffect } from '@react-navigation/native'
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
@@ -37,15 +38,17 @@ const PostFeedProfile = ({ navigation }) => {
 
   const [posts, setPosts] = useState([])
 
-  useEffect(() => {
-    getPostByUser(user?.id)
+  useFocusEffect(
+    useCallback(() => {
+      getPostByUser(user?.id)
       .then(res => {
         setPosts(res?.Data?.reverse())
       })
       .catch(error => {
         console.log(error)
       })
-  }, [])
+    }, [])
+  )
 
   return (
     <ScrollView
