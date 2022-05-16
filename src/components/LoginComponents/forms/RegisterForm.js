@@ -41,7 +41,8 @@ import {
   registerSchema,
   registerDefaultValue,
 } from '../../../utils/formValidations/registerUserFormValidation'
-import { registerUser, setPreferences } from '../../../services/authAPI'
+import { registerUser } from '../../../services/authAPI'
+import { setPreferences } from '../../../services/user/userAPI'
 import { getAllLiteraryGenre } from '../../../services/literaryGenre/literaryGenre'
 import { personalPreferencesData, registerData } from '../../../adapters/User'
 

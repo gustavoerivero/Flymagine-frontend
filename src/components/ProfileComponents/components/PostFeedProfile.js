@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+import { RefreshControl } from 'react-native'
 import {
   View,
   Box,
@@ -14,10 +15,22 @@ import COLORS from '../../styled-components/Colors'
 import useAuthContext from '../../../hooks/useAuthContext'
 import { getPostByUser } from '../../../services/post/postAPI'
 import Post from '../../Post/Post'
+import { useFocusEffect } from '@react-navigation/native'
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout))
+}
 
 const PostFeedProfile = ({ navigation }) => {
 
   const layout = useWindowDimensions()
+
+  const [refreshing, setRefreshing] = useState(false)
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(2000).then(() => setRefreshing(false))
+  }, [])
 
   const {
     state: { user }
@@ -25,25 +38,34 @@ const PostFeedProfile = ({ navigation }) => {
 
   const [posts, setPosts] = useState([])
 
-  useEffect(() => {
-    getPostByUser(user?.id)
+  useFocusEffect(
+    useCallback(() => {
+      getPostByUser(user?.id)
       .then(res => {
         setPosts(res?.Data?.reverse())
       })
       .catch(error => {
         console.log(error)
       })
-  }, [])
+    }, [])
+  )
 
   return (
-    <ScrollView>
-      <VStack 
-        space={2} 
-        minH={layout.height} 
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
+      <VStack
+        space={2}
+        minH={layout.height}
         minW={layout.width}
         m={2}
         pr={4}
-        mb={20} 
+        mb={20}
       >
         {posts?.length > 0 && posts ? posts.map((post, index) => (
           <Post

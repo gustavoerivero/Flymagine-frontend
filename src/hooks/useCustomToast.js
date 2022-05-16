@@ -1,21 +1,23 @@
 import { Dimensions } from 'react-native'
 import { useToast, Avatar, Text, HStack, Icon } from 'native-base'
 import { Ionicons } from '@expo/vector-icons'
+import COLORS from '../components/styled-components/Colors'
 
 const { width } = Dimensions.get('window')
 
-const Toast = ({ id, text = 'r' }) => (
+const Toast = ({ id, text = 'r', color = COLORS.primary, bgColor = COLORS.secundary}) => (
   <HStack
     id={id}
     h='20'
     w={width}
     bottom={-50}
-    backgroundColor='white'
-    px={6}
-    space={4}
+    backgroundColor={bgColor}
+    px={10}
+    pr={20}
+    space={2}
     alignItems='center'
   >
-    <Avatar bgColor='#5A7E64'>
+    <Avatar bgColor={color}>
       <Icon
         as={Ionicons}
         name='ios-information-circle-outline'
@@ -23,7 +25,7 @@ const Toast = ({ id, text = 'r' }) => (
         color='white'
       />
     </Avatar>
-    <Text color='#5A7E64' fontWeight='bold'>
+    <Text color={color} bold pr={2} textAlign='justify' >
       {text}
     </Text>
   </HStack>
@@ -35,14 +37,16 @@ const useCustomToast = () => {
   const showSuccessToast = (text = '') => {
     toast.show({
       render: ({ id }) => {
-        return <Toast id={id} text={text} />
+        return <Toast id={id} text={text} bgColor={COLORS.bgPrimary} />
       },
     })
   }
 
   const showErrorToast = (text = '') => {
     toast.show({
-      title: text,
+      render: ({ id }) => {
+        return <Toast id={id} text={text} color={COLORS.error.primary} bgColor={COLORS.error.bgError} />
+      },
     })
   }
 

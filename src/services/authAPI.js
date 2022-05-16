@@ -12,16 +12,9 @@ const login = async (form = {}) => {
   return data
 }
 
-const setPreferences = async (id, data) => {
-  const response = await http.post(`${BASE_URL}/${id}/preferences`, data)
-  return response.data
-}
-
 module.exports = {
   // User
   registerUser,
   login,
 
-  // Preferences
-  setPreferences,
 }
