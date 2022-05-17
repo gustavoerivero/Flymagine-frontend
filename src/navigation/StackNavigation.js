@@ -12,11 +12,10 @@ import CommentPage from '../pages/Post/CommentPage'
 import ModifyCommentPage from '../pages/Post/ModifyCommentPage'
 
 // User Pages
-import ReaderUserProfile from '../pages/User/ReaderUserProfile'
-import EditReaderUserProfile from '../pages/User/EditReaderUserProfile'
 import MyFollower from '../pages/User/MyFollower'
-import MyFollow from '../pages/User/MyFollow'
 import UserProfilePage from '../pages/User/UserProfilePage'
+import EditProfile from '../pages/User/EditProfile'
+import Follows from '../pages/User/Follows'
 
 // Book Pages
 import MyBook from '../pages/Book/MyBook'
@@ -28,7 +27,7 @@ import EditBook from '../pages/Book/EditBook'
 import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
 import COLORS from '../components/styled-components/Colors'
-import EditProfile from '../pages/User/EditProfile'
+import Followers from '../pages/User/Followers'
 
 const Stack = createNativeStackNavigator()
 
@@ -90,22 +89,6 @@ const stackRoutes = [
     }
   },
   {
-    name: 'ReaderUserProfile',
-    component: ReaderUserProfile,
-    requireAuth: true,
-    options: {
-      title: 'Perfil',
-    }
-  },
-  {
-    name: 'EditReaderUserProfile',
-    component: EditReaderUserProfile,
-    requireAuth: true,
-    options: {
-      title: 'Editar perfil',
-    }
-  },
-  {
     name: 'CreatePostPage',
     component: CreatePostPage,
     requireAuth: true,
@@ -140,7 +123,7 @@ const stackRoutes = [
   },
   {
     name: 'MyFollower',
-    component: MyFollower,
+    component: Followers,
     requireAuth: true,
     options: {
       title: 'Seguidores',
@@ -148,7 +131,7 @@ const stackRoutes = [
   },
   {
     name: 'MyFollow',
-    component: MyFollow,
+    component: Follows,
     requireAuth: true,
     options: {
       title: 'Seguidos',

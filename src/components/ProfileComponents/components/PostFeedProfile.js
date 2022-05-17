@@ -21,7 +21,7 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
-const PostFeedProfile = ({ navigation }) => {
+const PostFeedProfile = ({ navigation, userInfo }) => {
 
   const layout = useWindowDimensions()
 
@@ -40,7 +40,7 @@ const PostFeedProfile = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      getPostByUser(user?.id)
+      getPostByUser(userInfo?._id || user?.id)
       .then(res => {
         setPosts(res?.Data?.reverse())
       })
@@ -61,7 +61,7 @@ const PostFeedProfile = ({ navigation }) => {
     >
       <VStack
         space={2}
-        minH={layout.height}
+        minH={layout.height * .9}
         minW={layout.width}
         m={2}
         pr={4}

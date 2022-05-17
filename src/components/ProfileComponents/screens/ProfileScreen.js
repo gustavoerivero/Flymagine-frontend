@@ -35,14 +35,19 @@ const ProfileScreen = ({ navigation, userData }) => {
         navigation={navigation}
         userInfo={userInfo}
       />
-      <InfoUserProfile
-        userInfo={userInfo}
-        navigation={navigation}
-      />
-      <TabContainerProfile
-        navigation={navigation}
-        userInfo={userInfo}
-      />
+      {userInfo && (
+        <>
+          <InfoUserProfile
+            userInfo={userInfo}
+            navigation={navigation}
+          />
+          <TabContainerProfile
+            navigation={navigation}
+            userInfo={userInfo}
+          />
+        </>
+      )}
+
     </View>
   )
 }

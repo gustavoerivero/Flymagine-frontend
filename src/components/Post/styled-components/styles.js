@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     marginRight: '20%',
   },
   image: {
-    width: '85%',
+    width: '50%',
     height: 200,
     margin: 5,
   },
