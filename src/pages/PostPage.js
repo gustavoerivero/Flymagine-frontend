@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useWindowDimensions } from 'react-native'
 import {
-  View,
-  StyleSheet,
   ScrollView,
-  Text
-} from 'react-native'
+  Text,
+  Stack,
+  VStack,
+  HStack,
+} from 'native-base'
 import {
-  Divider,
   Button,
   Image,
 } from 'react-native-elements'
-
 import { FAB } from '@rneui/themed'
-import { AntDesign, Ionicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons, FontAwesome } from '@expo/vector-icons'
 
 import CommentInput from '../components/Post/CommentInput'
-
 import PostModify from '../components/Post/PostModify'
+import COLORS from '../components/styled-components/Colors'
 
 import {
   handleChange,
@@ -24,28 +24,33 @@ import {
   permisionFunction,
 } from '../utils/functions'
 
-import {
-  parseDate,
-  parseTime,
-} from '../utilities/Parsers'
-
 import AddTag from '../components/Post/AddTag'
+import { useFocusEffect } from '@react-navigation/native'
+import useAuthContext from '../hooks/useAuthContext'
+import { getUserById } from '../services/user/userAPI'
 
 const CreatePostPage = () => {
 
+  const layout = useWindowDimensions()
+
+  const {
+    state: { user },
+  } = useAuthContext()
+
+  const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
-    signId: '',
+    signIn: '',
     author: 'Adam Meddler',
-    avatar: 'https://randomuser.me/api/portraits/med/men/1.jpg',
+    avatar: 'none',
     image: '',
     description: '',
-    date: parseDate(new Date()) + ' ' + parseTime(new Date()),
+    date: new Date(),
     likes: 0,
     comments: [],
     tags: [],
     personTags: []
   })
-  
+
   const [addPersonDialog, setAddPersonDialog] = useState(false)
   const [addPersonChoice, setAddPersonChoice] = useState(false)
 
@@ -57,246 +62,195 @@ const CreatePostPage = () => {
 
   const _handleChange = (item, value) => handleChange(post, setPost, item, value)
 
-  useEffect(() => {
-    permisionFunction()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      permisionFunction()
+      getUserById(user?.id)
+        .then(res => {
+          setUserData(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }, [])
+  )
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Text
-          style={styles.headerText}
-        >
-          Comparte tu experiencia
-        </Text>
-      </View>
-      <View style={styles.container}>
-        <PostModify
-          signIn={post.signIn}
-          author={post.author}
-          avatar={post.avatar}
-          image={post.image}
-          description={post.description}
-          date={post.date}
-          likes={post.likes}
-          comments={post.comments}
-          tags={post.tags}
-          personTags={post.personTags}
-          id={post.id}
-          posts={post.posts}
-          setPosts={post.setPosts}
-        />
-        <Divider
-          style={{
-            marginBottom: 10,
-          }}
-        />
-        <View style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'stretch',
-        }}>
-          <View style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-          }}>
-            <View>
-              {post.image !== "" && (
-                <>
-                  <Button
-                    icon={
-                      <Image
-                        source={{
-                          uri: post.image
-                        }}
-                        style={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 5,
-                        }}
-                      />
-                    }
-                    type='clear'
-                    containerStyle={{
-                      height: 45,
-                      width: 45,
-                      margin: 5,
-                      marginLeft: 10,
-                      alignContent: 'center',
-                      justifyContent: 'center',
-                    }}
-                    onPress={() => {
-                      console.log(`${post.author}'s post`)
-                      _handleChange('image', '')
-                    }}
-                  />
-                </>
+    <ScrollView>
+      <VStack>
+        <VStack minH={layout.height * .25} >
+          <Stack bgColor='white' alignItems='center' py={3} pt={4}>
+            <Text bold fontSize={20} color={COLORS.primary}>
+              Comparte tu experiencia
+            </Text>
+          </Stack>
+          <PostModify
+            user={userData}
+            post={post}
+          />
+        </VStack>
 
+        <VStack minH={layout.height * .68} justifyContent='flex-end'>
+          <HStack
+            justifyContent='space-between'
+            px={1} 
+            pt={3} 
+            minW={layout.width}
+          >
+            <Stack justifyContent='flex-end' >
+              {post?.image !== '' && (
+                <Button
+                  icon={
+                    <Image
+                      source={{
+                        uri: post.image
+                      }}
+                      style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 5,
+                      }}
+                    />
+                  }
+                  type='clear'
+                  containerStyle={{
+                    height: 45,
+                    width: 45,
+                    margin: 5,
+                    marginLeft: 10,
+                    alignContent: 'center',
+                    justifyContent: 'center',
+                  }}
+                  onPress={() => {
+                    console.log(`${post.author}'s post`)
+                    _handleChange('image', '')
+                  }}
+                />
               )}
-            </View>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'flex-end',
-                alignItems: 'flex-end',
-              }}
-            >
-              <AddTag
+            </Stack>
+            <VStack>
+
+              <AddTag 
                 visible={addPersonDialog}
                 setVisible={setAddPersonDialog}
                 setChoice={setAddPersonChoice}
-                content='¿A quién vas a añadir?'
-                tags={post.personTags}
-                setTags={_handleChange}
-                name='personTags'
+                content='¿A quién quieres etiquetar?'
+                
               />
-              <AddTag
-                visible={addTagDialog}
-                setVisible={setAddTagDialog}
-                setChoice={setAddTagChoice}
-                content='¿Sobre qué se trata esta publicación?'
-                tags={post.tags}
-                setTags={_handleChange}
-                name='tags'
-              />
-              <View
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'flex-end',
-                  alignItems: 'flex-end',
 
+              <FAB
+                icon={
+                  <Ionicons
+                    name='ios-person-add'
+                    color='#fff'
+                    size={20}
+                  />
+                }
+                containerStyle={{
+                  position: 'relative',
+                  marginBottom: 5,
+                  right: '15%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
                 }}
-              >
-                <FAB
-                  icon={
-                    <Ionicons
-                      name='ios-person-add'
-                      color='#fff'
-                      size={20}
-                    />
-                  }
-                  containerStyle={{
-                    position: 'relative',
-                    marginBottom: 5,
-                    right: '15%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 40,
-                    height: 40,
-                  }}
-                  color='rgba(200, 123, 255, 1)'
-                  onPress={() => {
-                    console.log('Add person tag')
-                    setAddPersonDialog(true)
-                  }}
-                />
+                color='rgba(200, 123, 255, 1)'
+                onPress={() => {
+                  console.log('Add person tag')
+                  setAddPersonDialog(true)
+                }}
+              />
 
-                <FAB
-                  icon={
-                    <AntDesign
-                      name='tags'
-                      color='#fff'
-                      size={20}
-                    />
-                  }
-                  containerStyle={{
-                    position: 'relative',
-                    marginBottom: 5,
-                    right: '15%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 40,
-                    height: 40,
-                  }}
-                  color='rgba(90, 123, 255, 1)'
-                  onPress={() => {
-                    console.log('Add post tag')
-                    setAddTagDialog(true)
-                  }}
-                />
+              <FAB
+                icon={
+                  <AntDesign
+                    name='tags'
+                    color='#fff'
+                    size={20}
+                  />
+                }
+                containerStyle={{
+                  position: 'relative',
+                  marginBottom: 5,
+                  right: '15%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                }}
+                color='rgba(90, 123, 255, 1)'
+                onPress={() => {
+                  console.log('Add post tag')
+                  setAddTagDialog(true)
+                }}
+              />
 
-                <FAB
-                  icon={
-                    <Ionicons
-                      name='ios-image-outline'
-                      color='#fff'
-                      size={20}
-                    />
-                  }
-                  containerStyle={{
-                    position: 'relative',
-                    marginBottom: 5,
-                    right: '15%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 40,
-                    height: 40,
-                  }}
-                  color='rgba(90, 85, 220, 1)'
-                  onPress={() => {
-                    console.log('Upload image')
-                    let image = pickImage()
-                    image.then(res => {
-                      _handleChange('image', res)
-                      console.log(res)
-                    }).catch(err => {
-                      console.log(err)
-                    })
-                  }}
-                />
-              </View>
-            </View>
+              <FAB
+                icon={
+                  <Ionicons
+                    name='ios-image-outline'
+                    color='#fff'
+                    size={20}
+                  />
+                }
+                containerStyle={{
+                  position: 'relative',
+                  marginBottom: 5,
+                  right: '15%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 40,
+                  height: 40,
+                }}
+                color='rgba(90, 85, 220, 1)'
+                onPress={() => {
+                  console.log('Upload image')
+                  let image = pickImage()
+                  image.then(res => {
+                    _handleChange('image', res.uri)
+                    console.log(res)
+                  }).catch(err => {
+                    console.log(err)
+                  })
+                }}
+              />
+            </VStack>
+          </HStack>
 
-          </View>
           <CommentInput
-            text={post.description}
-            setText={(text) => _handleChange('description', text)}
+            value={post.description}
+            onChangeText={(text) => _handleChange('description', text)}
+            placeholder='Dinos, ¿qué opinas?...'
+            rightElement={
+              <FAB
+                icon={
+                  <FontAwesome
+                    name='send'
+                    color='#fff'
+                    size={20}
+                  />
+                }
+                color='#b973ff'
+                containerStyle={{
+                  position: 'relative',
+                  marginBottom: 5,
+                  right: '5%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 50,
+                  height: 50,
+                }}
+                onPress={() => {
+                  console.log('Send')
+                }}
+              />
+            }
           />
-        </View>
-      </View>
+        </VStack>
+      </VStack>
     </ScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    width: '100%',
-    paddingTop: '10%',
-    paddingBottom: 10,
-    backgroundColor: '#fff'
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'rgba(90, 85, 220, 1)',
-
-  },
-  photoContainer: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 2.5,
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
 
 export default CreatePostPage

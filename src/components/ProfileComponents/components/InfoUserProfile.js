@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   Box,
   Stack,
@@ -12,8 +12,36 @@ import {
   MaterialIcons,
   FontAwesome,
 } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/native'
+
+import { getFollows, getFollowers } from '../../../services/user/userAPI'
 
 const InfoUserProfile = ({ userInfo, navigation }) => {
+
+  const [follows, setFollows] = useState(null)
+  const [followers, setFollowers] = useState(null)
+
+  useFocusEffect(
+    useCallback(() => {
+      if (userInfo) {
+        getFollowers(userInfo?._id)
+          .then(res => {
+            setFollowers(res?.Data)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        getFollows(userInfo?._id)
+          .then(res => {
+            setFollows(res?.Data?.follows)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }
+    }, [])
+  )
+
   return (
     <Box
       px={3}
@@ -58,7 +86,9 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
             alignItems='center'
           >
             <Link
-              onPress={() => navigation?.navigate('MyFollow')}
+              onPress={() => {
+                navigation?.navigate('MyFollow', { userId: userInfo?._id, follows: follows })
+              }}
             >
               <Text
                 fontSize='md'
@@ -67,13 +97,13 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                   fontSize='lg'
                   bold
                 >
-                  {userInfo?.follows ? userInfo?.follows?.length : 0}
+                  {follows ? follows?.length : 0}
                 </Text>
                 {''} Siguiendo
               </Text>
             </Link>
             <Link
-              onPress={() => navigation?.navigate('MyFollower')}
+              onPress={() => navigation?.navigate('MyFollower', { userId: userInfo?._id, followers: followers })}
             >
               <Text
                 fontSize='md'
@@ -82,7 +112,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                   fontSize='lg'
                   bold
                 >
-                  {userInfo?.followers ? userInfo?.followers?.length : 0}
+                  {followers ? followers?.length : 0}
                 </Text>
                 {''} Seguidores
               </Text>

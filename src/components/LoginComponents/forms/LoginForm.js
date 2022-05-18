@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   View,
   Text,
@@ -27,14 +27,8 @@ import {
 import Flymagine from '../../../../assets/Flymagine_Complete.png'
 import StyledField from '../StyledField'
 
-import {
-  loginDefaultvalue,
-  loginSchema,
-} from '../../../utils/formValidations/loginFormValidations'
-import {
-  Controller,
-  useForm,
-} from 'react-hook-form'
+import { loginDefaultvalue, loginSchema } from '../../../utils/formValidations/loginFormValidations'
+import { Controller, useForm } from 'react-hook-form'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useCustomToast from '../../../hooks/useCustomToast'

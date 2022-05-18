@@ -43,6 +43,21 @@ const getPreferences = async (id) => {
   return data?.Data[0]?.genres || []
 }
 
+const setFollowsByUser = async (id, follows) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/follows`, follows)
+  return data
+}
+
+const getFollows = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}/follows`)
+  return data
+}
+
+const getFollowers = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}/followers`)
+  return data
+}
+
 module.exports = {
   getOnlyUser,
   getUserById,
@@ -51,4 +66,8 @@ module.exports = {
 
   setPreferences,
   getPreferences,
+
+  setFollowsByUser,
+  getFollows,
+  getFollowers,
 }

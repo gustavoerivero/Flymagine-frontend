@@ -8,7 +8,6 @@ import {
 } from 'react-native'
 
 import { FontAwesome } from '@expo/vector-icons'
-import ReaderUserProfile from '../pages/User/ReaderUserProfile'
 import Book from '../pages/Book/Book'
 import { useNavigation } from '@react-navigation/native'
 
@@ -29,10 +28,6 @@ const Notification = (props) => {
       activeOpacity={0.9}
       onPress={() => {
         setRead('true')
-        if (page === 'profile')
-          Navegation.navigate(ReaderUserProfile)
-        if (page === 'profileBook')
-          Navegation.navigate(Book)
       }}>
       <View style={styles.container}>
         <View style={styles.photoContainer}>

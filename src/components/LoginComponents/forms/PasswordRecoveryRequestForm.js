@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
-import {
-  StyleSheet,
-} from 'react-native'
-
+import { StyleSheet } from 'react-native'
+import { Button } from 'react-native-elements'
 import {
   Box,
-  Button,
   Divider,
   Stack,
   Text,
@@ -14,31 +11,20 @@ import {
   FormControl,
   WarningOutlineIcon,
 } from 'native-base'
-import {
-  MaterialIcons
-} from '@expo/vector-icons'
-
-import {
-  Controller,
-  useForm,
-} from 'react-hook-form'
-
+import { MaterialIcons } from '@expo/vector-icons'
+import { Controller, useForm } from 'react-hook-form'
 import StyledField from '../StyledField'
-import Dialog from '../../Dialog'
-
-import {
-  emailValidator,
-} from '../../../utils/functions'
+import { emailValidator } from '../../../utils/functions'
+import useCustomToast from '../../../hooks/useCustomToast'
+import useLoading from '../../../hooks/useLoading'
+import { restorePassword } from '../../../services/authAPI'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { restorePasswordSchema, restorePasswordDefaultValue } from '../../../utils/formValidations/dataReset'
 
 const PasswordRecoveryRequestForm = ({ navigation }) => {
 
-  const [email, setEmail] = useState('')
-
-  const [modalVisible, setModalVisible] = useState(false)
-  const [choiceSelected, setChoiceSelected] = useState(false)
-
-  const [message, setMessage] = useState('')
-  const [valid, setValid] = useState(false)
+  const { showErrorToast, showSuccessToast } = useCustomToast()
+  const { isLoading, startLoading, stopLoading } = useLoading()
 
   const {
     control,
@@ -47,7 +33,23 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
     reset,
   } = useForm({
     mode: 'onChange',
+    resolver: yupResolver(restorePasswordSchema),
+    defaultvalue: restorePasswordDefaultValue,
   })
+
+  const onSubmit = async (value) => {
+    startLoading()
+    try {
+      await restorePassword(value.email)
+      showSuccessToast('¡El correo de recuperación de contraseña ha sido enviado!')
+      reset()
+      navigation?.navigate('Login')
+    } catch (error) {
+      showErrorToast('¡Error al enviar el correo de recuperación de contraseña!')
+      console.log(error)
+    }
+    stopLoading()
+  }
 
   return (
     <Box
@@ -64,7 +66,7 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
     >
       <Stack>
         <VStack
-          space={4}
+          space={1}
           divider={<Divider />}
           alignItems='center'
         >
@@ -72,6 +74,7 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
             bold
             fontSize='xl'
             color='purple.800'
+            mb={2}
           >
             ¿Olvidaste tu contraseña?
           </Text>
@@ -80,8 +83,8 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
             color='gray.500'
             textAlign='center'
           >
-            Ingresa tu correo electrónico y te enviaremos un enlace para que
-            puedas restablecerla.
+            Ingresa tu correo electrónico y te haremos llegar un correo con una
+            nueva contraseña.
           </Text>
 
           <Controller
@@ -129,68 +132,26 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
                 {emailValidator(value) || value.length === 0 ?
                   <Text></Text> : null
                 }
-                <Button
-                  onPress={() => {
-                    setValid(emailValidator(value))
-                    if (emailValidator(value)) {
-                      setMessage('Se ha enviado un correo electrónico a la dirección proporcionada con las instrucciones para recuperar su contraseña.')
-                      setModalVisible(true)
-                    } else {
-                      setMessage('Por favor, ingrese una dirección de correo electrónico válida.')
-                      setModalVisible(true)
-                    }
-                  }}
-                  bg='purple.600'
-                  color='white'
-                  rounded='lg'
-                  shadow={2}
-                  borderColor='purple.500'
-                  borderWidth={1}
-                  m={2}
-                  p={2}
-                >
-                  Recuperar contraseña
-                </Button>
+
               </FormControl>
             )}
           />
 
+          <Button
+            title='Recuperar acceso'
+            buttonStyle={styles.button}
+            disabled={!isValid || isLoading}
+            isLoading={isLoading}
+            onPress={handleSubmit(onSubmit)}
+          />
+
         </VStack>
       </Stack>
-
-      <Dialog
-        visible={modalVisible}
-        setVisible={setModalVisible}
-        setChoice={setChoiceSelected}
-        content={message}
-        toNavigate={
-          valid ? 'PasswordReset' : null
-        }
-        navigation={navigation}
-      />
     </Box>
   )
 }
 
-
 const styles = StyleSheet.create({
-  container: {
-    paddingTop: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    width: '95%',
-    height: '35%',
-  },
-  imageBackground: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 8,
-  },
   button: {
     width: 170,
     marginHorizontal: 2,

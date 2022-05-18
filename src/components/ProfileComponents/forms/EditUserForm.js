@@ -90,6 +90,7 @@ const EditUserForm = ({ navigation }) => {
                   .then(response => {
                     stopLoading()
                     showSuccessToast('¡Misión cumplida! Tu imagen de perfil ha sido actualizada con éxito')
+                    console.log(response)
                     setImage(res.uri)
                     navigation?.navigate('Profile')
                   })

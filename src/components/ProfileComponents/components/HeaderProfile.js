@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import {
   Box,
   Stack,
@@ -15,12 +16,57 @@ import {
   MaterialCommunityIcons,
 } from '@expo/vector-icons'
 import useAuthContext from '../../../hooks/useAuthContext'
+import { setFollowsByUser, getFollows } from '../../../services/user/userAPI'
+import COLORS from '../../styled-components/Colors'
 
 const HeaderProfile = ({ userInfo, navigation }) => {
 
   const {
     state: { user },
   } = useAuthContext()
+
+  const [isFollow, setIsFollow] = useState(false)
+  const [follows, setFollows] = useState(null)
+
+  useFocusEffect(
+    useCallback(() => {
+      getFollows(user?.id)
+        .then(res => {
+          setFollows(res?.Data?.follows)
+
+          if (follows?.find(f => f._id === userInfo?._id)) {
+            setIsFollow(true)
+          }
+          
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }, [follows])
+  )
+
+  const handleFollow = async () => {
+
+    let newFollows = [...follows]
+
+    if (isFollow) {
+      newFollows = newFollows.filter(f => f._id !== userInfo?._id)
+      setIsFollow(false)
+    } else {
+      newFollows.push(userInfo)
+      setIsFollow(true)
+    }
+
+    await setFollowsByUser(user.id, newFollows)
+      .then(res => {
+        console.log(res)
+        setFollows(res?.Data?.follows)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+
+  }
 
   return (
     <Box
@@ -71,7 +117,7 @@ const HeaderProfile = ({ userInfo, navigation }) => {
               </Text>
             </HStack>
           </VStack>
-          {userInfo?._id === user?.id && (
+          {userInfo && userInfo?._id === user?.id ?
             <VStack>
               <IconButton
                 borderRadius='full'
@@ -89,7 +135,25 @@ const HeaderProfile = ({ userInfo, navigation }) => {
                 }}
               />
             </VStack>
-          )}
+            :
+            <VStack>
+              <IconButton
+                borderRadius='full'
+                variant={'outline'}
+                borderColor={isFollow ? COLORS.button.secundary : COLORS.button.terciary}
+                icon={
+                  <FontAwesome5
+                    name={isFollow ? 'user-times' : 'user-plus'}
+                    size={20}
+                    color={isFollow ? COLORS.button.secundary : COLORS.button.terciary}
+                  />
+                }
+                onPress={() => {
+                  handleFollow()
+                }}
+              />
+            </VStack>
+          }
 
         </HStack>
       </Stack>
