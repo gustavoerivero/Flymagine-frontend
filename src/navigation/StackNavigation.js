@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import LoginPage from '../pages/Login/LoginPage'
 import RegisterPage from '../pages/Login/RegisterPage'
 import PasswordRecoveryRequestPage from '../pages/Login/PasswordRecorveryRequestPage'
-import PasswordResetPage from '../pages/Login/PasswordResetPage'
 
 // Post pages
 import CreatePostPage from '../pages/Post/CreatePostPage'
@@ -50,14 +49,6 @@ const stackRoutes = [
   {
     name: 'PasswordRecoveryRequest',
     component: PasswordRecoveryRequestPage,
-    requireAuth: false,
-    options: {
-      title: 'Recuperar contraseña',
-    }
-  },
-  {
-    name: 'PasswordReset',
-    component: PasswordResetPage,
     requireAuth: false,
     options: {
       title: 'Recuperar contraseña',

@@ -12,9 +12,15 @@ const login = async (form = {}) => {
   return data
 }
 
+const restorePassword = async (email) => {
+  const { data } = await http.post(`${BASE_URL}/restored/${email}`)	
+  return data
+}
+
 module.exports = {
   // User
   registerUser,
   login,
+  restorePassword
 
 }
