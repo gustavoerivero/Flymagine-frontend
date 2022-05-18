@@ -40,14 +40,11 @@ import { useWindowDimensions } from 'react-native'
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'
-import { deletePost } from '../../services/post/postAPI'
+import { deletePost, getHashtags } from '../../services/post/postAPI'
 import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
 import { useFocusEffect } from '@react-navigation/native'
 
-const Post = ({
-  navigation,
-  post = {},
-}) => {
+const Post = ({ navigation, post = {} }) => {
 
   const layout = useWindowDimensions()
   const { showSuccessToast, showErrorToast } = useCustomToast()
@@ -58,7 +55,7 @@ const Post = ({
   const [userLogged, setUserLogged] = useState(null)
   const [userPost, setUserPost] = useState(null)
   const [personTags, setPersonTags] = useState([])
-  const [hashtags, setHashtags] = useState([])
+  const [hashtags, setHashtags] = useState(null)
 
   const [isLiked, setIsLiked] = useState(false)
   const [postReactionInfo, setPostReactionInfo] = useState([])
@@ -123,6 +120,12 @@ const Post = ({
           console.log(error)
         })
     }, [])
+  )
+
+  useFocusEffect(
+    useCallback(() => {
+
+    })
   )
 
   return (
@@ -316,6 +319,18 @@ const Post = ({
               </Text>
             </Stack>
             <Divider />
+            <Stack alignItems='flex-end' >
+              {post?.photo && (post?.photo !== 'none') && (
+                <>
+                  <Image
+                    source={{ uri: post?.photo }}
+                    style={{ width: '100%', height: 300 }}
+                    alt='post'
+                  />
+                  <Divider />
+                </>
+              )}
+            </Stack>
             {hashtags?.length > 0 && (
               <>
                 <ScrollView horizontal >
@@ -326,10 +341,10 @@ const Post = ({
                         margin: 2,
                       }}
                       onPress={() => {
-                        console.log(`Tag ${hashtag}`)
+                        console.log(`Tag ${hashtag.name}`)
                       }}
                     >
-                      {hashtag}
+                      {hashtag.name}
                     </Chip>
                   ))}
                 </ScrollView>

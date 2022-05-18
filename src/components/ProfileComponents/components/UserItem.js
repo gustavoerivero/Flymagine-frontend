@@ -113,15 +113,15 @@ const UserItem = ({ userItem, navigation, onPress }) => {
               alignItems='center'
             >
               <Icon
-                as={userItem?.idRole?.name === 'Reader' ? FontAwesome5 : AntDesign}
-                name={userItem?.idRole?.name === 'Reader' ? 'book-reader' : 'edit'}
+                as={userItem?.idRole === '626aef37b4a9510568d6036d' ? FontAwesome5 : AntDesign}
+                name={userItem?.idRole === '626aef37b4a9510568d6036d' ? 'book-reader' : 'edit'}
               />
               <Text
                 fontSize='xs'
                 color={'purple.600'}
                 italic
               >
-                {userItem?.idRole?.name === 'Reader' ? 'Lector' : 'Escritor'}
+                {userItem?.idRole === '626aef37b4a9510568d6036d' ? 'Lector' : 'Escritor'}
               </Text>
             </HStack>
             <HStack space={2}>

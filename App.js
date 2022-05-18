@@ -3,10 +3,6 @@ import { NativeBaseProvider } from 'native-base'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { AuthProvider } from './src/context/AuthContext'
 import StackNavigation from './src/navigation/StackNavigation'
-/**
- * import store from './Redux/store'
- * import { Provider } from 'react-redux'
- */
 
 const App = () => {
   return (

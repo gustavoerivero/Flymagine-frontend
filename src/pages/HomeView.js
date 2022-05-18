@@ -41,7 +41,6 @@ const HomeView = ({ navigation }) => {
       getFollows(user?.id)
         .then(res => {
           setFollows(res?.Data?.follows)
-          console.log(follows)
 
           if (follows?.length > 0) {
             let f = follows.map(follow => follow._id)

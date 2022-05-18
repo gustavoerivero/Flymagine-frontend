@@ -12,10 +12,10 @@ import CommentPage from '../pages/Post/CommentPage'
 import ModifyCommentPage from '../pages/Post/ModifyCommentPage'
 
 // User Pages
-import MyFollower from '../pages/User/MyFollower'
 import UserProfilePage from '../pages/User/UserProfilePage'
 import EditProfile from '../pages/User/EditProfile'
 import Follows from '../pages/User/Follows'
+import Followers from '../pages/User/Followers'
 
 // Book Pages
 import MyBook from '../pages/Book/MyBook'
@@ -27,7 +27,6 @@ import EditBook from '../pages/Book/EditBook'
 import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
 import COLORS from '../components/styled-components/Colors'
-import Followers from '../pages/User/Followers'
 
 const Stack = createNativeStackNavigator()
 

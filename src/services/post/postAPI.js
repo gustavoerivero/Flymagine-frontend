@@ -1,5 +1,4 @@
 import { http } from '../http'
-import { getFollows } from '../user/userAPI'
 
 const BASE_URL = 'post'
 
@@ -23,9 +22,26 @@ const deletePost = async (id) => {
   return data || null
 }
 
-module.exports  = {
+// Hashtag Post API
+
+const setHashtags = async (postId, hashtags) => {
+  const { data } = await http.post(`${BASE_URL}/${postId}/hashtag`, hashtags)
+  return data || null
+}
+
+const getHashtags = async (postId) => {
+  const { data } = await http.get(`${BASE_URL}/${postId}/hashtag`)
+  return data?.Data || null
+}
+
+
+module.exports = {
   getPosts,
   getFeed,
   getPostByUser,
   deletePost,
+
+  // Hashtag Post API
+  setHashtags,
+  getHashtags,
 }

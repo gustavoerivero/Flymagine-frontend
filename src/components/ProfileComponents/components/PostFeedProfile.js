@@ -82,7 +82,7 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
               fontSize='sm'
               color={COLORS.primary}
             >
-              No tienes publicaciones aún
+              {user.id === userInfo?._id ? 'No tienes publicaciones aún...' : 'Este usuario no ha publicado aún...'}
             </Text>
           </Box>
         )}
