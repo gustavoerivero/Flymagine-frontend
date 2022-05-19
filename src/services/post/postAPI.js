@@ -31,7 +31,19 @@ const setHashtags = async (postId, hashtags) => {
 
 const getHashtags = async (postId) => {
   const { data } = await http.get(`${BASE_URL}/${postId}/hashtag`)
-  return data?.Data || null
+  return data?.Data[0]?.hashtags || null
+}
+
+// Usertags Post API
+
+const setUsertags = async (postId, usertags) => {
+  const { data } = await http.post(`${BASE_URL}/${postId}/usertag`, usertags)
+  return data || null
+}
+
+const getUsertags = async (postId) => {
+  const { data } = await http.get(`${BASE_URL}/${postId}/usertag`)
+  return data?.Data[0]?.users || null
 }
 
 
@@ -44,4 +56,8 @@ module.exports = {
   // Hashtag Post API
   setHashtags,
   getHashtags,
+
+  // Usertags Post API
+  setUsertags,
+  getUsertags,
 }

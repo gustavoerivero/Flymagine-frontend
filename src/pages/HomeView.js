@@ -37,17 +37,18 @@ const HomeView = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-
       getFollows(user?.id)
         .then(res => {
           setFollows(res?.Data?.follows)
 
-          if (follows?.length > 0) {
-            let f = follows.map(follow => follow._id)
+          let followsReceived = res?.Data?.follows
+
+          if (followsReceived?.length > 0) {
+            let f = followsReceived.map(follow => follow._id)
             f.push(user?.id)
             setUsers(f)
-            
-            getFeed(users)
+
+            getFeed(f)
               .then(res => {
                 setPosts(res?.Data?.reverse())
               })
@@ -55,13 +56,11 @@ const HomeView = ({ navigation }) => {
                 console.log(err)
               })
           }
-
         })
         .catch(err => {
           console.log(err)
         })
-
-    }, [follows])
+    }, [])
   )
 
   return (
