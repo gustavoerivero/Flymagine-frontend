@@ -3,6 +3,7 @@ import {
   AlertDialog,
   Button,
   Avatar,
+  Badge,
   Image,
   Box,
   Stack,
@@ -15,19 +16,9 @@ import {
   Icon
 } from 'native-base'
 
-import { Chip } from 'react-native-paper'
-
-import {
-  parseDate,
-  parseTime,
-} from '../../utilities/Parsers'
-
-import {
-  previousFourteenHours,
-} from '../../utils/functions'
-
-import { TouchableOpacity } from 'react-native'
-
+import { parseDate, parseTime } from '../../utilities/Parsers'
+import { previousFourteenHours } from '../../utils/functions'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   FontAwesome,
   MaterialIcons,
@@ -35,12 +26,11 @@ import {
 } from '@expo/vector-icons'
 
 import COLORS from '../styled-components/Colors'
-
-import { useWindowDimensions } from 'react-native'
+-
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'
-import { deletePost, getHashtags } from '../../services/post/postAPI'
+import { deletePost, getHashtags, getUsertags } from '../../services/post/postAPI'
 import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
 import { useFocusEffect } from '@react-navigation/native'
 
@@ -97,8 +87,8 @@ const Post = ({ navigation, post = {} }) => {
   useFocusEffect(
     useCallback(() => {
       getOnlyUser(user?.id)
-        .then(log => {
-          setUserLogged(log?.Data)
+        .then(res => {
+          setUserLogged(res?.Data)
         })
         .catch(error => {
           console.log(error)
@@ -119,14 +109,27 @@ const Post = ({ navigation, post = {} }) => {
         .catch(error => {
           console.log(error)
         })
+
+      getHashtags(post?._id)
+        .then(res => {
+          setHashtags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getUsertags(post?._id)
+        .then(res => {
+          setPersonTags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
     }, [])
   )
 
-  useFocusEffect(
-    useCallback(() => {
 
-    })
-  )
 
   return (
     <Box
@@ -263,46 +266,50 @@ const Post = ({ navigation, post = {} }) => {
 
           <VStack>
 
-            <Stack
-              ml={2}
-            >
+            <Stack>
+              <Divider />
               {personTags?.length > 0 && (
                 <>
-                  <ScrollView horizontal >
-                    {personTags.map((tag, index) => (
-                      <Chip
-                        key={index}
-                        type='outlined'
-                        avatar={
-                          <Image
-                            source={{
-                              uri: tag.picture,
-                            }}
-                            style={{
-                              height: 15,
-                              width: 15,
-                            }}
-                          />
-                        }
-                        onPress={() => {
-                          console.log(`${tag.firstName} ${tag.lastName}'s profile`)
-                        }}
-                        style={{
-                          marginRight: 5,
-                          height: 20,
-                          justifyContent: 'center',
-                          backgroundColor: 'rgba(200, 90, 235, .5)',
-                        }}
-                        textStyle={{
-                          fontSize: 10,
-                          fontWeight: 'bold',
-                          color: '#fff',
-                        }}
-
-                      >
-                        {tag.firstName + ' ' + tag.lastName}
-                      </Chip>
-                    ))}
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                    <HStack space={1} mr={10} m={1}>
+                      {personTags.map((tag, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            if (tag?._id === user?.id) {
+                              navigation.navigate('Profile')
+                            } else {
+                              navigation.navigate('UserProfile', { user: tag._id })
+                            }
+                          }}
+                        >
+                          <Badge
+                            size='sm'
+                            bgColor='rgba(223, 204, 255, .35)'
+                            rounded='full'
+                          >
+                            <HStack space={1}>
+                              <Avatar
+                                bg='purple.600'
+                                size='xs'
+                                source={{
+                                  uri: (tag?.photo === 'none' ? null : tag?.photo)
+                                }}
+                                borderColor='white'
+                                borderWidth={3}
+                              >
+                                {tag && (tag?.firstName[0] + tag?.lastName[0])}
+                              </Avatar>
+                              <Text
+                                color='rgba(95, 0, 255, .55)'
+                              >
+                                {tag.firstName + ' ' + tag.lastName}
+                              </Text>
+                            </HStack>
+                          </Badge>
+                        </TouchableOpacity>
+                      ))}
+                    </HStack>
                   </ScrollView>
                   <Divider />
                 </>
@@ -319,12 +326,12 @@ const Post = ({ navigation, post = {} }) => {
               </Text>
             </Stack>
             <Divider />
-            <Stack alignItems='flex-end' >
+            <Stack alignItems='flex-start' >
               {post?.photo && (post?.photo !== 'none') && (
                 <>
                   <Image
                     source={{ uri: post?.photo }}
-                    style={{ width: '100%', height: 300 }}
+                    style={{ width: 300, height: 300 }}
                     alt='post'
                   />
                   <Divider />
@@ -333,24 +340,30 @@ const Post = ({ navigation, post = {} }) => {
             </Stack>
             {hashtags?.length > 0 && (
               <>
-                <ScrollView horizontal >
-                  {hashtags.map((hashtag, index) => (
-                    <Chip
-                      key={index}
-                      style={{
-                        margin: 2,
-                      }}
-                      onPress={() => {
-                        console.log(`Tag ${hashtag.name}`)
-                      }}
-                    >
-                      {hashtag.name}
-                    </Chip>
-                  ))}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                  <HStack space={1} mr={10} m={1}>
+
+                    {hashtags.map((hashtag, index) => (
+                      <TouchableOpacity key={index}>
+                        <Badge
+                          size='sm'
+                          bgColor='rgba(223, 204, 255, .35)'
+                          rounded='full'
+                        >
+                          <Text
+                            color='rgba(95, 0, 255, .55)'
+                          >
+                            {hashtag.name}
+                          </Text>
+                        </Badge>
+                      </TouchableOpacity>
+                    ))}
+                  </HStack>
                 </ScrollView>
                 <Divider />
               </>
             )}
+
             <HStack
               w={layout.width * .73}
               mt={1}
