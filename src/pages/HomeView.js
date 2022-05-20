@@ -24,7 +24,6 @@ const HomeView = ({ navigation }) => {
   } = useAuthContext()
 
   const [follows, setFollows] = useState([])
-  const [users, setUsers] = useState([])
 
   const [posts, setPosts] = useState([])
 
@@ -47,7 +46,6 @@ const HomeView = ({ navigation }) => {
           if (followsReceived?.length >= 0) {
             let f = followsReceived.map(follow => follow._id)
             f.push(user?.id)
-            setUsers(f)
 
             getFeed(f)
               .then(res => {
