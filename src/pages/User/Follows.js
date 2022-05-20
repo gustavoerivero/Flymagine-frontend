@@ -34,8 +34,11 @@ const Follows = ({ navigation, route }) => {
   )
 
   return (
-    <ScrollView bgColor='red'>
-      <View minH={layout.height * .9} bgColor={COLORS.base} >
+    <ScrollView>
+      <View
+        minH={layout.height * .9}
+        bgColor={COLORS.base}
+      >
         {follows && follows.map(follow => (
           <UserItem
             key={follow._id}

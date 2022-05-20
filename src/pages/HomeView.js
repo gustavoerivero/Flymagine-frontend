@@ -37,13 +37,14 @@ const HomeView = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+
       getFollows(user?.id)
         .then(res => {
           setFollows(res?.Data?.follows)
 
           let followsReceived = res?.Data?.follows
 
-          if (followsReceived?.length > 0) {
+          if (followsReceived?.length >= 0) {
             let f = followsReceived.map(follow => follow._id)
             f.push(user?.id)
             setUsers(f)

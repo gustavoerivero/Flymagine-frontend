@@ -55,7 +55,7 @@ const setFollowsByUser = async (id, follows) => {
 
 const getFollows = async (id) => {
   const { data } = await http.get(`${BASE_URL}/${id}/follows`)
-  return data
+  return data || []
 }
 
 const getFollowers = async (id) => {
