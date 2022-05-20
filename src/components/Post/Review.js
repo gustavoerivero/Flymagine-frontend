@@ -1,19 +1,21 @@
-import React, {
-  useState,
-} from 'react'
+import React, { useState, useEffect, } from 'react'
+import { View, TouchableOpacity, } from 'react-native'
+
 import {
-  Text,
-  View,
-} from 'react-native'
-
-import { Divider } from '@rneui/themed'
-
-import styles from './styled-components/styles'
-import { 
-  Button, 
+  AlertDialog,
+  Button,
+  Avatar,
   Image,
-  AirbnbRating,
-} from 'react-native-elements'
+  Box,
+  Stack,
+  HStack,
+  VStack,
+  Text,
+  Divider,
+  IconButton,
+  ScrollView,
+  Icon
+} from 'native-base'
 
 import { Chip } from 'react-native-paper'
 
@@ -26,199 +28,309 @@ import {
   previousFourteenHours,
 } from '../../utils/functions'
 
+import {
+  FontAwesome,
+  MaterialIcons,
+  MaterialCommunityIcons,
+} from '@expo/vector-icons'
+
 import { useNavigation } from '@react-navigation/native'
-import Dialog from '../Dialog'
 
-const Review = (props) => {
+import COLORS from '../styled-components/Colors'
 
-  const [isLiked, setIsLiked] = useState(false)
-  const [likes, setLikes] = useState(props.likes)
-  const [comments, setComments] = useState(props.comments.length)
+import { useWindowDimensions } from 'react-native'
+import useAuthContext from '../../hooks/useAuthContext'
+import useCustomToast from '../../hooks/useCustomToast'
+import { getUserById, getOnlyUser } from '../../services/user/userAPI'
+import { deleteReview } from '../../services/post/reviewAPI'
+import { reviewReactionsByReview, getReactionsByReview } from '../../services/post/reactionAPI'
+
+const Review = ({ navigation, review = {}, }) => {
+
+  const {
+    state: { user }
+  } = useAuthContext()
+
+  const layout = useWindowDimensions()
 
   const [editChoice, setEditChoice] = useState(false)
-  const [editVisible, setEditVisible] = useState(false)
 
-  const [deleteVisible, setDeleteVisible] = useState(false)
   const [deleteChoice, setDeleteChoice] = useState(false)
 
   const Navegation = useNavigation()
 
+
+
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+  
+  const [userLogged, setUserLogged] = useState(null)
+  const [userReview, setReviewPost] = useState(null)
+  const [personTags, setPersonTags] = useState([])
+
+  const [isLiked, setIsLiked] = useState(false)
+  const [reviewReactionInfo, setReviewReactionInfo] = useState([])
+  const [likes, setLikes] = useState(0)
+  const [comments, setComments] = useState(null)
+
+  const [editVisible, setEditVisible] = useState(false)
+  const [deleteVisible, setDeleteVisible] = useState(false)
+  
+
+  const deleteReviewById = async () => {
+    try {
+      console.log(review)
+      const data = await deleteReview(review?._id)
+      console.log(data)
+      showSuccessToast('Publicación eliminada con éxito')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const likeReview = async () => {
+    try {
+      const newValue = reviewReactionInfo
+      if (newValue?.find((value) => userLogged._id === value?._id)) {
+        newValue?.splice(newValue?.findIndex((reactionUser) => userLogged?._id === reactionUser?._id), 1)
+      } else {
+        newValue?.push(userLogged)
+      }
+
+      setReviewReactionInfo(newValue)
+      await reviewReactionsByReview(review?._id, reviewReactionInfo)
+      setLikes(reviewReactionInfo?.length)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+
+    getOnlyUser(user?.id)
+      .then(log => {
+        setUserLogged(log?.Data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+    getUserById(review?.idUser)
+      .then(res => {
+        setUserReview(res?.Data)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+    getReactionsByReview(review?._id)
+      .then(res => {
+        setReviewReactionInfo(res?.Data[0]?.users || [])
+        setLikes(res?.Data[0]?.users?.length || 0)
+        setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }, [])
+
+
+
+
   return (
-    <View style={styles.container}>
-      <View style={styles.photoContainer}>
-        <Button
-          buttonStyle={styles.profileButton}
-          containerStyle={styles.profileButton}
-          icon={
-            <Image
-              source={{
-                uri: props.avatar
-              }}
-              style={styles.profileButton}
-            />
-          }
-          type='clear'
+    <Box
+      p={2}
+      bgColor='white'
+      rounded='lg'
+      shadow={2}
+      pb={2}
+    >
+      <HStack>
+        <TouchableOpacity
           onPress={() => {
-            console.log(`${props.author}'s profile`)
+            console.log(`${userReview?.firstName + ' ' + userReview?.lastName}'s profile`)
+            console.log(userReview._id)
+            if (userReview?._id === user?.id) {
+              navigation.navigate('Profile')
+            } else {
+              navigation.navigate('UserProfile', { user: userReview._id })
+            }
           }}
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={styles.headerContainer}>
-          <View style={styles.title}>
-            <Text style={{
-              fontWeight: 'bold',
-              marginRight: 5,
-            }}>
-              {props.author}
-            </Text>
-            <Text style={{
-              fontSize: 10,
-              color: '#aaa',
-            }}>
-              {parseDate(props.date) + ' ' + parseTime(props.date)}
-            </Text>
-          </View>
-          <View style={styles.titleButtons}>
-            {(props.signIn === props.author && previousFourteenHours(props.date)) && (
-              <>
-                <Button
-                  containerStyle={styles.button}
-                  icon={{
-                    name: 'edit',
-                    type: 'font-awesome',
-                    color: '#aaa',
-                    size: 15,
-                  }}
-                  type='clear'
-                  onPress={() => {
-                    console.log(`Edit ${props.author}'s review`)
-                    setEditVisible(true)
-                  }}
+        >
+          <Avatar
+            bg='purple.600'
+            size='md'
+            source={{
+              uri: (userReview?.photo === 'none' ? null : userReview?.photo)
+            }}
+            borderColor='white'
+            borderWidth={3}
+          >
+            {userReview && (userReview?.firstName[0] + userReview?.lastName[0])}
+          </Avatar>
+        </TouchableOpacity>
+        <VStack
+          ml={2}
+        >
+          <HStack
+            space={2}
+            justifyContent='space-between'
+            alignItems='center'
+            h={7}
+            mr={2}
+          >
+            <HStack
+              space={2}
+            >
+              <Text
+                bold
+                fontSize='sm'
+              >
+                {userReview?.firstName} {userReview?.lastName}
+              </Text>
+              <Text
+                fontSize={10}
+                color='gray.300'
+                alignSelf='center'
+              >
+                {parseDate(review?.createdAt) + ' ' + parseTime(review?.createdAt)}
+              </Text>
+            </HStack>
+
+            {(user?.id === review?.idUser && previousFourteenHours(review?.createdAt)) && (
+              <HStack
+                alignItems='flex-end'
+              >
+                <IconButton
+                  icon={
+                    <FontAwesome
+                      name='edit'
+                      color='gray.300'
+                    />
+                  }
+                  size='sm'
                 />
-                <Dialog
-                  content='¿Está seguro de querer editar esta review?'
-                  visible={editVisible}
-                  setVisible={setEditVisible}
-                  setChoice={setEditChoice}
-                  cancelButton={true}
-                  toNavigate='CreatePostPage'
-                  params={props}
-                />
-                <Button
-                  containerStyle={styles.button}
-                  icon={{
-                    name: 'trash',
-                    type: 'font-awesome',
-                    color: '#aaa',
-                    size: 15,
-                  }}
-                  type='clear'
+                <IconButton
+                  icon={
+                    <FontAwesome
+                      name='trash'
+                      color='gray.300'
+                    />
+                  }
+                  size='sm'
                   onPress={() => {
-                    console.log(`Delete ${props.author}'s review`)
                     setDeleteVisible(true)
                   }}
                 />
-                <Dialog
-                  content='¿Está seguro de querer eliminar esta review?'
-                  visible={deleteVisible}
-                  setVisible={setDeleteVisible}
-                  setChoice={setDeleteChoice}
-                  cancelButton={true}
-                />
-              </>
+                <AlertDialog
+                  isOpen={deleteVisible}
+                  onClose={() => {
+                    setDeleteVisible(false)
+                  }}
+                >
+                  <AlertDialog.Content>
+                    <AlertDialog.CloseButton />
+                    <AlertDialog.Header>
+                      Eliminación de publicación
+                    </AlertDialog.Header>
+                    <AlertDialog.Body>
+                      ¿Estás seguro de que quieres eliminar esta publicación?
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                      <Button.Group space={2}>
+                        <Button
+                          variant='unstyled'
+                          colorScheme='coolGray'
+                          onPress={() => {
+                            setDeleteVisible(false)
+                          }}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          colorScheme='danger'
+                          onPress={() => {
+                            try {
+                              deleteReviewById()
+                              setDeleteVisible(false)
+                              navigation?.navigate('Home')
+                            } catch {
+                              showErrorToast('Error eliminando la publicación')
+                            }
+                          }}
+                        >
+                          Eliminar
+                        </Button>
+                      </Button.Group>
+                    </AlertDialog.Footer>
+                  </AlertDialog.Content>
+                </AlertDialog>
+              </HStack>
             )}
-          </View>
 
-        </View>
-        <View style={styles.descriptionContainer}>
-          <Text
-            style={styles.content}
-          >
-            {props.description}
-          </Text>
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            marginLeft: 10,
-            marginBottom: 10,
-          }}
-        >
-          {props.rating && (
-            <AirbnbRating
-              count={5}
-              defaultRating={props.rating}
-              size={15}
-              showRating={false}
-              isDisabled={true}
-            />
-          )}
-        </View>
-        <View>
-          <Divider />
-          <View style={styles.actionsContainer}>
-            <Button
-              containerStyle={{
-                borderRadius: 50,
-              }}
-              buttonStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 5,
-                height: 30,
-                width: 50,
-              }}
-              icon={{
-                name: 'thumb-up',
-                type: 'material-community',
-                color: isLiked ? 'purple' : '#aaa',
-                size: 15,
-              }}
-              title={likes}
-              titleStyle={{
-                fontSize: 10,
-                color: isLiked ? 'purple' : '#aaa',
-              }}
-              onPress={() => {
-                setIsLiked(!isLiked)
-                setLikes(isLiked ? likes - 1 : likes + 1)
-                console.log(`${props.author}'s post liked`)
-              }}
-            />
-            <Button
-              containerStyle={{
-                borderRadius: 50,
-              }}
-              buttonStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 5,
-                height: 30,
-                width: 50
-              }}
-              icon={{
-                name: 'comment',
-                type: 'material-community',
-                color: '#aaa',
-                size: 15,
-              }}
-              title={comments}
-              titleStyle={{
-                fontSize: 10,
-                color: '#aaa',
-              }}
-              onPress={() => Navegation.navigate("CommentPage", { props: props })}
-            />
-          </View>
-        </View>
-      </View>
-      <Divider
-        color='black'
-        inset={true}
-        width={1}
-      />
-    </View>
+          </HStack>
+
+          <VStack>
+
+            <Stack
+              w={layout.width * .73}
+              mx={2}
+              mb={2}
+            >
+              <Text fontSize='xs' textAlign='justify' >
+                {review?.description}
+              </Text>
+            </Stack>
+            <Divider />
+            <HStack
+              w={layout.width * .73}
+              mt={1}
+              justifyContent='flex-end'
+              space={4}
+            >
+
+              <TouchableOpacity
+                onPress={() => {
+                  setIsLiked(!isLiked)
+                  likePost()
+                  if (isLiked) {
+                    setLikes(likes - 1)
+                  } else {
+                    setLikes(likes + 1)
+                  }
+                }}
+              >
+                <HStack space={1} alignItems='center' >
+                  <Icon
+                    as={MaterialIcons}
+                    name='thumb-up'
+                    color={isLiked ? COLORS.button.secundary : 'gray.400'}
+                  />
+                  <Text fontSize='xs' color={'gray.400'} >
+                    {likes}
+                  </Text>
+                </HStack>
+              </TouchableOpacity>
+
+              <TouchableOpacity>
+                <HStack space={1} alignItems='center' >
+                  <Icon
+                    as={MaterialCommunityIcons}
+                    name='comment'
+                    color={'gray.400'}
+                  />
+                  <Text fontSize='xs' color={'gray.400'} >
+                    {0}
+                  </Text>
+                </HStack>
+              </TouchableOpacity>
+
+            </HStack>
+
+          </VStack>
+        </VStack>
+      </HStack>
+    </Box>
   )
 }
 

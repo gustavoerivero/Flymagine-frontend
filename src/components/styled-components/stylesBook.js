@@ -6,8 +6,7 @@ const stylesBook = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
     height: "100%",
-    backgroundColor: COLORS.primary,
-    paddingTop: 10,
+    backgroundColor: COLORS.base,
     display: "flex",
   },
   bookDetailsContainer: {
@@ -17,12 +16,9 @@ const stylesBook = StyleSheet.create({
     backgroundColor: COLORS.base,
   },
   image: {
-    maxWidth: 130,
-    maxHeight: 175,
-    alignSelf: "center",
+    width: '90%',
+    height: '90%',
     borderRadius: 20,
-    marginHorizontal: 10,
-    marginVertical: 10,
   },
   bookDetails: {
     marginVertical: 10,
@@ -115,6 +111,13 @@ const stylesBook = StyleSheet.create({
   rating: {
     marginBottom: 5,
     marginTop: 5,
+  },
+  reviewContainer: {
+    justifyContent: "flex-start",
+    width: "100%",
+    height: "95%",
+    backgroundColor: COLORS.base,
+    display: "flex",
   },
 });
 

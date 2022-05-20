@@ -14,7 +14,20 @@ const getReactionsByPost = async (id) => {
   return data || null
 }
 
+const reviewReactionsByReview = async (id, reactions) => {
+  const { data } = await http.post(`${BASE_URL(id)}`, reactions)
+  return data || null
+}
+
+const getReactionsByReview = async (id) => {
+  const { data } = await http.get(`${BASE_URL(id)}`)
+  return data || null
+}
+
+
 module.exports  = {
   postReactionsByPost,
   getReactionsByPost,
+  reviewReactionsByReview,
+  getReactionsByReview,
 }
