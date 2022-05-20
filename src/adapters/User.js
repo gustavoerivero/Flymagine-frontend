@@ -37,7 +37,8 @@ const updateDetailsDataAdapter = (values) => {
 const updateAccessDataAdapter = (values) => {
   return {
     email: values.email,
-    password: values.password,
+    password: values.currentPassword,
+    newPassword: values.password
   }
 }
 

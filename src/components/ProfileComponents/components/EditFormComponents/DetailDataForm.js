@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Button } from 'react-native-elements'
@@ -38,7 +39,6 @@ const DetailDataForm = ({ navigation, userData }) => {
   const { isLoading, startLoading, stopLoading } = useLoading()
 
   const [literaryGenres, setLiteraryGenres] = useState([])
-  const [userPreferences, setUserPreferences] = useState([])
 
   const {
     control,
@@ -53,12 +53,11 @@ const DetailDataForm = ({ navigation, userData }) => {
     defaultValues: dataDetailsDefaultValues,
   })
 
-  useEffect(() => {
-
-    getPreferences(userInfo?._id)
+  useFocusEffect(
+    useCallback(() => {
+      getPreferences(userInfo?._id)
       .then(response => {
-        setUserPreferences(response)
-        console.log(response)
+        setValue('literaryGenres', response)
       })
       .catch(error => {
         console.log(`Error: ${error}`)
@@ -74,9 +73,9 @@ const DetailDataForm = ({ navigation, userData }) => {
       })
 
     setValue('biography', userInfo?.biography || '')
-    setValue('literaryGenres', userPreferences)
 
-  }, [ userInfo ])
+    },[])
+  )
 
   const onSubmit = async (values) => {
     startLoading()

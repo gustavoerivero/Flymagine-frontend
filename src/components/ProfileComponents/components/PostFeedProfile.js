@@ -41,12 +41,12 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
   useFocusEffect(
     useCallback(() => {
       getPostByUser(userInfo?._id || user?.id)
-      .then(res => {
-        setPosts(res?.Data?.reverse())
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        .then(res => {
+          setPosts(res?.Data?.reverse())
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }, [])
   )
 
@@ -61,7 +61,7 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
     >
       <VStack
         space={2}
-        minH={layout.height * .9}
+        minH={layout.height}
         minW={layout.width}
         m={2}
         pr={4}

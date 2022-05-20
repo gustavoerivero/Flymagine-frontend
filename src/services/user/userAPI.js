@@ -33,6 +33,11 @@ const updateUser = async (id, values) => {
   return data
 }
 
+const changeUserPassword = async (id, values) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/password`, values)	
+  return data
+}
+
 const setPreferences = async (id, data) => {
   const response = await http.post(`${BASE_URL}/${id}/preferences`, data)
   return response.data
@@ -62,6 +67,7 @@ module.exports = {
   getOnlyUser,
   getUserById,
   updateUser,
+  changeUserPassword,
   setProfileImage,
 
   setPreferences,
