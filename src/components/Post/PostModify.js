@@ -1,32 +1,25 @@
-import React, { useState } from 'react'
-import { useWindowDimensions } from 'react-native'
+import React from 'react'
+import { useWindowDimensions, TouchableOpacity } from 'react-native'
 import {
   Avatar,
+  Badge,
   Box,
   Text,
   Stack,
   VStack,
   HStack,
   Image,
+  IconButton,
+  Icon,
   Divider,
+  ScrollView,
 } from 'native-base'
+import { Entypo } from '@expo/vector-icons'
 
-import { Chip } from 'react-native-paper'
-
-import AddTag from './AddTag'
-
-import {
-  parseDate,
-  parseTime,
-} from '../../utilities/Parsers'
-
-import mime from 'mime'
-import useCustomToast from '../../hooks/useCustomToast'
-import useLoading from '../../hooks/useLoading'
-
+import { parseDate, parseTime } from '../../utilities/Parsers'
 import COLORS from '../styled-components/Colors'
 
-const PostModify = ({ user, post }) => {
+const PostModify = ({ user, post, handleChange }) => {
 
   const layout = useWindowDimensions()
 
@@ -78,6 +71,60 @@ const PostModify = ({ user, post }) => {
             pl={3}
             pr={2}
           >
+            <Stack>
+              {post?.personTags?.length > 0 && (
+                <>
+                  <Divider />
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                    <HStack space={1} mr={10} m={1}>
+                      {post?.personTags?.map((tag, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            console.log('Tag pressed')
+                            let newTags = post?.personTags
+                            newTags.splice(index, 1)
+                            handleChange('personTags', newTags)
+                          }}
+                        >
+                          <Badge
+                            size='sm'
+                            bgColor='rgba(223, 204, 255, .35)'
+                            rounded='full'
+                          >
+                            <HStack space={1} alignItems='center'>
+                              <Avatar
+                                bg='purple.600'
+                                size='xs'
+                                source={{
+                                  uri: (tag?.photo === 'none' ? null : tag?.photo)
+                                }}
+                                borderColor='white'
+                                borderWidth={3}
+                              >
+                                {tag && (tag?.firstName[0] + tag?.lastName[0])}
+                              </Avatar>
+                              <Text
+                                color='rgba(95, 0, 255, .55)'
+                              >
+                                {tag.firstName + ' ' + tag.lastName}
+                              </Text>
+                              <Icon
+                                as={Entypo}
+                                name='cross'
+                                size={4}
+                                color='rgba(95, 0, 255, .55)'
+                              />
+                            </HStack>
+                          </Badge>
+                        </TouchableOpacity>
+                      ))}
+                    </HStack>
+                  </ScrollView>
+                  <Divider />
+                </>
+              )}
+            </Stack>
             <Text fontSize='xs' textAlign='justify' >
               {post?.description}
             </Text>

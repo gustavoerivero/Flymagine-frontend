@@ -63,7 +63,6 @@ const BasicDataForm = ({ navigation, userData }) => {
     try {
 
       const response = await updateUser(userInfo?._id, updateDataUserAdapter(values))
-      console.log(response)
 
       showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
 
@@ -72,7 +71,6 @@ const BasicDataForm = ({ navigation, userData }) => {
 
     } catch (error) {
       showErrorToast('¡Misión fallida! No se pudo actualizar tus datos')
-      console.log('this is a error', error)
       console.log(error)
     }
     stopLoading()

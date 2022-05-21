@@ -1,7 +1,9 @@
 import React, { useCallback, useState } from 'react'
-import { useWindowDimensions } from 'react-native'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   ScrollView,
+  View,
+  Avatar,
   Text,
   Stack,
   VStack,
@@ -9,7 +11,7 @@ import {
 } from 'native-base'
 import { Button, Image } from 'react-native-elements'
 import { FAB } from '@rneui/themed'
-import { AntDesign, Ionicons, FontAwesome } from '@expo/vector-icons'
+import { AntDesign, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
 import CommentInput from '../components/Post/CommentInput'
 import PostModify from '../components/Post/PostModify'
@@ -24,8 +26,9 @@ import {
 import AddTag from '../components/Post/AddTag'
 import { useFocusEffect } from '@react-navigation/native'
 import useAuthContext from '../hooks/useAuthContext'
-import { getUserById } from '../services/user/userAPI'
+import { getUserById, searchUsers } from '../services/user/userAPI'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import StyledField from '../components/StyledField'
 
 const CreatePostPage = () => {
 
@@ -47,19 +50,20 @@ const CreatePostPage = () => {
   })
 
   const [addPersonDialog, setAddPersonDialog] = useState(false)
-  const [addPersonChoice, setAddPersonChoice] = useState(false)
 
   const [addTagDialog, setAddTagDialog] = useState(false)
-  const [addTagChoice, setAddTagChoice] = useState(false)
 
-  const [personTags, setPersonTags] = useState(post.personTags || [])
-  const [hashtags, setTags] = useState(post.hashtags || [])
+  const [userSearch, setUserSearch] = useState('')
+  const [usersSearched, setUserSearched] = useState([])
+  const [hashtags, setTags] = useState([])
 
   const _handleChange = (item, value) => handleChange(post, setPost, item, value)
 
   useFocusEffect(
     useCallback(() => {
+
       permisionFunction()
+
       getUserById(user?.id)
         .then(res => {
           setUserData(res?.Data)
@@ -67,6 +71,7 @@ const CreatePostPage = () => {
         .catch(error => {
           console.log(error)
         })
+
     }, [])
   )
 
@@ -84,6 +89,7 @@ const CreatePostPage = () => {
           <PostModify
             user={userData}
             post={post}
+            handleChange={_handleChange}
           />
         </ScrollView>
 
@@ -135,10 +141,97 @@ const CreatePostPage = () => {
               <AddTag
                 visible={addPersonDialog}
                 setVisible={setAddPersonDialog}
-                setChoice={setAddPersonChoice}
-                content='¿A quién quieres etiquetar?'
+              >
+                <VStack space={1}>
+                  <HStack space={2} justifyContent='center'>
+                    <StyledField
+                      placeholder='¿Quién está involucrado?'
+                      value={userSearch}
+                      onChangeText={(text) => {
+                        setUserSearch(text)
+                        if (text !== '') {
+                          searchUsers(text)
+                            .then(res => {
 
-              />
+                              let filtered = res.Data.filter(user => {
+                                return userData._id !== user._id && post.personTags.find(tag => tag._id === user._id) === undefined
+                              })
+
+                              setUserSearched(filtered)
+
+                            })
+                            .catch(error => {
+                              console.log(error)
+                            })
+                        } else {
+                          setUserSearched([])
+                        }
+                      }}
+                      w='85%'
+                    />                    
+                    <Button
+                      icon={
+                        <MaterialIcons
+                          name='cancel'
+                          color='#fff'
+                          size={20}
+                        />
+                      }
+                      buttonStyle={{
+                        backgroundColor: 'rgba(255, 84, 138, 1)',
+                      }}
+                      onPress={() => {
+                        setAddPersonDialog(false)
+                      }}
+                    />
+                  </HStack>
+                  <ScrollView>
+                    <VStack maxH='80%' space={2} mx='5%'>
+                      {usersSearched.map((item, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            setUserSearch('')
+                            setUserSearched([])
+                            setPost({
+                              ...post,
+                              personTags: [...post.personTags, item]
+                            })
+                            setAddPersonDialog(false)
+                            console.log(post)
+                          }}
+                        >
+                          <HStack
+                            space={2}
+                            alignItems='center'
+                          >
+                            <Avatar
+                              bg='purple.600'
+                              size='xs'
+                              source={{
+                                uri: item?.photo === 'none' ?
+                                  null
+                                  : item?.photo
+                              }}
+                              borderColor='white'
+                              borderWidth={3}
+                            >
+                              <Text bold color='white' fontSize={8}>
+                                {item && (item?.firstName[0] + item?.lastName[0])}
+                              </Text>
+                            </Avatar>
+
+                            <Text bold fontSize={12} color='gray.700'>
+                              {item?.firstName} {item?.lastName}
+                            </Text>
+                          </HStack>
+                        </TouchableOpacity>
+                      ))}
+                    </VStack>
+                  </ScrollView>
+                </VStack>
+
+              </AddTag>
 
               <FAB
                 icon={
@@ -207,7 +300,6 @@ const CreatePostPage = () => {
                 }}
                 color='rgba(90, 85, 220, 1)'
                 onPress={() => {
-                  console.log('Upload image')
                   let image = pickImage()
                   image.then(res => {
                     _handleChange('image', res.uri)
