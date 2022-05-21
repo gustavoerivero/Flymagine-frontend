@@ -19,17 +19,12 @@ const registerData = (values) => {
   }
 }
 
-const updateBasicDataAdapter = (values) => {
+const updateDataUserAdapter = (values) => {
   return {
     firstName: values.firstName,
     lastName: values.lastName,
     phone: values.phone,
     address: values.address,
-  }
-}
-
-const updateDetailsDataAdapter = (values) => {
-  return {
     biography: values.biography,
   }
 }
@@ -49,8 +44,7 @@ const personalPreferencesData = (values) => {
 module.exports = {
   loginData,
   registerData,
-  updateBasicDataAdapter,
-  updateDetailsDataAdapter,
+  updateDataUserAdapter,
   updateAccessDataAdapter,
   personalPreferencesData,
 }
