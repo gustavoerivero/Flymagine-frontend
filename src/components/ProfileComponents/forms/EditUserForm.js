@@ -83,8 +83,6 @@ const EditUserForm = ({ navigation }) => {
                   name: imageUri.split('/').pop()
                 })
 
-                console.log('form', formData)
-
                 startLoading()                            
                 setProfileImage(user.id, formData)
                   .then(response => {

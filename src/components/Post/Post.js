@@ -272,9 +272,9 @@ const Post = ({ navigation, post = {} }) => {
                 <>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                     <HStack space={1} mr={10} m={1}>
-                      {personTags.map((tag, index) => (
+                      {personTags.map((tag) => (
                         <TouchableOpacity
-                          key={index}
+                          key={tag._id}
                           onPress={() => {
                             if (tag?._id === user?.id) {
                               navigation.navigate('Profile')
@@ -343,8 +343,8 @@ const Post = ({ navigation, post = {} }) => {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                   <HStack space={1} mr={10} m={1}>
 
-                    {hashtags.map((hashtag, index) => (
-                      <TouchableOpacity key={index}>
+                  {hashtags.map((hashtag) => (
+                      <TouchableOpacity key={hashtag._id}>
                         <Badge
                           size='sm'
                           bgColor='rgba(223, 204, 255, .35)'

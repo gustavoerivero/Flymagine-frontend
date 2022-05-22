@@ -1,10 +1,8 @@
 import React from 'react'
 import { Modal } from 'react-native'
 import { Text, Divider, Box, HStack, VStack } from 'native-base'
-import { Button } from 'react-native-elements'
-import Colors from '../styled-components/Colors'
 
-const AddTag = ({ visible, setVisible, children }) => {
+const AddTag = ({ visible, setVisible, title, children }) => {
 
   return (
     <Modal
@@ -36,7 +34,7 @@ const AddTag = ({ visible, setVisible, children }) => {
             fontSize={16}
             textAlign='center'            
           >
-            Añade etiquetas
+            {title}
           </Text>
           <Divider />
           <HStack 

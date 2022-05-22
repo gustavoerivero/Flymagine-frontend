@@ -2,6 +2,27 @@ import { http } from '../http'
 
 const BASE_URL = 'post'
 
+const createPost = async (post) => {
+  const { data } = await http.post(`${BASE_URL}`, post)
+  return data?.Data
+}
+
+const postImage = async (postId, image) => {
+  fetch(`https://flymagine-backend.herokuapp.com/api/v1/${BASE_URL}/${postId}/image`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    body: image
+  }).then(response => {
+    response.text().then((res) => {
+      return res
+    })
+  }).catch(err => {
+    return err
+  })
+}
+
 const getPosts = async () => {
   const { data } = await http.get(`${BASE_URL}`)
   return data?.Data || null
@@ -48,6 +69,8 @@ const getUsertags = async (postId) => {
 
 
 module.exports = {
+  createPost,
+  postImage,
   getPosts,
   getFeed,
   getPostByUser,

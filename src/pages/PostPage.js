@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   ScrollView,
-  View,
   Avatar,
+  Icon,
   Text,
   Stack,
   VStack,
@@ -11,26 +11,36 @@ import {
 } from 'native-base'
 import { Button, Image } from 'react-native-elements'
 import { FAB } from '@rneui/themed'
-import { AntDesign, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import mime from 'mime'
 
 import CommentInput from '../components/Post/CommentInput'
 import PostModify from '../components/Post/PostModify'
 import COLORS from '../components/styled-components/Colors'
-
 import {
   handleChange,
   pickImage,
   permisionFunction,
 } from '../utils/functions'
-
 import AddTag from '../components/Post/AddTag'
-import { useFocusEffect } from '@react-navigation/native'
-import useAuthContext from '../hooks/useAuthContext'
-import { getUserById, searchUsers } from '../services/user/userAPI'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import StyledField from '../components/StyledField'
 
-const CreatePostPage = () => {
+import useAuthContext from '../hooks/useAuthContext'
+import useLoading from '../hooks/useLoading'
+import useCustomToast from '../hooks/useCustomToast'
+import { getUserById, searchUsers } from '../services/user/userAPI'
+import { searchHashtag, createHashtag } from '../services/hashtag/hashtagAPI'
+import { createPost, postImage, setHashtags, setUsertags } from '../services/post/postAPI'
+import { postAdapter } from '../adapters/Post'
+
+import { logger } from "react-native-logs";
+
+var log = logger.createLogger();
+
+
+const CreatePostPage = ({ navigation }) => {
 
   const layout = useWindowDimensions()
 
@@ -38,8 +48,12 @@ const CreatePostPage = () => {
     state: { user },
   } = useAuthContext()
 
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { isLoading, startLoading, stopLoading } = useLoading()
+
   const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
+    idUser: user.id,
     author: `${userData?.firstName} ${userData?.lastName}` || '',
     avatar: userData?.photo || '',
     image: '',
@@ -49,13 +63,17 @@ const CreatePostPage = () => {
     personTags: []
   })
 
+  const [image, setImage] = useState(null)
+
   const [addPersonDialog, setAddPersonDialog] = useState(false)
 
   const [addTagDialog, setAddTagDialog] = useState(false)
 
   const [userSearch, setUserSearch] = useState('')
   const [usersSearched, setUserSearched] = useState([])
-  const [hashtags, setTags] = useState([])
+
+  const [tagSearch, setTagSearch] = useState('')
+  const [tagsSearched, setTagsSearched] = useState([])
 
   const _handleChange = (item, value) => handleChange(post, setPost, item, value)
 
@@ -78,19 +96,21 @@ const CreatePostPage = () => {
   return (
     <KeyboardAwareScrollView>
       <VStack h={layout.height * .94}>
-        <VStack>
-          <Stack bgColor='white' alignItems='center' py={3} pt={4}>
-            <Text bold fontSize={20} color={COLORS.primary}>
-              Comparte tu experiencia
-            </Text>
-          </Stack>
-        </VStack>
+        <Stack bgColor='white' alignItems='center' py={3} pt={4}>
+          <Text bold fontSize={20} color={COLORS.primary}>
+            Comparte tu experiencia
+          </Text>
+        </Stack>
         <ScrollView>
-          <PostModify
-            user={userData}
-            post={post}
-            handleChange={_handleChange}
-          />
+          <VStack
+            maxH='65%'
+          >
+            <PostModify
+              user={userData}
+              post={post}
+              handleChange={_handleChange}
+            />
+          </VStack>
         </ScrollView>
 
 
@@ -141,6 +161,7 @@ const CreatePostPage = () => {
               <AddTag
                 visible={addPersonDialog}
                 setVisible={setAddPersonDialog}
+                title='Incluye a un amigo'
               >
                 <VStack space={1}>
                   <HStack space={2} justifyContent='center'>
@@ -168,7 +189,7 @@ const CreatePostPage = () => {
                         }
                       }}
                       w='85%'
-                    />                    
+                    />
                     <Button
                       icon={
                         <MaterialIcons
@@ -187,9 +208,9 @@ const CreatePostPage = () => {
                   </HStack>
                   <ScrollView>
                     <VStack maxH='80%' space={2} mx='5%'>
-                      {usersSearched.map((item, index) => (
+                      {usersSearched.map((item) => (
                         <TouchableOpacity
-                          key={index}
+                          key={item._id}
                           onPress={() => {
                             setUserSearch('')
                             setUserSearched([])
@@ -257,6 +278,133 @@ const CreatePostPage = () => {
                 }}
               />
 
+              <AddTag
+                visible={addTagDialog}
+                setVisible={setAddTagDialog}
+                title='Etiqueta esta publicación'
+              >
+                <VStack space={1}>
+                  <HStack space={2} justifyContent='center'>
+                    <StyledField
+                      placeholder='¿De qué se trata la publicación?'
+                      value={tagSearch}
+                      onChangeText={(text) => {
+                        setTagSearch(text)
+                        if (text !== '') {
+                          searchHashtag(text)
+                            .then(res => {
+
+                              let filtered = res.filter(hashtag => {
+                                return post.hashtags.find(tag => tag._id === hashtag._id) === undefined
+                              })
+
+                              setTagsSearched(filtered)
+
+                            })
+                            .catch(error => {
+                              console.log(error)
+                            })
+                        } else {
+                          setTagsSearched([])
+                        }
+                      }}
+                      w='70%'
+                    />
+                    <Button
+                      icon={
+                        <MaterialCommunityIcons
+                          name='tag-plus'
+                          color='#fff'
+                          size={20}
+                        />
+                      }
+                      buttonStyle={{
+                        backgroundColor: 'rgba(158, 84, 255, 1)',
+                      }}
+                      disabled={
+                        tagSearch === '' ||
+                        post.hashtags.find(tag => tag.name === tagSearch) ||
+                        tagsSearched.find(tag => tag.name === tagSearch) ||
+                        isLoading
+                      }
+                      onPress={() => {
+                        startLoading()
+                        createHashtag({
+                          name: tagSearch
+                        })
+                          .then(res => {
+                            setPost({
+                              ...post,
+                              hashtags: [...post.hashtags, res]
+                            })
+
+                            setTagSearch('')
+                            setTagsSearched([])
+                            setAddTagDialog(false)
+                            showSuccessToast('¡Misión cumplida! Has creado una etiqueta')
+
+                          })
+                          .catch(error => {
+                            console.log(error)
+                            showErrorToast('¡Misión fallida! No se ha podido crear la etiqueta')
+                          })
+                        stopLoading()
+                      }}
+                    />
+                    <Button
+                      icon={
+                        <MaterialIcons
+                          name='cancel'
+                          color='#fff'
+                          size={20}
+                        />
+                      }
+                      buttonStyle={{
+                        backgroundColor: 'rgba(255, 84, 138, 1)',
+                      }}
+                      onPress={() => {
+                        setAddTagDialog(false)
+                      }}
+                    />
+                  </HStack>
+                  <ScrollView>
+                    <VStack maxH='80%' space={2} mx='5%'>
+                      {tagsSearched.map((item) => (
+                        <TouchableOpacity
+                          key={item._id}
+                          onPress={() => {
+                            setTagSearch('')
+                            setTagsSearched([])
+                            setPost({
+                              ...post,
+                              hashtags: [...post.hashtags, item]
+                            })
+                            setAddTagDialog(false)
+                            console.log(post)
+                          }}
+                        >
+                          <HStack
+                            space={2}
+                            alignItems='center'
+                          >
+                            <Icon
+                              as={Ionicons}
+                              name='pricetag'
+                              size={3}
+                              color='#aaa'
+                            />
+                            <Text bold fontSize={12} color='gray.700'>
+                              {item?.name}
+                            </Text>
+                          </HStack>
+                        </TouchableOpacity>
+                      ))}
+                    </VStack>
+                  </ScrollView>
+                </VStack>
+
+              </AddTag>
+
               <FAB
                 icon={
                   <AntDesign
@@ -303,6 +451,7 @@ const CreatePostPage = () => {
                   let image = pickImage()
                   image.then(res => {
                     _handleChange('image', res.uri)
+                    setImage(res)
                     console.log(res)
                   }).catch(err => {
                     console.log(err)
@@ -335,8 +484,72 @@ const CreatePostPage = () => {
                   width: 50,
                   height: 50,
                 }}
+                disabled={post.description === '' || isLoading}
                 onPress={() => {
-                  console.log('Send')
+                  startLoading()
+                  createPost(postAdapter(post))
+                    .then(res => {
+                      console.log(res)
+
+                      let idPost = res._id
+
+                      if (image) {
+
+                        const imageUri = Platform.OS === 'ios' ? 'file:///' + image.uri.split('file:/').join('') : image.uri
+
+                        const formData = new FormData()
+                        formData.append('photo', {
+                          uri: imageUri,
+                          type: mime.getType(imageUri),
+                          name: imageUri.split('/').pop()
+                        })
+
+                        postImage(idPost, formData)
+                          .then(res => {
+                            console.log(res)
+                          })
+                          .catch(err => {
+                            console.log(err)
+                          })
+                      }
+
+                      if (post.personTags.length > 0) {
+                        setUsertags(idPost, post.personTags)
+                          .then(res => {
+                            console.log(res)
+                          })
+                          .catch(err => {
+                            console.log(err)
+                          })
+                      }
+
+                      if (post.hashtags.length > 0) {
+                        setHashtags(idPost, post.hashtags)
+                          .then(res => {
+                            console.log(res)
+                          })
+                          .catch(err => {
+                            console.log(err)
+                          })
+                      }
+
+                      setPost({
+                        ...post,
+                        description: '',
+                        image: '',
+                        hashtags: [],
+                        personTags: []
+                      })
+                      setImage(null)
+
+                      showSuccessToast('¡Misión cumplida! Has creado una publicación')
+                      navigation.navigate('Home')
+                    })
+                    .catch(error => {
+                      console.log(error)
+                      showErrorToast('¡Misión fallida! No se ha podido crear la publicación')
+                    })
+                  stopLoading()
                 }}
               />
             }

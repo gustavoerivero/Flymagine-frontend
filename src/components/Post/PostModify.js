@@ -9,7 +9,6 @@ import {
   VStack,
   HStack,
   Image,
-  IconButton,
   Icon,
   Divider,
   ScrollView,
@@ -142,6 +141,49 @@ const PostModify = ({ user, post, handleChange }) => {
               </>
             )}
           </Stack>
+          <Stack>
+              {post?.hashtags?.length > 0 && (
+                <>
+                  <Divider />
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                    <HStack space={1} mr={10} m={1}>
+                      {post?.hashtags?.map((tag, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            console.log('Tag pressed')
+                            let newTags = post?.hashtags
+                            newTags.splice(index, 1)
+                            handleChange('hashtags', newTags)
+                          }}
+                        >
+                          <Badge
+                            size='sm'
+                            bgColor='rgba(223, 204, 255, .35)'
+                            rounded='full'
+                          >
+                            <HStack space={1} alignItems='center'>                              
+                              <Text
+                                color='rgba(95, 0, 255, .55)'
+                              >
+                                {tag.name}
+                              </Text>
+                              <Icon
+                                as={Entypo}
+                                name='cross'
+                                size={4}
+                                color='rgba(95, 0, 255, .55)'
+                              />
+                            </HStack>
+                          </Badge>
+                        </TouchableOpacity>
+                      ))}
+                    </HStack>
+                  </ScrollView>
+                  <Divider />
+                </>
+              )}
+            </Stack>
         </VStack>
       </HStack>
     </Box>

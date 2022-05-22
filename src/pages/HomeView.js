@@ -76,9 +76,9 @@ const HomeView = ({ navigation }) => {
         <VStack
           space={2}
         >
-          {posts && posts.map((post, index) => (
+          {posts && posts.map((post) => (
             <Post
-              key={index}
+              key={post._id}
               post={post}
               navigation={navigation}
             />
