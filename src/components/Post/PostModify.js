@@ -63,7 +63,7 @@ const PostModify = ({ user, post, handleChange }) => {
               color='gray.300'
               alignSelf='flex-end'
             >
-              {parseDate(post?.date) + ' ' + parseTime(post?.date)}
+              {parseDate(post?.createdAt) + ' ' + parseTime(post?.createdAt)}
             </Text>
           </HStack>
           <Stack
@@ -130,10 +130,10 @@ const PostModify = ({ user, post, handleChange }) => {
           </Stack>
           <Divider />
           <Stack alignItems='flex-end' >
-            {post?.image !== '' && (
+            {post?.photo !== '' && post?.photo !== 'none' && (
               <>
                 <Image
-                  source={{ uri: post?.image }}
+                  source={{ uri: post?.photo }}
                   style={{ width: '100%', height: 300 }}
                   alt='post'
                 />

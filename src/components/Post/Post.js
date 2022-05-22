@@ -52,7 +52,6 @@ const Post = ({ navigation, post = {} }) => {
   const [likes, setLikes] = useState(0)
   const [comments, setComments] = useState(null)
 
-  const [editVisible, setEditVisible] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(false)
 
   const deletePostById = async () => {
@@ -171,7 +170,9 @@ const Post = ({ navigation, post = {} }) => {
             justifyContent='space-between'
             alignItems='center'
             h={7}
-            mr={2}
+            mr={2} 
+            w={290}           
+            maxW={290}
           >
             <HStack
               space={2}
@@ -203,6 +204,14 @@ const Post = ({ navigation, post = {} }) => {
                     />
                   }
                   size='sm'
+                  onPress={() => {
+                    console.log(post?._id)
+                    navigation.navigate('EditPost', { 
+                      post: post,
+                      hashtags: hashtags,
+                      personTags: personTags
+                    })
+                  }}
                 />
                 <IconButton
                   icon={

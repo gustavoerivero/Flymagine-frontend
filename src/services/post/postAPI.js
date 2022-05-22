@@ -23,6 +23,11 @@ const postImage = async (postId, image) => {
   })
 }
 
+const getPostById = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}`)
+  return data?.Data
+}
+
 const getPosts = async () => {
   const { data } = await http.get(`${BASE_URL}`)
   return data?.Data || null
@@ -36,6 +41,11 @@ const getFeed = async (users) => {
 const getPostByUser = async (id) => {
   const { data } = await http.get(`${BASE_URL}/user/${id}`)
   return data || null
+}
+
+const updatePost = async (id, post) => {
+  const { data } = await http.put(`${BASE_URL}/${id}`, post)
+  return data?.Data
 }
 
 const deletePost = async (id) => {
@@ -72,8 +82,10 @@ module.exports = {
   createPost,
   postImage,
   getPosts,
+  getPostById,
   getFeed,
   getPostByUser,
+  updatePost,
   deletePost,
 
   // Hashtag Post API

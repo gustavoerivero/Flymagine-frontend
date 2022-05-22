@@ -7,6 +7,7 @@ import PasswordRecoveryRequestPage from '../pages/Login/PasswordRecorveryRequest
 
 // Post pages
 import CreatePostPage from '../pages/Post/CreatePostPage'
+import PostEditPage from '../pages/Post/PostEditPage'
 import CommentPage from '../pages/Post/CommentPage'
 import ModifyCommentPage from '../pages/Post/ModifyCommentPage'
 
@@ -84,6 +85,14 @@ const stackRoutes = [
     requireAuth: true,
     options: {
       title: 'Crear post',
+    }
+  },
+   {
+    name: 'EditPost',
+    component: PostEditPage,
+    requireAuth: true,
+    options: {
+      title: 'Edita tu experiencia',
     }
   },
   {

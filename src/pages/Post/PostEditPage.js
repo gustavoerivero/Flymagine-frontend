@@ -16,26 +16,30 @@ import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import mime from 'mime'
 
-import CommentInput from '../components/Post/CommentInput'
-import PostModify from '../components/Post/PostModify'
-import COLORS from '../components/styled-components/Colors'
+import CommentInput from '../../components/Post/CommentInput'
+import PostModify from '../../components/Post/PostModify'
 import {
   handleChange,
   pickImage,
   permisionFunction,
-} from '../utils/functions'
-import AddTag from '../components/Post/AddTag'
-import StyledField from '../components/StyledField'
+} from '../../utils/functions'
+import AddTag from '../../components/Post/AddTag'
+import StyledField from '../../components/StyledField'
 
-import useAuthContext from '../hooks/useAuthContext'
-import useLoading from '../hooks/useLoading'
-import useCustomToast from '../hooks/useCustomToast'
-import { getUserById, searchUsers } from '../services/user/userAPI'
-import { searchHashtag, createHashtag } from '../services/hashtag/hashtagAPI'
-import { createPost, postImage, setHashtags, setUsertags } from '../services/post/postAPI'
-import { postAdapter } from '../adapters/Post'
+import useAuthContext from '../../hooks/useAuthContext'
+import useLoading from '../../hooks/useLoading'
+import useCustomToast from '../../hooks/useCustomToast'
+import { getUserById, searchUsers } from '../../services/user/userAPI'
+import { searchHashtag, createHashtag } from '../../services/hashtag/hashtagAPI'
+import {
+  updatePost,
+  postImage,
+  setHashtags,
+  setUsertags,
+} from '../../services/post/postAPI'
+import { postAdapter } from '../../adapters/Post'
 
-const CreatePostPage = ({ navigation }) => {
+const PostEditPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
@@ -48,14 +52,15 @@ const CreatePostPage = ({ navigation }) => {
 
   const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
-    idUser: user.id,
+    _id: route.params.post._id,
+    idUser: route.params.post.idUser,
     author: `${userData?.firstName} ${userData?.lastName}` || '',
     avatar: userData?.photo || '',
-    photo: '',
-    description: '',
-    createdAt: new Date(),
-    hashtags: [],
-    personTags: []
+    photo: route.params.post.photo,
+    description: route.params.post.description,
+    createdAt: route.params.post.createdAt,
+    hashtags: route.params.hashtags || [],
+    personTags: route.params.personTags || [],
   })
 
   const [image, setImage] = useState(null)
@@ -91,20 +96,17 @@ const CreatePostPage = ({ navigation }) => {
   return (
     <KeyboardAwareScrollView>
       <VStack h={layout.height * .94}>
-        <Stack bgColor='white' alignItems='center' py={3} pt={4}>
-          <Text bold fontSize={20} color={COLORS.primary}>
-            Comparte tu experiencia
-          </Text>
-        </Stack>
         <ScrollView>
           <VStack
             maxH='65%'
           >
-            <PostModify
-              user={userData}
-              post={post}
-              handleChange={_handleChange}
-            />
+            {post && (
+              <PostModify
+                user={userData}
+                post={post}
+                handleChange={_handleChange}
+              />
+            )}
           </VStack>
         </ScrollView>
 
@@ -121,12 +123,12 @@ const CreatePostPage = ({ navigation }) => {
             borderRadius={10}
           >
             <Stack justifyContent='flex-end' >
-              {post?.photo !== '' && (
+              {post?.photo && post?.photo !== 'none' && post?.photo !== '' && (
                 <Button
                   icon={
                     <Image
                       source={{
-                        uri: post.photo
+                        uri: post?.photo
                       }}
                       style={{
                         width: 40,
@@ -145,8 +147,8 @@ const CreatePostPage = ({ navigation }) => {
                     justifyContent: 'center',
                   }}
                   onPress={() => {
-                    console.log(`${post.author}'s post`)
-                    _handleChange('image', '')
+                    console.log(`${post?.idUser}'s post`)
+                    _handleChange('photo', 'none')
                   }}
                 />
               )}
@@ -170,7 +172,7 @@ const CreatePostPage = ({ navigation }) => {
                             .then(res => {
 
                               let filtered = res.Data.filter(user => {
-                                return userData._id !== user._id && post.personTags.find(tag => tag._id === user._id) === undefined
+                                return userData._id !== user._id && post?.personTags.find(tag => tag._id === user._id) === undefined
                               })
 
                               setUserSearched(filtered)
@@ -211,7 +213,7 @@ const CreatePostPage = ({ navigation }) => {
                             setUserSearched([])
                             setPost({
                               ...post,
-                              personTags: [...post.personTags, item]
+                              personTags: [...post?.personTags, item]
                             })
                             setAddPersonDialog(false)
                             console.log(post)
@@ -290,7 +292,7 @@ const CreatePostPage = ({ navigation }) => {
                             .then(res => {
 
                               let filtered = res.filter(hashtag => {
-                                return post.hashtags.find(tag => tag._id === hashtag._id) === undefined
+                                return post?.hashtags.find(tag => tag._id === hashtag._id) === undefined
                               })
 
                               setTagsSearched(filtered)
@@ -318,7 +320,7 @@ const CreatePostPage = ({ navigation }) => {
                       }}
                       disabled={
                         tagSearch === '' ||
-                        post.hashtags.find(tag => tag.name === tagSearch) ||
+                        post?.hashtags.find(tag => tag.name === tagSearch) ||
                         tagsSearched.find(tag => tag.name === tagSearch) ||
                         isLoading
                       }
@@ -330,7 +332,7 @@ const CreatePostPage = ({ navigation }) => {
                           .then(res => {
                             setPost({
                               ...post,
-                              hashtags: [...post.hashtags, res]
+                              hashtags: [...post?.hashtags, res]
                             })
 
                             setTagSearch('')
@@ -372,7 +374,7 @@ const CreatePostPage = ({ navigation }) => {
                             setTagsSearched([])
                             setPost({
                               ...post,
-                              hashtags: [...post.hashtags, item]
+                              hashtags: [...post?.hashtags, item]
                             })
                             setAddTagDialog(false)
                             console.log(post)
@@ -457,7 +459,7 @@ const CreatePostPage = ({ navigation }) => {
           </HStack>
 
           <CommentInput
-            value={post.description}
+            value={post?.description}
             onChangeText={(text) => _handleChange('description', text)}
             placeholder='Dinos, ¿qué opinas?...'
             rightElement={
@@ -479,14 +481,17 @@ const CreatePostPage = ({ navigation }) => {
                   width: 50,
                   height: 50,
                 }}
-                disabled={post.description === '' || isLoading}
+                disabled={post?.description === '' || isLoading}
                 onPress={() => {
                   startLoading()
-                  createPost(postAdapter(post))
+
+                  console.log(post._id)
+
+                  updatePost(post._id, { description: post.description })
                     .then(res => {
                       console.log(res)
 
-                      let idPost = res._id
+                      let idPost = post._id
 
                       if (image) {
 
@@ -508,30 +513,26 @@ const CreatePostPage = ({ navigation }) => {
                           })
                       }
 
-                      if (post.personTags.length > 0) {
-                        setUsertags(idPost, post.personTags)
-                          .then(res => {
-                            console.log(res)
-                          })
-                          .catch(err => {
-                            console.log(err)
-                          })
-                      }
+                      setUsertags(idPost, post?.personTags)
+                        .then(res => {
+                          console.log(res)
+                        })
+                        .catch(err => {
+                          console.log(err)
+                        })
 
-                      if (post.hashtags.length > 0) {
-                        setHashtags(idPost, post.hashtags)
-                          .then(res => {
-                            console.log(res)
-                          })
-                          .catch(err => {
-                            console.log(err)
-                          })
-                      }
+                      setHashtags(idPost, post?.hashtags)
+                        .then(res => {
+                          console.log(res)
+                        })
+                        .catch(err => {
+                          console.log(err)
+                        })
 
                       setPost({
                         ...post,
                         description: '',
-                        photo: '',
+                        image: '',
                         hashtags: [],
                         personTags: []
                       })
@@ -555,4 +556,4 @@ const CreatePostPage = ({ navigation }) => {
   )
 }
 
-export default CreatePostPage
+export default PostEditPage
