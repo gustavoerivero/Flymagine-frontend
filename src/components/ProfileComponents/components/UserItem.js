@@ -82,7 +82,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
       <Box
         p={5}
         m={1}
-        minW={layout.width}
+        w='100%'
         alignItems='center'
         alignContent='center'
         alignSelf='center'
@@ -102,7 +102,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
             {userItem && (userItem?.firstName[0] + userItem?.lastName[0])}
           </Avatar>
 
-          <VStack minW={layout.width * .5} maxW={layout.width * .5} mt={2}>
+          <VStack w={layout.width * .5} mt={2}>
             <HStack>
               <Text bold fontSize='sm'>
                 {userItem?.firstName} {userItem?.lastName}
@@ -142,14 +142,13 @@ const UserItem = ({ userItem, navigation, onPress }) => {
 
           <Stack
             mt={3}
-            width={layout.width * .2}
+            w={layout.width * .25}
           >
             {user?.id !== userItem?._id && (
               <Button
                 size='xs'
                 variant='outline'
                 height={layout.height * .04}
-                width={layout.width * .2}
                 borderRadius={50}
                 onPress={() => {
                   console.log(isFollow ? 'unfollow' : 'follow')
@@ -157,7 +156,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
                 }}
               >
                 <Text fontSize={10} color={COLORS.primary}>
-                  {isFollow ? 'Siguiendo' : 'Seguir'}
+                  {isFollow ? 'Dejar de seguir' : 'Seguir'}
                 </Text>
               </Button>
             )}

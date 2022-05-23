@@ -24,7 +24,6 @@ const HomeView = ({ navigation }) => {
   } = useAuthContext()
 
   const [follows, setFollows] = useState([])
-  const [users, setUsers] = useState([])
 
   const [posts, setPosts] = useState([])
 
@@ -37,16 +36,16 @@ const HomeView = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+
       getFollows(user?.id)
         .then(res => {
           setFollows(res?.Data?.follows)
 
           let followsReceived = res?.Data?.follows
 
-          if (followsReceived?.length > 0) {
+          if (followsReceived?.length >= 0) {
             let f = followsReceived.map(follow => follow._id)
             f.push(user?.id)
-            setUsers(f)
 
             getFeed(f)
               .then(res => {
@@ -77,9 +76,9 @@ const HomeView = ({ navigation }) => {
         <VStack
           space={2}
         >
-          {posts && posts.map((post, index) => (
+          {posts && posts.map((post) => (
             <Post
-              key={index}
+              key={post._id}
               post={post}
               navigation={navigation}
             />

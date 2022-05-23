@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { View } from 'native-base'
 import { useFocusEffect } from '@react-navigation/native'
 

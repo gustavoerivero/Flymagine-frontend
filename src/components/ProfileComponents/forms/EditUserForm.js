@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   Avatar,
@@ -82,8 +82,6 @@ const EditUserForm = ({ navigation }) => {
                   type: mime.getType(imageUri),
                   name: imageUri.split('/').pop()
                 })
-
-                console.log('form', formData)
 
                 startLoading()                            
                 setProfileImage(user.id, formData)

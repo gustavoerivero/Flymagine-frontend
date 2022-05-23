@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { TouchableOpacity } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Button } from 'react-native-elements'
@@ -26,7 +27,7 @@ import {
   dataDetailsSchema,
   dataDetailsDefaultValues
 } from '../../../../utils/formValidations/dataDetailsFormValidation'
-import { updateDetailsDataAdapter, personalPreferencesData } from '../../../../adapters/User'
+import { updateDataUserAdapter, personalPreferencesData } from '../../../../adapters/User'
 import { updateUser, getPreferences, setPreferences } from '../../../../services/user/userAPI'
 import { getAllLiteraryGenre } from '../../../../services/literaryGenre/literaryGenre'
 
@@ -38,7 +39,6 @@ const DetailDataForm = ({ navigation, userData }) => {
   const { isLoading, startLoading, stopLoading } = useLoading()
 
   const [literaryGenres, setLiteraryGenres] = useState([])
-  const [userPreferences, setUserPreferences] = useState([])
 
   const {
     control,
@@ -53,42 +53,44 @@ const DetailDataForm = ({ navigation, userData }) => {
     defaultValues: dataDetailsDefaultValues,
   })
 
-  useEffect(() => {
+  useFocusEffect(
+    useCallback(() => {
+      getPreferences(userInfo?._id)
+        .then(response => {
+          setValue('literaryGenres', response)
+        })
+        .catch(error => {
+          console.log(`Error: ${error}`)
+          showErrorToast('Error al agregar los géneros literarios')
+        })
+      getAllLiteraryGenre()
+        .then(response => {
+          setLiteraryGenres(response)
+        })
+        .catch(error => {
+          console.log(`Error: ${error}`)
+          showErrorToast('Error al agregar los géneros literarios')
+        })
+      setValue('firstName', userInfo?.firstName)
+      setValue('lastName', userInfo?.lastName)
+      setValue('phone', userInfo?.phone)
+      setValue('address', userInfo?.address)
+      setValue('biography', userInfo?.biography || '')
 
-    getPreferences(userInfo?._id)
-      .then(response => {
-        setUserPreferences(response)
-        console.log(response)
-      })
-      .catch(error => {
-        console.log(`Error: ${error}`)
-        showErrorToast('Error al agregar los géneros literarios')
-      })
-    getAllLiteraryGenre()
-      .then(response => {
-        setLiteraryGenres(response)
-      })
-      .catch(error => {
-        console.log(`Error: ${error}`)
-        showErrorToast('Error al agregar los géneros literarios')
-      })
-
-    setValue('biography', userInfo?.biography || '')
-    setValue('literaryGenres', userPreferences)
-
-  }, [ userInfo ])
+    }, [])
+  )
 
   const onSubmit = async (values) => {
     startLoading()
     try {
 
-      const response = await updateUser(userInfo?._id, updateDetailsDataAdapter(values))
+      const response = await updateUser(userInfo?._id, updateDataUserAdapter(values))
       const responsePreferences = await setPreferences(response?.Data?._id, personalPreferencesData(values))
 
       console.log(responsePreferences)
 
       showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
-      
+
       reset(dataDetailsDefaultValues)
       setValue('literaryGenres', [])
 

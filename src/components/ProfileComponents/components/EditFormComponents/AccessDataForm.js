@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Button } from 'react-native-elements'
 import {
@@ -21,13 +21,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import useCustomToast from '../../../../hooks/useCustomToast'
 import useLoading from '../../../../hooks/useLoading'
 import useAuthContext from '../../../../hooks/useAuthContext'
-import{
-  dataAccessSchema,
-  dataAccessDefaultValues,
-} from '../../../../utils/formValidations/dataAccessFormValidation'
-import { registerUser, setPreferences } from '../../../../services/authAPI'
-import { getUserById } from '../../../../services/user/userAPI'
-import { personalPreferencesData, registerData } from '../../../../adapters/User'
+import { dataAccessSchema, dataAccessDefaultValues } from '../../../../utils/formValidations/dataAccessFormValidation'
+import { getUserById, changeUserPassword } from '../../../../services/user/userAPI'
+import { updateAccessDataAdapter } from '../../../../adapters/User'
 
 import COLORS from '../../../../components/styled-components/Colors'
 import styles from './styled-components/styles'
@@ -38,8 +34,6 @@ const AccessDataForm = ({ navigation, userData }) => {
     state: { user },
   } = useAuthContext()
 
-  const [userInfo, setUserInfo] = useState(userData || null)
-
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
@@ -47,23 +41,9 @@ const AccessDataForm = ({ navigation, userData }) => {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
-  useEffect(() => {
-    getUserById(user?.id)
-      .then(res => {
-        setUserInfo(res?.Data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-    setValue('email', userInfo?.email)    
-  }, [])
-
   const {
     control,
     handleSubmit,
-    setValue,
-
     formState: { errors, isValid },
     reset,
   } = useForm({
@@ -76,7 +56,7 @@ const AccessDataForm = ({ navigation, userData }) => {
     startLoading()
     try {
 
-      const response = await updateUser()
+      const response = await changeUserPassword(user?.id, updateAccessDataAdapter(values))
       console.log(response)
 
       showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
@@ -117,13 +97,28 @@ const AccessDataForm = ({ navigation, userData }) => {
               space={4}
               alignItems='center'
             >
-              <Text
-                bold
-                fontSize='xl'
-                color='purple.800'
+
+              <VStack
+                alignItems='center'
+                space={1}
               >
-                Datos de Acceso
-              </Text>
+                <Text
+                  bold
+                  fontSize='xl'
+                  color='purple.800'
+                >
+                  Datos de Acceso
+                </Text>
+
+                <Text
+                  fontSize='xs'
+                  color='gray.600'
+                  textAlign='center'
+                >
+                  Para cambiar tu contraseña, es necesario que ingreses tu correo electrónico,
+                  tu contraseña actual y la nueva contraseña.
+                </Text>
+              </VStack>
 
               <Controller
                 control={control}

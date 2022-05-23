@@ -33,6 +33,11 @@ const updateUser = async (id, values) => {
   return data
 }
 
+const changeUserPassword = async (id, values) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/password`, values)	
+  return data
+}
+
 const setPreferences = async (id, data) => {
   const response = await http.post(`${BASE_URL}/${id}/preferences`, data)
   return response.data
@@ -50,7 +55,7 @@ const setFollowsByUser = async (id, follows) => {
 
 const getFollows = async (id) => {
   const { data } = await http.get(`${BASE_URL}/${id}/follows`)
-  return data
+  return data || []
 }
 
 const getFollowers = async (id) => {
@@ -58,10 +63,16 @@ const getFollowers = async (id) => {
   return data
 }
 
+const searchUsers = async (search) => {
+  const { data } = await http.get(`${BASE_URL}/search/${search}`)
+  return data
+}
+
 module.exports = {
   getOnlyUser,
   getUserById,
   updateUser,
+  changeUserPassword,
   setProfileImage,
 
   setPreferences,
@@ -70,4 +81,6 @@ module.exports = {
   setFollowsByUser,
   getFollows,
   getFollowers,
+
+  searchUsers,
 }

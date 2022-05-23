@@ -36,6 +36,7 @@ const CommentInput = ({ style = {}, ...props }, {children}) => {
           textAlign='justify'
           minH={16}
           h={height}
+          maxH={120}
           w={layout.width * .85}
           bgColor='rgba(217, 179, 255, .08)'
           color='black'
