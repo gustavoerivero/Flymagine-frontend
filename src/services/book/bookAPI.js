@@ -12,7 +12,13 @@ const getBooks = async () => {
     return data?.Data
   }
 
+  const getGenresByIdBook = async (id) => {
+    const { data } = await http.get(`${BASE_URL}/${id}/genres`)
+    return data?.Data
+  }
+
 module.exports  = {
     getBooks,
     getBookById,
+    getGenresByIdBook,
 }

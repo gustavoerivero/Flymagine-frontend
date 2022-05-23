@@ -40,6 +40,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 //Components
 import Review from "../../Post/Review";
+import StatusBookButton from "./StatusBookButton";
 
 //Data
 import dataReviews from "../../../utilities/data/reviews.json";
@@ -52,7 +53,20 @@ import COLORS from "../../styled-components/Colors";
 //Styles
 import stylesBook from "../../styled-components/stylesBook";
 
-const InfoBookProfile = ({ navigation, bookInfo, author }) => {
+const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
+  //Colors
+  const backgroundColor = COLORS.primary;
+  const text = COLORS.base;
+  const elementsButton = COLORS.button.text;
+  const icon = COLORS.button.icon;
+  const buttonColor = COLORS.button.terciary;
+  const categoryBgColor = COLORS.button.secundary;
+
+  //Status Book
+  const [buttonToRead, setButtonToRead] = useState(true);
+  const [buttonReading, setButtonReading] = useState(false);
+  const [buttonRead, setButtonRead] = useState(false);
+
   const [index, setIndex] = React.useState(0);
 
   const [show, setShow] = useState(true);
@@ -67,7 +81,6 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
 
   useFocusEffect(
     useCallback(() => {
-      
       getAllLiteraryGenre()
         .then((response) => {
           setLiteraryGenres(response);
@@ -81,7 +94,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
   );
 
   return (
-    <Box h="100%" bg={COLORS.primary}>
+    <Box h="100%" bg={backgroundColor} opacity="0.95">
       <HStack h="30%">
         <VStack w="40%" justifyContent="center" alignItems="center">
           <Image
@@ -93,21 +106,25 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
 
         <VStack w="60%" px={1} justifyContent="center">
           <HStack h="40%">
-            <Text fontSize="xl" bold color={COLORS.base}>
+            <Text fontSize="xl" bold color={text}>
               {bookInfo && bookInfo?.name}
             </Text>
           </HStack>
 
+          <HStack h="10%">
+            <AirbnbRating count={5} showRating={false} size={16} defaultRating={4} isDisabled={true} selectedColor={'#FF00F0'} unSelectedColor={COLORS.button.secundaryDisabled}/>
+          </HStack>
+
           <HStack alignItems="center" pt={1} h="10%">
-            <Ionicons name="person" color={COLORS.base} />
-            <Text fontSize="sm" color={COLORS.base} pl={1}>
+            <Ionicons name="person" color={icon} />
+            <Text fontSize="sm" color={text} pl={1}>
               {author && author?.lastName[0] + ". " + author?.firstName}
             </Text>
           </HStack>
 
           <HStack alignItems="center" pt={1} h="10%">
-            <Entypo name="book" color={COLORS.base} />
-            <Text fontSize="sm" color={COLORS.base} pl={1}>
+            <Entypo name="book" color={icon} />
+            <Text fontSize="sm" color={text} pl={1}>
               Géneros: {bookInfo && bookInfo?.geners}
             </Text>
           </HStack>
@@ -123,34 +140,34 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
                 renderItem={({ item }) => (
                   <Badge
                     colorScheme="success"
+                    alignItems="center"
+                    justifyContent="center"
                     style={{
                       borderRadius: 30,
-                      backgroundColor: COLORS.button.secundaryDisabled,
+                      backgroundColor: categoryBgColor,
                     }}
                   >
-                    <Text color={COLORS.base}>{item?.name}</Text>
+                    <Text color={elementsButton}>{item?.name}</Text>
                   </Badge>
                 )}
               />
             </Box>
           </HStack>
 
-          <HStack h="10%">
-            <AirbnbRating count={5} showRating={false} size={16} />
-          </HStack>
+          
         </VStack>
       </HStack>
 
       <HStack h="35%" justifyContent="center">
         <VStack w="95%">
           <HStack alignItems="center" my={1}>
-            <MaterialIcons name="description" size={12} color={COLORS.base} />
-            <Text fontSize="sm" bold color={COLORS.base} pl={1}>
+            <MaterialIcons name="description" size={12} color={icon} />
+            <Text fontSize="md" bold color={text} pl={1}>
               Sinopsis:
             </Text>
           </HStack>
 
-          <Text fontSize="md" color={COLORS.base} pl={1} textAlign='justify'>
+          <Text fontSize="md" color={text} pl={1} textAlign="justify">
             {bookInfo && bookInfo?.sypnosis}
           </Text>
         </VStack>
@@ -162,31 +179,38 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
             <Button
               h="95%"
               w="80%"
-              colorScheme={COLORS.button.secundary}
+              bg={buttonColor}
+              colorScheme="blueGray"
               endIcon={
                 <Icon
                   as={Ionicons}
                   name="cloud-download-outline"
                   size="md"
-                  color={COLORS.button.icon}
+                  color={elementsButton}
                 />
               }
               borderRadius="full"
+              onPress={() => [
+                setButtonToRead(false),
+                setButtonReading(true),
+                setButtonRead(false),
+              ]}
             >
-              <Text fontSize="md" bold color={COLORS.base}>
+              <Text fontSize="md" bold color={elementsButton}>
                 Descargar libro
               </Text>
             </Button>
             <IconButton
               h="95%"
               w="15%"
+              variant="unstyled"
               alignItems="center"
               justifyContent="center"
               icon={
                 <MaterialIcons
                   name="favorite"
                   size={20}
-                  color={show ? COLORS.base : "red"}
+                  color={show ? icon : "red"}
                 />
               }
               borderRadius="100"
@@ -204,35 +228,22 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
             >
               <Button
                 h="95%"
-                variant="ghost"
-                colorScheme={COLORS.button.secundary}
+                variant="unstyled"
                 borderRadius="full"
-                startIcon={
-                  <FontAwesome name="edit" size={15} color={COLORS.base} />
-                }
+                startIcon={<FontAwesome name="edit" size={15} color={icon} />}
               >
-                <Text fontSize="md" bold color={COLORS.base}>
+                <Text fontSize="md" bold color={text}>
                   Editar libro
                 </Text>
               </Button>
-
-              <Button
-                h="95%"
-                variant="ghost"
-                colorScheme={COLORS.button.secundary}
-                borderRadius="full"
-                startIcon={
-                  <Ionicons
-                    name="checkmark-done-sharp"
-                    size={15}
-                    color={COLORS.base}
-                  />
-                }
-              >
-                <Text fontSize="md" bold color={COLORS.base}>
-                  Leído
-                </Text>
-              </Button>
+              <StatusBookButton
+                buttonRead={buttonRead}
+                setButtonRead={setButtonRead}
+                buttonReading={buttonReading}
+                setButtonReading={setButtonReading}
+                buttonToRead={buttonToRead}
+                setButtonToRead={setButtonToRead}
+              />
             </HStack>
           ) : (
             <HStack
@@ -241,23 +252,14 @@ const InfoBookProfile = ({ navigation, bookInfo, author }) => {
               alignItems="center"
               mt="3"
             >
-              <Button
-                h="95%"
-                variant="ghost"
-                colorScheme={COLORS.button.secundary}
-                borderRadius="full"
-                startIcon={
-                  <Ionicons
-                    name="checkmark-done-sharp"
-                    size={15}
-                    color={COLORS.base}
-                  />
-                }
-              >
-                <Text fontSize="md" bold color={COLORS.base}>
-                  Leído
-                </Text>
-              </Button>
+              <StatusBookButton
+                buttonRead={buttonRead}
+                setButtonRead={setButtonRead}
+                buttonReading={buttonReading}
+                setButtonReading={setButtonReading}
+                buttonToRead={buttonToRead}
+                setButtonToRead={setButtonToRead}
+              />
             </HStack>
           )}
         </VStack>
