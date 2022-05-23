@@ -31,6 +31,7 @@ import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'
 import { deletePost, getHashtags, getUsertags } from '../../services/post/postAPI'
+import { getComments } from '../../services/comments/commentPostAPI'
 import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
 import { useFocusEffect } from '@react-navigation/native'
 
@@ -50,7 +51,7 @@ const Post = ({ navigation, post = {} }) => {
   const [isLiked, setIsLiked] = useState(false)
   const [postReactionInfo, setPostReactionInfo] = useState([])
   const [likes, setLikes] = useState(0)
-  const [comments, setComments] = useState(null)
+  const [comments, setComments] = useState(0)
 
   const [deleteVisible, setDeleteVisible] = useState(false)
 
@@ -120,6 +121,14 @@ const Post = ({ navigation, post = {} }) => {
       getUsertags(post?._id)
         .then(res => {
           setPersonTags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getComments(post?._id)
+        .then(res => {
+          setComments(res)
         })
         .catch(error => {
           console.log(error)
@@ -403,7 +412,14 @@ const Post = ({ navigation, post = {} }) => {
                 </HStack>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('CommentPage', {
+                    post: post,
+                    comments: comments
+                  })
+                }}
+              >
                 <HStack space={1} alignItems='center' >
                   <Icon
                     as={MaterialCommunityIcons}
@@ -411,7 +427,7 @@ const Post = ({ navigation, post = {} }) => {
                     color={'gray.400'}
                   />
                   <Text fontSize='xs' color={'gray.400'} >
-                    {0}
+                    {comments?.length || 0}
                   </Text>
                 </HStack>
               </TouchableOpacity>

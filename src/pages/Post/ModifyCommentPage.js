@@ -1,98 +1,119 @@
-import React, { useEffect, useState } from 'react'
-import {
-  View,
-  ScrollView,
-  StyleSheet,
-} from 'react-native'
-import {
-  Divider,
-  Button,
-  Image,
-} from 'react-native-elements'
-
+import React, { useCallback, useState } from 'react'
+import { useWindowDimensions } from 'react-native'
+import { ScrollView, VStack } from 'native-base'
 import { FAB } from '@rneui/themed'
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import CommentInput from '../../components/Post/CommentInput'
+import CommentModify from '../../components/Post/CommentModify'
+import { handleChange, } from '../../utils/functions'
 
-import {
-  handleChange,
-  pickImage,
-  permisionFunction,
-} from '../../utils/functions'
+import useAuthContext from '../../hooks/useAuthContext'
+import useLoading from '../../hooks/useLoading'
+import useCustomToast from '../../hooks/useCustomToast'
+import { getUserById } from '../../services/user/userAPI'
+import { updateComment } from '../../services/comments/commentPostAPI'
 
-import CommentModify from '../../components/Post/CommentModify';
+const ModifyCommentPage = ({ navigation, route }) => {
 
-const ModifyCommentPage = ({ route }) => {
+  const layout = useWindowDimensions()
 
-  const [comment, setComment] = useState(route.params.props || {
-    id: '',
-    text: '',
-    publishDate: '',
-    likes: '',
-    owner: {
-      id: '',
-      title: '',
-      firstName: '',
-      lastName: '',
-      picture: '',
-    }
+  const {
+    state: { user },
+  } = useAuthContext()
+
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { isLoading, startLoading, stopLoading } = useLoading()
+
+  const [userData, setUserData] = useState(null)
+  const [comment, setComment] = useState({
+    _id: route.params.comment._id,
+    idPost: route.params.comment.idPost,
+    idUser: user.id,
+    description: route.params.comment.description,
+    createdAt: route.params.comment.createdAt,
+    usersLiked: route.params.comment.usersLiked || [],
   })
 
   const _handleChange = (item, value) => handleChange(comment, setComment, item, value)
 
-  useEffect(() => {
-    permisionFunction()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+
+      getUserById(user?.id)
+        .then(res => {
+          setUserData(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+    }, [])
+  )
 
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <CommentModify
-          author={comment.owner.firstName + ' ' + comment.owner.lastName}
-          avatar={comment.owner.picture}
-          description={comment.text}
-          date={comment.publishDate}
-          likes={comment.likes}
-        />
-        <Divider
-          style={{
-            marginBottom: 10,
-          }}
-        />
-        <View style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'stretch',
-        }}>
+    <KeyboardAwareScrollView>
+      <VStack h={layout.height * .94}>
+        <ScrollView>
+          <VStack maxH='65%' >
+            <CommentModify
+              comment={comment}
+              user={userData}
+            />
+          </VStack>
+        </ScrollView>
+
+        <VStack justifyContent='flex-end'>
           <CommentInput
-            text={comment.text}
-            setText={(text) => _handleChange('text', text)}
+            value={comment.description}
+            onChangeText={(text) => _handleChange('description', text)}
+            rightElement={
+              <FAB
+                icon={
+                  <FontAwesome
+                    name='send'
+                    color='#fff'
+                    size={20}
+                  />
+                }
+                color='#b973ff'
+                containerStyle={{
+                  position: 'relative',
+                  marginBottom: 5,
+                  right: '5%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 50,
+                  height: 50,
+                }}
+                disabled={comment === '' || isLoading}
+                onPress={() => {
+                  startLoading()
+
+                  updateComment(comment._id, { description: comment.description })
+                    .then(res => {
+                      console.log(res)
+
+                      showSuccessToast('¡Misión cumplida! Has editado un comentario')
+                      navigation?.goBack()
+                    })
+                    .catch(error => {
+                      console.log(error)
+                      showErrorToast('¡Misión fallida! No se ha podido editar el comentario')
+                    })
+                  stopLoading()
+                }}
+              />
+            }
           />
-        </View>
-      </View>
-    </ScrollView>
+        </VStack>
+
+      </VStack>
+
+    </KeyboardAwareScrollView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  photoContainer: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 2.5,
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
 
 export default ModifyCommentPage

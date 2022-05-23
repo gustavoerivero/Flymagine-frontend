@@ -1,103 +1,120 @@
-import React, {
-  useState,
-} from 'react'
+import React, { useState, useCallback } from 'react'
+import { useWindowDimensions } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 import {
   ScrollView,
-  View,
-  StyleSheet,
-} from 'react-native'
-import {
-  Divider
-} from 'react-native-elements'
+  Stack,
+  VStack,
+} from 'native-base'
+import { FontAwesome } from '@expo/vector-icons'
+import { FAB } from '@rneui/themed'
 
 import CommentPost from '../../components/Post/CommentPost'
 import Comment from '../../components/Post/Comment'
 import CommentInput from '../../components/Post/CommentInput'
+import { getComments, createComment } from '../../services/comments/commentPostAPI'
 
-const CommentPage = ({ route }) => {
+import useAuthContext from '../../hooks/useAuthContext'
+import useLoading from '../../hooks/useLoading'
+import useCustomToast from '../../hooks/useCustomToast'
+import { createCommentPostAdapter } from '../../adapters/CommentPost'
 
-  const [props, setProps] = useState(route.params.props)
+const CommentPage = ({ navigation, route }) => {
 
+  const {
+    state: { user },
+  } = useAuthContext()
+
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const { isLoading, startLoading, stopLoading } = useLoading()
+
+  const [post, setPost] = useState(route.params.post || {})
+  const [comments, setComments] = useState(route.params.comments || [])
   const [comment, setComment] = useState('')
+
+  const layout = useWindowDimensions()
+
+  useFocusEffect(
+    useCallback(() => {
+      getComments(post?._id)
+        .then(res => {
+          setComments(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }, [])
+  )
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <CommentPost
-          props={props}
-        />
-        <View style={styles.baseComment}>
-          <View style={styles.comments}>
-            <Divider
-              orientation='vertical'
-              style={{
-                paddingLeft: '2%',
-                marginLeft: '10%'
+      <VStack minH={layout.height * .9 - 30} justifyContent='space-between' space={3}>
+        <VStack alignItems='center' space={2}>
+          <Stack alignItems='center' w='100%'>
+            <CommentPost
+              navigation={navigation}
+              post={post}
+            />
+          </Stack>
+          {comments && comments?.map((element) =>
+            <Comment
+              key={element._id}
+              comment={element}
+              navigation={navigation}
+            />
+          )}
+        </VStack>
+        <CommentInput
+          value={comment}
+          onChangeText={setComment}
+          placeholder='¿Tienes algo que decir?'
+          rightElement={
+            <FAB
+              icon={
+                <FontAwesome
+                  name='send'
+                  color='#fff'
+                  size={20}
+                />
+              }
+              color='#b973ff'
+              containerStyle={{
+                position: 'relative',
+                marginBottom: 5,
+                right: '5%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 50,
+                height: 50,
               }}
-              width={2}
-            />
-            <View style={styles.commentStyle}>
-              {props.comments.map((comment, index) => {
-                return (
-                  <Comment
-                    key={index}
-                    props={comment}
-                    signIn={props.signIn}
-                  />
-                )
-              })}
-            </View>
-          </View>
-          <Divider 
-            style={{
-              marginBottom: '1%',
-            }}
-          />
-          <View style={styles.commentInput}>
-            <CommentInput 
-              text={comment}
-              setText={setComment}
-            />
-          </View>
-        </View>
+              disabled={comment === '' || isLoading}
+              onPress={() => {
+                startLoading()
+                createComment({
+                  'idPost': post._id,
+                  'idUser': user.id,
+                  'description': comment,
+                })
+                  .then(res => {
+                    console.log(res)
 
-      </View>
-    </ScrollView>
+                    setComment('')
+                    setComments([...comments, res?.Data])
+
+                    showSuccessToast('¡Misión cumplida! Has creado un comentario')
+                  })
+                  .catch(error => {
+                    console.log(error)
+                    showErrorToast('¡Misión fallida! No se ha podido crear el comentario')
+                  })
+                stopLoading()
+              }}
+            />
+          }
+        />
+      </VStack>
+    </ScrollView >
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  comments: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    alignContent: 'center',
-  },
-  commentStyle: {
-    marginRight: '37%',
-    marginLeft: '2%',
-  },
-  baseComment: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    justifyContent: 'space-between',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-  },
-  commentInput: {
-    display: 'flex',
-    backgroundColor: '#fff',
-    marginLeft: '15%',
-    marginRight: '15%',
-  },
-})
 
 export default CommentPage

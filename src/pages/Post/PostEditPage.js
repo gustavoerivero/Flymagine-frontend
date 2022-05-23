@@ -37,7 +37,6 @@ import {
   setHashtags,
   setUsertags,
 } from '../../services/post/postAPI'
-import { postAdapter } from '../../adapters/Post'
 
 const PostEditPage = ({ navigation, route }) => {
 
@@ -538,12 +537,12 @@ const PostEditPage = ({ navigation, route }) => {
                       })
                       setImage(null)
 
-                      showSuccessToast('¡Misión cumplida! Has creado una publicación')
+                      showSuccessToast('¡Misión cumplida! Has editado una publicación')
                       navigation.navigate('Home')
                     })
                     .catch(error => {
                       console.log(error)
-                      showErrorToast('¡Misión fallida! No se ha podido crear la publicación')
+                      showErrorToast('¡Misión fallida! No se ha podido editar la publicación')
                     })
                   stopLoading()
                 }}

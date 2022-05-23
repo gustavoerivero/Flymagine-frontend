@@ -6,7 +6,6 @@ import RegisterPage from '../pages/Login/RegisterPage'
 import PasswordRecoveryRequestPage from '../pages/Login/PasswordRecorveryRequestPage'
 
 // Post pages
-import CreatePostPage from '../pages/Post/CreatePostPage'
 import PostEditPage from '../pages/Post/PostEditPage'
 import CommentPage from '../pages/Post/CommentPage'
 import ModifyCommentPage from '../pages/Post/ModifyCommentPage'
@@ -79,14 +78,6 @@ const stackRoutes = [
       title: 'Edita tu perfil',
     }
   },
-  {
-    name: 'CreatePostPage',
-    component: CreatePostPage,
-    requireAuth: true,
-    options: {
-      title: 'Crear post',
-    }
-  },
    {
     name: 'EditPost',
     component: PostEditPage,
@@ -100,8 +91,7 @@ const stackRoutes = [
     component: CommentPage,
     requireAuth: true,
     options: {
-      headerShown: false,
-
+      title: '¿Qué están pasando?',
     }
   },
   {

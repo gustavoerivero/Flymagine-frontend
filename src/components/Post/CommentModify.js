@@ -1,94 +1,75 @@
-import React, {
-  useState,
-} from 'react'
+import React from 'react'
+import { useWindowDimensions } from 'react-native'
 import {
+  Avatar,
+  Box,
   Text,
-  View,
-} from 'react-native'
+  Stack,
+  VStack,
+  HStack,
+} from 'native-base'
 
-import { Divider } from '@rneui/themed'
+import { parseDate, parseTime } from '../../utilities/Parsers'
+import COLORS from '../styled-components/Colors'
 
-import styles from './styled-components/styles'
-import { Button, Image } from 'react-native-elements'
+const CommentModify = ({ user, comment }) => {
 
-import {
-  parseDate,
-  parseTime,
-} from '../../utilities/Parsers'
-
-import {
-  Ionicons
-} from '@expo/vector-icons'
-
-const CommentModify = (props) => {
+  const layout = useWindowDimensions()
 
   return (
-    <View style={styles.container}>
-      <View style={styles.photoContainer}>
-        <Button
-          buttonStyle={styles.profileButton}
-          containerStyle={styles.profileButton}
-          icon={
-            ((props.avatar || props.avatar === "")&&
-              <Image
-                source={{
-                  uri: props.avatar
-                }}
-                style={styles.profileButton}
-              />
-            ) ||  
-            <Ionicons
-              name='ios-person'
-              color='#000'
-            />
-          }
-          type='clear'
-          onPress={() => {
-            console.log(`${props.author}'s profile`)
+    <Box
+      bgColor={COLORS.secundary}
+      w={layout.width}
+      p={2}
+      shadow={2}
+      minH={layout.height * 0.1}
+    >
+      <HStack
+        space={2}
+      >
+        <Avatar
+          bg='purple.600'
+          size='md'
+          source={{
+            uri: user?.photo === 'none' ?
+              null
+              : user?.photo
           }}
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={styles.headerContainer}>
-          <View style={styles.title}>
-            <Text style={{
-              fontWeight: 'bold',
-              marginRight: 5,
-            }}>
-              {props.author}
+          borderColor='white'
+          borderWidth={3}
+        >
+          {user && (user?.firstName[0] + user?.lastName[0])}
+        </Avatar>
+        <VStack
+          space={1}
+          w='85%'
+        >
+          <HStack space={2} >
+            <Text
+              bold
+              fontSize='sm'
+              pt={2}
+            >
+              {user?.firstName} {user?.lastName}
             </Text>
-            <Text style={{
-              fontSize: 10,
-              color: '#aaa',
-            }}>
-              {parseDate(props.date) + ' ' + parseTime(props.date)}
+            <Text
+              fontSize={10}
+              color='gray.300'
+              alignSelf='flex-end'
+            >
+              {parseDate(comment?.createdAt) + ' ' + parseTime(comment?.createdAt)}
             </Text>
-          </View>
-        </View>
-        <View style={styles.descriptionContainer}>
-          <Text
-            style={styles.content}
-          >
-            {props.description}
-          </Text>
-        </View>
-        <View>
-          {props.image !== "" && props.image && (
-            <Image
-              source={{
-                uri: props.image
-              }}
-              style={styles.image}
-            />
-          )}
-        </View>
-      </View>
-      <Divider
-        color='black'
-        inset={true}
-        width={1}
-      />
-    </View>
+          </HStack>
+          <Stack pl={3} pr={2}>
+
+            <Text fontSize='xs' textAlign='justify' >
+              {comment?.description}
+            </Text>
+          </Stack>         
+          
+        </VStack>
+      </HStack>
+    </Box>
   )
 }
 

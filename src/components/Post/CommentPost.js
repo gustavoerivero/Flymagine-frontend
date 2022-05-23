@@ -1,263 +1,409 @@
-import React, {
-  useState,
-} from 'react'
+import React, { useState, useCallback } from 'react'
 import {
+  AlertDialog,
+  Button,
+  Avatar,
+  Badge,
+  Image,
+  Box,
+  Stack,
+  HStack,
+  VStack,
   Text,
-  View,
-} from 'react-native'
+  Divider,
+  IconButton,
+  ScrollView,
+  Icon
+} from 'native-base'
 
-import { Divider } from '@rneui/themed'
+import { parseDate, parseTime } from '../../utilities/Parsers'
+import { previousFourteenHours } from '../../utils/functions'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
-import styles from './styled-components/styles'
-import { Button, Image } from 'react-native-elements'
+import COLORS from '../styled-components/Colors'
 
-import { Chip } from 'react-native-paper'
+import useAuthContext from '../../hooks/useAuthContext'
+import useCustomToast from '../../hooks/useCustomToast'
+import { getUserById, getOnlyUser } from '../../services/user/userAPI'
+import { deletePost, getHashtags, getUsertags } from '../../services/post/postAPI'
+import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
+import { useFocusEffect } from '@react-navigation/native'
 
-import Dialog from '../Dialog'
+const CommentPost = ({ navigation, post = {} }) => {
 
-import {
-  parseDate,
-  parseTime,
-} from '../../utilities/Parsers'
+  const layout = useWindowDimensions()
+  const { showSuccessToast, showErrorToast } = useCustomToast()
+  const {
+    state: { user }
+  } = useAuthContext()
 
-import {
-  previousFourteenHours
-} from '../../utils/functions'
-
-const CommentPost = (data) => {
-
-  const [props, setProps] = useState(data.props)
+  const [userLogged, setUserLogged] = useState(null)
+  const [userPost, setUserPost] = useState(null)
+  const [personTags, setPersonTags] = useState([])
+  const [hashtags, setHashtags] = useState(null)
 
   const [isLiked, setIsLiked] = useState(false)
-  const [likes, setLikes] = useState(props.likes)
-
-  const [editChoice, setEditChoice] = useState(false)
-  const [editVisible, setEditVisible] = useState(false)
+  const [postReactionInfo, setPostReactionInfo] = useState([])
+  const [likes, setLikes] = useState(0)
 
   const [deleteVisible, setDeleteVisible] = useState(false)
-  const [deleteChocie, setDeleteChoice] = useState(false)
+
+  const deletePostById = async () => {
+    try {
+      console.log(post)
+      const data = await deletePost(post?._id)
+      console.log(data)
+      showSuccessToast('Publicación eliminada con éxito')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const likePost = async () => {
+    try {
+      const newValue = postReactionInfo
+      if (newValue?.find((value) => userLogged._id === value?._id)) {
+        newValue?.splice(newValue?.findIndex((reactionUser) => userLogged?._id === reactionUser?._id), 1)
+      } else {
+        newValue?.push(userLogged)
+      }
+
+      setPostReactionInfo(newValue)
+      await postReactionsByPost(post?._id, postReactionInfo)
+      setLikes(postReactionInfo?.length)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getOnlyUser(user?.id)
+        .then(res => {
+          setUserLogged(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      getUserById(post?.idUser)
+        .then(res => {
+          setUserPost(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      getReactionsByPost(post?._id)
+        .then(res => {
+          setPostReactionInfo(res?.Data[0]?.users || [])
+          setLikes(res?.Data[0]?.users?.length || 0)
+          setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getHashtags(post?._id)
+        .then(res => {
+          setHashtags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getUsertags(post?._id)
+        .then(res => {
+          setPersonTags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+    }, [])
+  )
+
+
 
   return (
-    <View style={[styles.container, {
-      padding: 10,
-      paddingTop: 45,
-    }]}>
-      <View style={styles.photoContainer}>
-        <Button
-          buttonStyle={styles.profileButton}
-          containerStyle={styles.profileButton}
-          icon={
-            <Image
-              source={{
-                uri: props.avatar
-              }}
-              style={styles.profileButton}
-            />
-          }
-          type='clear'
+    <Box
+      p={2}
+      bgColor='white'
+      rounded='lg'
+      shadow={2}
+      pb={2}
+      w='100%'
+    >
+      <HStack>
+        <TouchableOpacity
           onPress={() => {
-            console.log(`${props.author}'s profile`)
+            console.log(`${userPost?.firstName + ' ' + userPost?.lastName}'s profile`)
+            console.log(userPost._id)
+            if (userPost?._id === user?.id) {
+              navigation.navigate('Profile')
+            } else {
+              navigation.navigate('UserProfile', { user: userPost._id })
+            }
           }}
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <View style={styles.headerContainer}>
-          <View style={styles.title}>
-            <Text style={{
-              fontWeight: 'bold',
-              marginRight: 5,
-            }}>
-              {props.author}
-            </Text>
-            <Text style={{
-              fontSize: 10,
-              color: '#aaa',
-            }}>
-              {parseDate(props.date) + ' ' + parseTime(props.date)}
-            </Text>
-          </View>
-          <View style={styles.titleButtons}>
-            {(props.signIn === props.author && previousFourteenHours(props.date)) && (
-              <>
-                <Button
-                  containerStyle={styles.button}
-                  icon={{
-                    name: 'edit',
-                    type: 'font-awesome',
-                    color: '#aaa',
-                    size: 15,
-                  }}
-                  type='clear'
+        >
+          <Avatar
+            bg='purple.600'
+            size='md'
+            source={{
+              uri: (userPost?.photo === 'none' ? null : userPost?.photo)
+            }}
+            borderColor='white'
+            borderWidth={3}
+          >
+            {userPost && (userPost?.firstName[0] + userPost?.lastName[0])}
+          </Avatar>
+        </TouchableOpacity>
+        <VStack
+          ml={2}
+        >
+          <HStack
+            space={2}
+            justifyContent='space-between'
+            alignItems='center'
+            h={7}
+            mr={2} 
+            w={290}           
+            maxW={290}
+          >
+            <HStack
+              space={2}
+            >
+              <Text
+                bold
+                fontSize='sm'
+              >
+                {userPost?.firstName} {userPost?.lastName}
+              </Text>
+              <Text
+                fontSize={10}
+                color='gray.300'
+                alignSelf='center'
+              >
+                {parseDate(post?.createdAt) + ' ' + parseTime(post?.createdAt)}
+              </Text>
+            </HStack>
+
+            {(user?.id === post?.idUser && previousFourteenHours(post?.createdAt)) && (
+              <HStack
+                alignItems='flex-end'
+              >
+                <IconButton
+                  icon={
+                    <FontAwesome
+                      name='edit'
+                      color='gray.300'
+                    />
+                  }
+                  size='sm'
                   onPress={() => {
-                    console.log(`Edit ${props.author}'s post`)
-                    setEditVisible(true)
+                    console.log(post?._id)
+                    navigation.navigate('EditPost', { 
+                      post: post,
+                      hashtags: hashtags,
+                      personTags: personTags
+                    })
                   }}
                 />
-                <Dialog
-                  content='¿Está seguro de querer editar esta publicación?'
-                  visible={editVisible}
-                  setVisible={setEditVisible}
-                  setChoice={setEditChoice}
-                  cancelButton={true}
-                  toNavigate='CreatePostPage'
-                  params={props}
-                />
-                <Button
-                  containerStyle={styles.button}
-                  icon={{
-                    name: 'trash',
-                    type: 'font-awesome',
-                    color: '#aaa',
-                    size: 15,
-                  }}
-                  type='clear'
+                <IconButton
+                  icon={
+                    <FontAwesome
+                      name='trash'
+                      color='gray.300'
+                    />
+                  }
+                  size='sm'
                   onPress={() => {
-                    console.log(`Delete ${props.author}'s post`)
                     setDeleteVisible(true)
                   }}
                 />
-                <Dialog
-                  content='¿Está seguro de querer eliminar esta publicación?'
-                  visible={deleteVisible}
-                  setVisible={setDeleteVisible}
-                  setChoice={setDeleteChoice}
-                  cancelButton={true}
-                />
+                <AlertDialog
+                  isOpen={deleteVisible}
+                  onClose={() => {
+                    setDeleteVisible(false)
+                  }}
+                >
+                  <AlertDialog.Content>
+                    <AlertDialog.CloseButton />
+                    <AlertDialog.Header>
+                      Eliminación de publicación
+                    </AlertDialog.Header>
+                    <AlertDialog.Body>
+                      ¿Estás seguro de que quieres eliminar esta publicación?
+                    </AlertDialog.Body>
+                    <AlertDialog.Footer>
+                      <Button.Group space={2}>
+                        <Button
+                          variant='unstyled'
+                          colorScheme='coolGray'
+                          onPress={() => {
+                            setDeleteVisible(false)
+                          }}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          colorScheme='danger'
+                          onPress={() => {
+                            try {
+                              deletePostById()
+                              setDeleteVisible(false)
+                              navigation?.navigate('Home')
+                            } catch {
+                              showErrorToast('Error eliminando la publicación')
+                            }
+                          }}
+                        >
+                          Eliminar
+                        </Button>
+                      </Button.Group>
+                    </AlertDialog.Footer>
+                  </AlertDialog.Content>
+                </AlertDialog>
+              </HStack>
+            )}
+
+          </HStack>
+
+          <VStack>
+
+            <Stack>
+              <Divider />
+              {personTags?.length > 0 && (
+                <>
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                    <HStack space={1} mr={10} m={1}>
+                      {personTags.map((tag) => (
+                        <TouchableOpacity
+                          key={tag._id}
+                          onPress={() => {
+                            if (tag?._id === user?.id) {
+                              navigation.navigate('Profile')
+                            } else {
+                              navigation.navigate('UserProfile', { user: tag._id })
+                            }
+                          }}
+                        >
+                          <Badge
+                            size='sm'
+                            bgColor='rgba(223, 204, 255, .35)'
+                            rounded='full'
+                          >
+                            <HStack space={1}>
+                              <Avatar
+                                bg='purple.600'
+                                size='xs'
+                                source={{
+                                  uri: (tag?.photo === 'none' ? null : tag?.photo)
+                                }}
+                                borderColor='white'
+                                borderWidth={3}
+                              >
+                                {tag && (tag?.firstName[0] + tag?.lastName[0])}
+                              </Avatar>
+                              <Text
+                                color='rgba(95, 0, 255, .55)'
+                              >
+                                {tag.firstName + ' ' + tag.lastName}
+                              </Text>
+                            </HStack>
+                          </Badge>
+                        </TouchableOpacity>
+                      ))}
+                    </HStack>
+                  </ScrollView>
+                  <Divider />
+                </>
+              )}
+            </Stack>
+
+            <Stack
+              w={layout.width * .73}
+              mx={2}
+              mb={2}
+            >
+              <Text fontSize='xs' textAlign='justify' >
+                {post?.description}
+              </Text>
+            </Stack>
+            <Divider />
+            <Stack alignItems='flex-start' >
+              {post?.photo && (post?.photo !== 'none') && (
+                <>
+                  <Image
+                    source={{ uri: post?.photo }}
+                    style={{ width: 300, height: 300 }}
+                    alt='post'
+                  />
+                  <Divider />
+                </>
+              )}
+            </Stack>
+            {hashtags?.length > 0 && (
+              <>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                  <HStack space={1} mr={10} m={1}>
+
+                  {hashtags.map((hashtag) => (
+                      <TouchableOpacity key={hashtag._id}>
+                        <Badge
+                          size='sm'
+                          bgColor='rgba(223, 204, 255, .35)'
+                          rounded='full'
+                        >
+                          <Text
+                            color='rgba(95, 0, 255, .55)'
+                          >
+                            {hashtag.name}
+                          </Text>
+                        </Badge>
+                      </TouchableOpacity>
+                    ))}
+                  </HStack>
+                </ScrollView>
+                <Divider />
               </>
             )}
-          </View>
-        </View>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
 
-          }}
-        >
-          {props.personTags.length > 0 && (
-            <View
-              style={{
-                marginLeft: 10,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                alignItems: 'center',
-                marginBottom: 10,
-              }}
+            <HStack
+              w={layout.width * .73}
+              mt={1}
+              justifyContent='flex-end'
+              space={4}
             >
-              {props.personTags.map((tag) => (
-                <Chip
-                  key={tag.id}
-                  type='outlined'
-                  avatar={
-                    <Image
-                      source={{
-                        uri: tag.picture,
-                      }}
-                      style={{
-                        height: 15,
-                        width: 15,
-                      }}
-                    />
-                  }
-                  onPress={() => {
-                    console.log(`${tag.firstName} ${tag.lastName}'s profile`)
-                  }}
-                  style={{
-                    marginRight: 5,
-                    height: 20,
-                    justifyContent: 'center',
-                    backgroundColor: 'rgba(200, 90, 235, .5)',
-                  }}
-                  textStyle={{
-                    fontSize: 10,
-                    fontWeight: 'bold',
-                    color: '#fff',
-                  }}
 
-                >
-                  {tag.firstName + ' ' + tag.lastName}
-                </Chip>
-              ))}
-            </View>
-          )}
-        </View>
-        <View style={styles.descriptionContainer}>
-          <Text
-            style={styles.content}
-          >
-            {props.description}
-          </Text>
-        </View>
-        <View>
-          {props.image !== "" && (
-            <Image
-              source={{
-                uri: props.image
-              }}
-              style={styles.image}
-            />
-          )}
-        </View>
-        <View>
-          <Divider />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            {props.tags.map((tag, index) => (
-              <Chip
-                key={index}
-                style={{
-                  margin: 2,
-                }}
+              <TouchableOpacity
                 onPress={() => {
-                  console.log(`Tag ${tag}`)
+                  setIsLiked(!isLiked)
+                  likePost()
+                  if (isLiked) {
+                    setLikes(likes - 1)
+                  } else {
+                    setLikes(likes + 1)
+                  }
                 }}
               >
-                {tag}
-              </Chip>
-            ))}
-          </View>
-          <Divider />
-          <View style={styles.actionsContainer}>
-            <Button
-              containerStyle={{
-                borderRadius: 50,
-              }}
-              buttonStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 5,
-                height: 30,
-                width: 50,
-              }}
-              icon={{
-                name: 'thumb-up',
-                type: 'material-community',
-                color: isLiked ? 'purple' : '#aaa',
-                size: 15,
-              }}
-              title={likes}
-              titleStyle={{
-                fontSize: 10,
-                color: isLiked ? 'purple' : '#aaa',
-              }}
-              onPress={() => {
-                setIsLiked(!isLiked)
-                setLikes(isLiked ? likes - 1 : likes + 1)
-                console.log(`${props.author}'s post liked`)
-              }}
-            />
-          </View>
-        </View>
-      </View>
-    </View>
+                <HStack space={1} alignItems='center' >
+                  <Icon
+                    as={MaterialIcons}
+                    name='thumb-up'
+                    color={isLiked ? COLORS.button.secundary : 'gray.400'}
+                  />
+                  <Text fontSize='xs' color={'gray.400'} >
+                    {likes}
+                  </Text>
+                </HStack>
+              </TouchableOpacity>
+            </HStack>
+
+          </VStack>
+        </VStack>
+      </HStack>
+    </Box>
   )
 }
 
