@@ -37,6 +37,7 @@ const Follows = ({ navigation, route }) => {
     <ScrollView>
       <View
         minH={layout.height * .9}
+        w={layout.width}
         bgColor={COLORS.base}
       >
         {follows && follows.map(follow => (

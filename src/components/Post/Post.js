@@ -30,6 +30,7 @@ import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'
 import { deletePost, getHashtags, getUsertags } from '../../services/post/postAPI'
+import { getComments } from '../../services/comments/commentPostAPI'
 import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
 import { useFocusEffect } from '@react-navigation/native'
 
@@ -49,9 +50,8 @@ const Post = ({ navigation, post = {} }) => {
   const [isLiked, setIsLiked] = useState(false)
   const [postReactionInfo, setPostReactionInfo] = useState([])
   const [likes, setLikes] = useState(0)
-  const [comments, setComments] = useState(null)
+  const [comments, setComments] = useState(0)
 
-  const [editVisible, setEditVisible] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(false)
 
   const deletePostById = async () => {
@@ -125,6 +125,14 @@ const Post = ({ navigation, post = {} }) => {
           console.log(error)
         })
 
+      getComments(post?._id)
+        .then(res => {
+          setComments(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
     }, [])
   )
 
@@ -170,7 +178,9 @@ const Post = ({ navigation, post = {} }) => {
             justifyContent='space-between'
             alignItems='center'
             h={7}
-            mr={2}
+            mr={2} 
+            w={290}           
+            maxW={290}
           >
             <HStack
               space={2}
@@ -202,6 +212,14 @@ const Post = ({ navigation, post = {} }) => {
                     />
                   }
                   size='sm'
+                  onPress={() => {
+                    console.log(post?._id)
+                    navigation.navigate('EditPost', { 
+                      post: post,
+                      hashtags: hashtags,
+                      personTags: personTags
+                    })
+                  }}
                 />
                 <IconButton
                   icon={
@@ -271,9 +289,9 @@ const Post = ({ navigation, post = {} }) => {
                 <>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                     <HStack space={1} mr={10} m={1}>
-                      {personTags.map((tag, index) => (
+                      {personTags.map((tag) => (
                         <TouchableOpacity
-                          key={index}
+                          key={tag._id}
                           onPress={() => {
                             if (tag?._id === user?.id) {
                               navigation.navigate('Profile')
@@ -342,8 +360,8 @@ const Post = ({ navigation, post = {} }) => {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} >
                   <HStack space={1} mr={10} m={1}>
 
-                    {hashtags.map((hashtag, index) => (
-                      <TouchableOpacity key={index}>
+                  {hashtags.map((hashtag) => (
+                      <TouchableOpacity key={hashtag._id}>
                         <Badge
                           size='sm'
                           bgColor='rgba(223, 204, 255, .35)'
@@ -393,7 +411,14 @@ const Post = ({ navigation, post = {} }) => {
                 </HStack>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('CommentPage', {
+                    post: post,
+                    comments: comments
+                  })
+                }}
+              >
                 <HStack space={1} alignItems='center' >
                   <Icon
                     as={MaterialCommunityIcons}
@@ -401,7 +426,7 @@ const Post = ({ navigation, post = {} }) => {
                     color={'gray.400'}
                   />
                   <Text fontSize='xs' color={'gray.400'} >
-                    {0}
+                    {comments?.length || 0}
                   </Text>
                 </HStack>
               </TouchableOpacity>

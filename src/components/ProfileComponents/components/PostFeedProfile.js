@@ -65,7 +65,7 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
         minW={layout.width}
         m={2}
         pr={4}
-        mb={20}
+        mb={layout.height * .2}
       >
         {posts?.length > 0 && posts ? posts.map((post, index) => (
           <Post

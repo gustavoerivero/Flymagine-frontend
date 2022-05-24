@@ -27,7 +27,7 @@ import {
   dataDetailsSchema,
   dataDetailsDefaultValues
 } from '../../../../utils/formValidations/dataDetailsFormValidation'
-import { updateDetailsDataAdapter, personalPreferencesData } from '../../../../adapters/User'
+import { updateDataUserAdapter, personalPreferencesData } from '../../../../adapters/User'
 import { updateUser, getPreferences, setPreferences } from '../../../../services/user/userAPI'
 import { getAllLiteraryGenre } from '../../../../services/literaryGenre/literaryGenre'
 
@@ -56,38 +56,41 @@ const DetailDataForm = ({ navigation, userData }) => {
   useFocusEffect(
     useCallback(() => {
       getPreferences(userInfo?._id)
-      .then(response => {
-        setValue('literaryGenres', response)
-      })
-      .catch(error => {
-        console.log(`Error: ${error}`)
-        showErrorToast('Error al agregar los géneros literarios')
-      })
-    getAllLiteraryGenre()
-      .then(response => {
-        setLiteraryGenres(response)
-      })
-      .catch(error => {
-        console.log(`Error: ${error}`)
-        showErrorToast('Error al agregar los géneros literarios')
-      })
+        .then(response => {
+          setValue('literaryGenres', response)
+        })
+        .catch(error => {
+          console.log(`Error: ${error}`)
+          showErrorToast('Error al agregar los géneros literarios')
+        })
+      getAllLiteraryGenre()
+        .then(response => {
+          setLiteraryGenres(response)
+        })
+        .catch(error => {
+          console.log(`Error: ${error}`)
+          showErrorToast('Error al agregar los géneros literarios')
+        })
+      setValue('firstName', userInfo?.firstName)
+      setValue('lastName', userInfo?.lastName)
+      setValue('phone', userInfo?.phone)
+      setValue('address', userInfo?.address)
+      setValue('biography', userInfo?.biography || '')
 
-    setValue('biography', userInfo?.biography || '')
-
-    },[])
+    }, [])
   )
 
   const onSubmit = async (values) => {
     startLoading()
     try {
 
-      const response = await updateUser(userInfo?._id, updateDetailsDataAdapter(values))
+      const response = await updateUser(userInfo?._id, updateDataUserAdapter(values))
       const responsePreferences = await setPreferences(response?.Data?._id, personalPreferencesData(values))
 
       console.log(responsePreferences)
 
       showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
-      
+
       reset(dataDetailsDefaultValues)
       setValue('literaryGenres', [])
 

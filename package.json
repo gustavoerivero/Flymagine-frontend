@@ -38,6 +38,7 @@
     "react-native-gesture-handler": "~2.1.0",
     "react-native-image-picker": "^4.7.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
+    "react-native-logs": "^4.0.1",
     "react-native-make-it-rain": "^1.1.1",
     "react-native-modal-dropdown": "^1.0.2",
     "react-native-multiple-select": "^0.5.7",

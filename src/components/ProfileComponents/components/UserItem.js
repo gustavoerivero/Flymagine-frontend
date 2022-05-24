@@ -82,8 +82,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
       <Box
         p={5}
         m={1}
-        minW={layout.width}
-        maxW={layout.width}
+        w='100%'
         alignItems='center'
         alignContent='center'
         alignSelf='center'
@@ -103,7 +102,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
             {userItem && (userItem?.firstName[0] + userItem?.lastName[0])}
           </Avatar>
 
-          <VStack maxW={layout.width * .5} mt={2}>
+          <VStack w={layout.width * .5} mt={2}>
             <HStack>
               <Text bold fontSize='sm'>
                 {userItem?.firstName} {userItem?.lastName}

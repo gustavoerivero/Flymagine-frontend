@@ -18,6 +18,10 @@ export const dataBasicSchema = object({
     .min(4, 'La dirección debe contener al menos 4 caracteres')
     .max(255, 'La dirección debe contener máximo 255 caracteres')
     .required('La dirección es requerida'),
+  biography: string()
+    .max(1024, 'La biografía debe contener máximo 1024 caracteres')
+    .default('')
+    .notRequired(),
 }).required()
 
 export const dataBasicDefaultValues = {
@@ -25,4 +29,5 @@ export const dataBasicDefaultValues = {
   lastName: '',
   phone: '',
   address: '',
+  biography: ''
 }

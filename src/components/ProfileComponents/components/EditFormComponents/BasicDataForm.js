@@ -20,7 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import useCustomToast from '../../../../hooks/useCustomToast'
 import useLoading from '../../../../hooks/useLoading'
 import { dataBasicSchema, dataBasicDefaultValues } from '../../../../utils/formValidations/dataBasicFormValidation'
-import { updateBasicDataAdapter } from '../../../../adapters/User'
+import { updateDataUserAdapter } from '../../../../adapters/User'
 import { updateUser } from '../../../../services/user/userAPI'
 
 import COLORS from '../../../../components/styled-components/Colors'
@@ -53,6 +53,7 @@ const BasicDataForm = ({ navigation, userData }) => {
         setValue('lastName', userInfo?.lastName)
         setValue('phone', userInfo?.phone)
         setValue('address', userInfo?.address)
+        setValue('biography', userInfo?.biography)
       }
     }, [])
   )
@@ -61,8 +62,7 @@ const BasicDataForm = ({ navigation, userData }) => {
     startLoading()
     try {
 
-      const response = await updateUser(userInfo?._id, updateBasicDataAdapter(values))
-      console.log(response)
+      const response = await updateUser(userInfo?._id, updateDataUserAdapter(values))
 
       showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
 
