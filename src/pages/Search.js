@@ -1,155 +1,88 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react'
+import { useWindowDimensions } from 'react-native'
 import {
   View,
+  Box,
+  HStack,
+  Image,
+  IconButton,
+  Icon,
+  VStack,
+  Stack,
   Text,
-  StyleSheet,
   ScrollView,
-  Touchable,
-  TouchableOpacity
-} from "react-native";
+} from 'native-base'
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 
-import { Image, Input, Button } from "react-native-elements";
+import StyledField from '../components/SearchComponents/StyledField'
+import TabContainerSearch from '../components/SearchComponents/TabContainerSearch'
+import COLORS from '../components/styled-components/Colors'
 
-import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
+import Pana from '../../assets/images/pana.png'
 
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+const Search = ({ navigation }) => {
 
-import FlymagineIcon from "../../assets/favicon.png";
+  const layout = useWindowDimensions()
 
-import { SearchBar } from "react-native-elements";
-import MiniCard from "../components/SearchComponents/MiniCard";
-import BooksCard from "../components/SearchComponents/BooksCard";
-
-import ListSearchBook from "../components/ListSearchBook";
-import dataBooks from "../utilities/data/books";
-import dataCategory from "../utilities/data/category";
-import dataTrending from "../utilities/data/trendingBooks";
-
-import {useNavigation} from "@react-navigation/native";
-
-//Pages
-import Book from "./Book/Book";
-
-//Components
-import StatusBar from "../components/StatusBar";
-
-//Colors
-import COLORS from "../components/styled-components/Colors";
-
-//Styles
-import stylesSearch from "../components/styled-components/stylesSearch";
-
-const Search = () => {
-  const [search, setSearch] = useState("");
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
-
-  const [books, setBooks] = useState(dataBooks);
-
-  const [category, setCategory] = useState(dataCategory);
-
-  const [trend, setTrend] = useState(dataTrending);
-
-  const styles = stylesSearch;
-
-  
-  const navegation = useNavigation();
+  const [search, setSearch] = useState('')
 
   return (
-    <View style={stylesSearch.container}>
-      <StatusBar />
-      <KeyboardAwareScrollView>
-        <View style={styles.header}>
-          <SearchBar
-            placeholderTextColor={COLORS.gray0}
-            underlineColorAndroid={"transparent"}
-            autoCapitalize="none"
-            containerStyle={styles.searchBarContainer}
-            inputStyle={styles.label}
-            inputContainerStyle={styles.inputContainer}
-            platform="android"
-            placeholder="Busca libros, historias y más..."
-            onChangeText={updateSearch}
+    <View minH={layout.height}>
+      <VStack alignItems='center'>
+        <Stack bgColor={COLORS.primary} alignItems='flex-start' w='100%' p={4} pl={6}>
+          <Text bold fontSize={20} color='white'>
+            Descubre nuevos mundos...
+          </Text>
+        </Stack>
+        <Stack bgColor={COLORS.primary} w='100%' alignItems='center' pb={2}>
+          <StyledField
+            placeholder='¿Qué estás buscando?'
+            onChangeText={(text) => setSearch(text)}
             value={search}
-            //              searchIcon={{color: COLORS.secundary}}
+            leftElement={
+              <Icon
+                as={search === '' ? FontAwesome : FontAwesome5}
+                name={search === '' ? 'search' : 'arrow-alt-circle-right'}
+                color={COLORS.button.primary}
+                size={6}
+                ml={3}
+              />
+            }
+            rightElement={
+              search !== '' && (
+                <IconButton
+                  onPress={() => setSearch('')}
+                  borderRadius='full'
+                  icon={
+                    <Icon
+                      as={FontAwesome5}
+                      name='times'
+                      color={COLORS.button.primary}
+                      size={6}
+                    />
+                  }
+                />
+              )}
           />
-        </View>
-
-        <View /* - - Contenido - - */>
-          <ScrollView
-            scrollEventThrottle={16}
-            showsVerticalScrollIndicator={false}
-          >
-            {search.length === 0 ? (
-              /* - - Categorias Scroll - - */
-              <View>
-                <View style={styles.titleSectionPlus}>
-                  <Text style={styles.title}>Nuestras Categorias</Text>
-                </View>
-
-                <View style={{ height: 140, marginTop: 20 }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {category?.map((category) => (
-                      <MiniCard name={category.name} image={category.image} />
-                    ))}
-                  </ScrollView>
-                </View>
-
-                <View style={styles.titleSection}>
-                  <Text style={styles.title}>Tendencia</Text>
-                  <Text style={styles.description}>
-                    Los tres libros más descargados esta semana, ¿Alguno te
-                    gusta?
-                  </Text>
-                </View>
-
-                <View>
-                  {trend?.map((trend) => (
-                    <TouchableOpacity onPress={() => navegation.navigate(Book)} activeOpacity={0.75}>
-                      <BooksCard
-                        imageCover={trend.image}
-                        title={trend.title}
-                        autor={trend.autor}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </View>
-
-                <View style={styles.titleSectionPlus}>
-                  <Text style={styles.title}> Porque leíste: </Text>
-                  <Text style={styles.name}>Cocina facil con Elmo.</Text>
-                </View>
-                <View style={{ height: 130, marginTop: 20, marginBottom: 20 }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {category?.map((category) => (
-                      <MiniCard name={category.name} image={category.image} />
-                    ))}
-                  </ScrollView>
-                </View>
-              </View>
-            ) : (
-              <View>
-                {books?.map((Book) => (
-                  <ListSearchBook
-                    key={Book.id}
-                    name={Book.book.name}
-                    image={Book.book.picture}
-                  />
-                ))}
-              </View>
-            )}
-          </ScrollView>
-        </View>
-      </KeyboardAwareScrollView>
+        </Stack>
+        {search !== '' ?
+          <TabContainerSearch navigation={navigation} search={search} />
+          :
+          <VStack alignContent='center' alignItems='center'>
+            <Image
+              source={Pana}
+              alt='Pana'
+              resizeMode='contain'
+              size={400}
+            />
+            <Text bold textAlign='center' color={COLORS.primary}>
+              Cuéntanos qué estás buscando para que te ayudemos a encontrarlo
+            </Text>
+          </VStack>
+        }
+      </VStack>
     </View>
-  );
-};
+  )
+}
 
 export default Search;
