@@ -68,6 +68,11 @@ const searchUsers = async (search) => {
   return data
 }
 
+const searchUsersNoLimits = async (search) => {
+  const { data } = await http.get(`${BASE_URL}/search-users/${search}`)
+  return data
+}
+
 module.exports = {
   getOnlyUser,
   getUserById,
@@ -83,4 +88,5 @@ module.exports = {
   getFollowers,
 
   searchUsers,
+  searchUsersNoLimits,
 }
