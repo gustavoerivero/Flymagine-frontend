@@ -43,6 +43,11 @@ const getPostByUser = async (id) => {
   return data || null
 }
 
+const searchPostByHashtags = async (hashtags) => {
+  const { data } = await http.post(`${BASE_URL}/hashtags`, hashtags)
+  return data?.Data || []
+}
+
 const updatePost = async (id, post) => {
   const { data } = await http.put(`${BASE_URL}/${id}`, post)
   return data?.Data
@@ -87,6 +92,8 @@ module.exports = {
   getPostByUser,
   updatePost,
   deletePost,
+
+  searchPostByHashtags,
 
   // Hashtag Post API
   setHashtags,

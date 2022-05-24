@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { useWindowDimensions } from 'react-native'
 import {
   View,
-  Box,
-  HStack,
   Image,
   IconButton,
   Icon,
@@ -12,19 +11,40 @@ import {
   Text,
   ScrollView,
 } from 'native-base'
+import { Tab, TabView } from '@rneui/themed'
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 
+import UserResults from '../components/SearchComponents/screens/UserResults'
+import PostResults from '../components/SearchComponents/screens/PostResults'
+
 import StyledField from '../components/SearchComponents/StyledField'
-import TabContainerSearch from '../components/SearchComponents/TabContainerSearch'
 import COLORS from '../components/styled-components/Colors'
 
+import UserItem from '../components/SearchComponents/UserItem'
+import Post from '../components/Post/Post'
+
+import { searchUsers } from '../services/user/userAPI'
+import { searchHashtag } from '../services/hashtag/hashtagAPI'
+import { searchPostByHashtags } from '../services/post/postAPI'
+
 import Pana from '../../assets/images/pana.png'
+import DontKnow from '../../assets/images/dontknow.png'
 
 const Search = ({ navigation }) => {
 
   const layout = useWindowDimensions()
-
   const [search, setSearch] = useState('')
+  const [index, setIndex] = useState(0)
+
+  const tabs = [
+    'Todo',
+    'Usuarios',
+    'Libros',
+    'Publicaciones'
+  ]
+
+  const [users, setUsers] = useState([])
+  const [posts, setPosts] = useState([])
 
   return (
     <View minH={layout.height}>
@@ -37,7 +57,43 @@ const Search = ({ navigation }) => {
         <Stack bgColor={COLORS.primary} w='100%' alignItems='center' pb={2}>
           <StyledField
             placeholder='¿Qué estás buscando?'
-            onChangeText={(text) => setSearch(text)}
+            onChangeText={(text) => {
+
+              setSearch(text)
+
+              if (text !== '') {
+
+                searchUsers(text)
+                  .then(res => {
+                    setUsers(res?.Data || [])
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+
+                searchHashtag(text)
+                  .then(res => {
+
+                    if (res.length > 0) {
+
+                      let hashtags = res?.map(hashtag => hashtag?._id)
+
+                      searchPostByHashtags(hashtags)
+                        .then(res => {
+                          let pubs = res.map(element => element.idPost)
+                          setPosts(pubs || [])
+                        })
+                        .catch(err => {
+                          console.log(err)
+                        })
+
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+              }
+            }}
             value={search}
             leftElement={
               <Icon
@@ -66,7 +122,94 @@ const Search = ({ navigation }) => {
           />
         </Stack>
         {search !== '' ?
-          <TabContainerSearch navigation={navigation} search={search} />
+          <View minH={layout.height} >
+            <Tab
+              value={index}
+              onChange={setIndex}
+              indicatorStyle={{
+                backgroundColor: 'white',
+                height: 4,
+              }}
+              scrollable
+            >
+              {tabs.map((tab) => (
+                <Tab.Item
+                  key={tab}
+                  title={tab}
+                  titleStyle={{ color: 'white' }}
+                  containerStyle={{ backgroundColor: COLORS.primary }}
+                />
+              ))}
+            </Tab>
+            <TabView
+              value={index}
+              onChange={setIndex}
+              animationType='spring'
+            >
+              <TabView.Item>
+
+              </TabView.Item>
+
+              <TabView.Item>
+                <ScrollView>
+                  <VStack minH={layout.height}>
+                    {users.length ? users.map(user => (
+                      <UserItem
+                        key={user._id}
+                        userItem={user}
+                        navigation={navigation}
+                      />
+                    ))
+                      :
+                      <VStack alignContent='center' alignItems='center'>
+                        <Image
+                          source={DontKnow}
+                          alt='DontKnow'
+                          resizeMode='contain'
+                          size={400}
+                        />
+                        <Text bold textAlign='center' color={COLORS.primary}>
+                          Discúlpanos, pero no pudimos encontrar lo que estás buscando
+                        </Text>
+                      </VStack>
+                    }
+                  </VStack>
+                </ScrollView>
+              </TabView.Item>
+
+              <TabView.Item>
+
+              </TabView.Item>
+
+              <TabView.Item>
+                <ScrollView>
+                  <VStack minH={layout.height + 230} space={2} alignItems='center' mx={2} mt={1}>
+                    {posts.length > 0 ? posts.map((post) => (
+                      <Post
+                        key={post._id}
+                        post={post}
+                        navigation={navigation}
+                      />
+                    ))
+                      :
+                      <VStack alignContent='center' alignItems='center'>
+                        <Image
+                          source={DontKnow}
+                          alt='DontKnow'
+                          resizeMode='contain'
+                          size={400}
+                        />
+                        <Text bold textAlign='center' color={COLORS.primary}>
+                          Discúlpanos, pero no pudimos encontrar lo que estás buscando
+                        </Text>
+                      </VStack>
+                    }
+                  </VStack>
+                </ScrollView>
+              </TabView.Item>
+
+            </TabView>
+          </View>
           :
           <VStack alignContent='center' alignItems='center'>
             <Image
