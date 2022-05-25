@@ -1,5 +1,4 @@
-import React, { useState, useCallback } from 'react'
-import { useFocusEffect } from '@react-navigation/native'
+import React, { useState } from 'react'
 import { useWindowDimensions } from 'react-native'
 import {
   View,
