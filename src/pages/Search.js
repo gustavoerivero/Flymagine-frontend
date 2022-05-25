@@ -19,7 +19,7 @@ import COLORS from '../components/styled-components/Colors'
 import UserItem from '../components/SearchComponents/UserItem'
 import Post from '../components/Post/Post'
 
-import { searchUsers } from '../services/user/userAPI'
+import { searchUsersNoLimits } from '../services/user/userAPI'
 import { searchHashtag } from '../services/hashtag/hashtagAPI'
 import { searchPostByHashtags } from '../services/post/postAPI'
 
@@ -59,7 +59,7 @@ const Search = ({ navigation }) => {
 
               if (text !== '') {
 
-                searchUsers(text)
+                searchUsersNoLimits(text)
                   .then(res => {
                     setUsers(res?.Data || [])
                   })
