@@ -14,9 +14,6 @@ import {
 import { Tab, TabView } from '@rneui/themed'
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 
-import UserResults from '../components/SearchComponents/screens/UserResults'
-import PostResults from '../components/SearchComponents/screens/PostResults'
-
 import StyledField from '../components/SearchComponents/StyledField'
 import COLORS from '../components/styled-components/Colors'
 
@@ -152,7 +149,11 @@ const Search = ({ navigation }) => {
 
               <TabView.Item>
                 <ScrollView>
-                  <VStack minH={layout.height}>
+                  <VStack
+                    minH={layout.height}
+                    pb={layout.height * .2}
+                    space={1}
+                  >
                     {users.length ? users.map(user => (
                       <UserItem
                         key={user._id}
@@ -183,7 +184,13 @@ const Search = ({ navigation }) => {
 
               <TabView.Item>
                 <ScrollView>
-                  <VStack minH={layout.height + 230} space={2} alignItems='center' mx={2} mt={1}>
+                  <VStack
+                    minH={layout.height}
+                    pb={layout.height * .3}
+                    mx={2}
+                    mt={1}
+                    space={1}
+                  >
                     {posts.length > 0 ? posts.map((post) => (
                       <Post
                         key={post._id}
