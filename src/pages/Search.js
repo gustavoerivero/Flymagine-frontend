@@ -1,155 +1,231 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useWindowDimensions } from 'react-native'
 import {
   View,
+  Image,
+  IconButton,
+  Icon,
+  VStack,
+  Stack,
   Text,
-  StyleSheet,
   ScrollView,
-  Touchable,
-  TouchableOpacity
-} from "react-native";
+} from 'native-base'
+import { Tab, TabView } from '@rneui/themed'
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 
-import { Image, Input, Button } from "react-native-elements";
+import UserResults from '../components/SearchComponents/screens/UserResults'
+import PostResults from '../components/SearchComponents/screens/PostResults'
 
-import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
+import StyledField from '../components/SearchComponents/StyledField'
+import COLORS from '../components/styled-components/Colors'
 
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import UserItem from '../components/SearchComponents/UserItem'
+import Post from '../components/Post/Post'
 
-import FlymagineIcon from "../../assets/favicon.png";
+import { searchUsers } from '../services/user/userAPI'
+import { searchHashtag } from '../services/hashtag/hashtagAPI'
+import { searchPostByHashtags } from '../services/post/postAPI'
 
-import { SearchBar } from "react-native-elements";
-import MiniCard from "../components/SearchComponents/MiniCard";
-import BooksCard from "../components/SearchComponents/BooksCard";
+import Pana from '../../assets/images/pana.png'
+import DontKnow from '../../assets/images/dontknow.png'
 
-import ListSearchBook from "../components/ListSearchBook";
-import dataBooks from "../utilities/data/books";
-import dataCategory from "../utilities/data/category";
-import dataTrending from "../utilities/data/trendingBooks";
+const Search = ({ navigation }) => {
 
-import {useNavigation} from "@react-navigation/native";
+  const layout = useWindowDimensions()
+  const [search, setSearch] = useState('')
+  const [index, setIndex] = useState(0)
 
-//Pages
-import Book from "./Book/Book";
+  const tabs = [
+    'Todo',
+    'Usuarios',
+    'Libros',
+    'Publicaciones'
+  ]
 
-//Components
-import StatusBar from "../components/StatusBar";
-
-//Colors
-import COLORS from "../components/styled-components/Colors";
-
-//Styles
-import stylesSearch from "../components/styled-components/stylesSearch";
-
-const Search = () => {
-  const [search, setSearch] = useState("");
-  const updateSearch = (search) => {
-    setSearch(search);
-  };
-
-  const [books, setBooks] = useState(dataBooks);
-
-  const [category, setCategory] = useState(dataCategory);
-
-  const [trend, setTrend] = useState(dataTrending);
-
-  const styles = stylesSearch;
-
-  
-  const navegation = useNavigation();
+  const [users, setUsers] = useState([])
+  const [posts, setPosts] = useState([])
 
   return (
-    <View style={stylesSearch.container}>
-      <StatusBar />
-      <KeyboardAwareScrollView>
-        <View style={styles.header}>
-          <SearchBar
-            placeholderTextColor={COLORS.gray0}
-            underlineColorAndroid={"transparent"}
-            autoCapitalize="none"
-            containerStyle={styles.searchBarContainer}
-            inputStyle={styles.label}
-            inputContainerStyle={styles.inputContainer}
-            platform="android"
-            placeholder="Busca libros, historias y más..."
-            onChangeText={updateSearch}
+    <View minH={layout.height}>
+      <VStack alignItems='center'>
+        <Stack bgColor={COLORS.primary} alignItems='flex-start' w='100%' p={4} pl={6}>
+          <Text bold fontSize={20} color='white'>
+            Descubre nuevos mundos...
+          </Text>
+        </Stack>
+        <Stack bgColor={COLORS.primary} w='100%' alignItems='center' pb={2}>
+          <StyledField
+            placeholder='¿Qué estás buscando?'
+            onChangeText={(text) => {
+
+              setSearch(text)
+
+              if (text !== '') {
+
+                searchUsers(text)
+                  .then(res => {
+                    setUsers(res?.Data || [])
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+
+                searchHashtag(text)
+                  .then(res => {
+
+                    if (res.length > 0) {
+
+                      let hashtags = res?.map(hashtag => hashtag?._id)
+
+                      searchPostByHashtags(hashtags)
+                        .then(res => {
+                          let pubs = res.map(element => element.idPost)
+                          setPosts(pubs || [])
+                        })
+                        .catch(err => {
+                          console.log(err)
+                        })
+
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+              }
+            }}
             value={search}
-            //              searchIcon={{color: COLORS.secundary}}
+            leftElement={
+              <Icon
+                as={search === '' ? FontAwesome : FontAwesome5}
+                name={search === '' ? 'search' : 'arrow-alt-circle-right'}
+                color={COLORS.button.primary}
+                size={6}
+                ml={3}
+              />
+            }
+            rightElement={
+              search !== '' && (
+                <IconButton
+                  onPress={() => setSearch('')}
+                  borderRadius='full'
+                  icon={
+                    <Icon
+                      as={FontAwesome5}
+                      name='times'
+                      color={COLORS.button.primary}
+                      size={6}
+                    />
+                  }
+                />
+              )}
           />
-        </View>
+        </Stack>
+        {search !== '' ?
+          <View minH={layout.height} >
+            <Tab
+              value={index}
+              onChange={setIndex}
+              indicatorStyle={{
+                backgroundColor: 'white',
+                height: 4,
+              }}
+              scrollable
+            >
+              {tabs.map((tab) => (
+                <Tab.Item
+                  key={tab}
+                  title={tab}
+                  titleStyle={{ color: 'white' }}
+                  containerStyle={{ backgroundColor: COLORS.primary }}
+                />
+              ))}
+            </Tab>
+            <TabView
+              value={index}
+              onChange={setIndex}
+              animationType='spring'
+            >
+              <TabView.Item>
 
-        <View /* - - Contenido - - */>
-          <ScrollView
-            scrollEventThrottle={16}
-            showsVerticalScrollIndicator={false}
-          >
-            {search.length === 0 ? (
-              /* - - Categorias Scroll - - */
-              <View>
-                <View style={styles.titleSectionPlus}>
-                  <Text style={styles.title}>Nuestras Categorias</Text>
-                </View>
+              </TabView.Item>
 
-                <View style={{ height: 140, marginTop: 20 }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {category?.map((category) => (
-                      <MiniCard name={category.name} image={category.image} />
-                    ))}
-                  </ScrollView>
-                </View>
-
-                <View style={styles.titleSection}>
-                  <Text style={styles.title}>Tendencia</Text>
-                  <Text style={styles.description}>
-                    Los tres libros más descargados esta semana, ¿Alguno te
-                    gusta?
-                  </Text>
-                </View>
-
-                <View>
-                  {trend?.map((trend) => (
-                    <TouchableOpacity onPress={() => navegation.navigate(Book)} activeOpacity={0.75}>
-                      <BooksCard
-                        imageCover={trend.image}
-                        title={trend.title}
-                        autor={trend.autor}
+              <TabView.Item>
+                <ScrollView>
+                  <VStack minH={layout.height}>
+                    {users.length ? users.map(user => (
+                      <UserItem
+                        key={user._id}
+                        userItem={user}
+                        navigation={navigation}
                       />
-                    </TouchableOpacity>
-                  ))}
-                </View>
+                    ))
+                      :
+                      <VStack alignContent='center' alignItems='center'>
+                        <Image
+                          source={DontKnow}
+                          alt='DontKnow'
+                          resizeMode='contain'
+                          size={400}
+                        />
+                        <Text bold textAlign='center' color={COLORS.primary}>
+                          Discúlpanos, pero no pudimos encontrar lo que estás buscando
+                        </Text>
+                      </VStack>
+                    }
+                  </VStack>
+                </ScrollView>
+              </TabView.Item>
 
-                <View style={styles.titleSectionPlus}>
-                  <Text style={styles.title}> Porque leíste: </Text>
-                  <Text style={styles.name}>Cocina facil con Elmo.</Text>
-                </View>
-                <View style={{ height: 130, marginTop: 20, marginBottom: 20 }}>
-                  <ScrollView
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  >
-                    {category?.map((category) => (
-                      <MiniCard name={category.name} image={category.image} />
-                    ))}
-                  </ScrollView>
-                </View>
-              </View>
-            ) : (
-              <View>
-                {books?.map((Book) => (
-                  <ListSearchBook
-                    key={Book.id}
-                    name={Book.book.name}
-                    image={Book.book.picture}
-                  />
-                ))}
-              </View>
-            )}
-          </ScrollView>
-        </View>
-      </KeyboardAwareScrollView>
+              <TabView.Item>
+
+              </TabView.Item>
+
+              <TabView.Item>
+                <ScrollView>
+                  <VStack minH={layout.height + 230} space={2} alignItems='center' mx={2} mt={1}>
+                    {posts.length > 0 ? posts.map((post) => (
+                      <Post
+                        key={post._id}
+                        post={post}
+                        navigation={navigation}
+                      />
+                    ))
+                      :
+                      <VStack alignContent='center' alignItems='center'>
+                        <Image
+                          source={DontKnow}
+                          alt='DontKnow'
+                          resizeMode='contain'
+                          size={400}
+                        />
+                        <Text bold textAlign='center' color={COLORS.primary}>
+                          Discúlpanos, pero no pudimos encontrar lo que estás buscando
+                        </Text>
+                      </VStack>
+                    }
+                  </VStack>
+                </ScrollView>
+              </TabView.Item>
+
+            </TabView>
+          </View>
+          :
+          <VStack alignContent='center' alignItems='center'>
+            <Image
+              source={Pana}
+              alt='Pana'
+              resizeMode='contain'
+              size={400}
+            />
+            <Text bold textAlign='center' color={COLORS.primary}>
+              Cuéntanos qué estás buscando para que te ayudemos a encontrarlo
+            </Text>
+          </VStack>
+        }
+      </VStack>
     </View>
-  );
-};
+  )
+}
 
 export default Search;

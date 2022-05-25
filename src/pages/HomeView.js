@@ -11,7 +11,7 @@ import Post from '../components/Post/Post'
 import useAuthContext from '../hooks/useAuthContext'
 
 import { getFollows } from '../services/user/userAPI'
-import { getPosts, getFeed } from '../services/post/postAPI'
+import { getFeed } from '../services/post/postAPI'
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
@@ -49,7 +49,7 @@ const HomeView = ({ navigation }) => {
 
             getFeed(f)
               .then(res => {
-                setPosts(res?.Data?.reverse())
+                setPosts(res?.Data)
               })
               .catch(err => {
                 console.log(err)
@@ -73,9 +73,7 @@ const HomeView = ({ navigation }) => {
           />
         }
       >
-        <VStack
-          space={2}
-        >
+        <VStack space={2} >
           {posts && posts.map((post) => (
             <Post
               key={post._id}
