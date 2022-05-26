@@ -8,7 +8,6 @@ import HomeView from '../pages/HomeView'
 import SearchPage from '../pages/Search'
 import PostPage from '../pages/PostPage'
 import NotificationsPage from '../pages/NotificationsPage'
-import EditReaderUserProfile from '../pages/User/EditReaderUserProfile'
 import ProfilePage from '../pages/ProfilePage'
 import { View, StyleSheet } from 'react-native'
 
@@ -18,11 +17,6 @@ import BookProfilePage from '../pages/Book/BookProfilePage' //Perfil del Libro c
 import BookEdit from '../pages/Book/EditBook' //Edicion del libro
 import MyBook from '../pages/Book/MyBook' //Mis libros, con opcion de Agregar un libro
 import RegisterBook from '../pages/Book/RegisterBook' //Pagina de Registro de un libro nuevo
-
-
-
-
-import ReaderUserProfile from '../pages/User/ReaderUserProfile'
 
 
 const Tab = createBottomTabNavigator()

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { ScrollView, RefreshControl } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
 import { VStack } from 'native-base'
 
 //Components
@@ -7,13 +8,22 @@ import StatusBar from "../components/StatusBar"
 import Container from '../components/Container'
 import Post from '../components/Post/Post'
 
-import { getPosts } from '../services/post/postAPI'
+import useAuthContext from '../hooks/useAuthContext'
+
+import { getFollows } from '../services/user/userAPI'
+import { getPosts, getFeed } from '../services/post/postAPI'
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
 const HomeView = ({ navigation }) => {
+
+  const {
+    state: { user },
+  } = useAuthContext()
+
+  const [follows, setFollows] = useState([])
 
   const [posts, setPosts] = useState([])
 
@@ -22,24 +32,35 @@ const HomeView = ({ navigation }) => {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
     wait(2000).then(() => setRefreshing(false))
-    getPosts()
-      .then(res => {
-        setPosts(res.reverse())
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }, [])
 
-  useEffect(() => {
-    getPosts()
-      .then(res => {
-        setPosts(res.reverse())
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+
+      getFollows(user?.id)
+        .then(res => {
+          setFollows(res?.Data?.follows)
+
+          let followsReceived = res?.Data?.follows
+
+          if (followsReceived?.length >= 0) {
+            let f = followsReceived.map(follow => follow._id)
+            f.push(user?.id)
+
+            getFeed(f)
+              .then(res => {
+                setPosts(res?.Data?.reverse())
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }, [])
+  )
 
   return (
     <Container>
@@ -55,9 +76,9 @@ const HomeView = ({ navigation }) => {
         <VStack
           space={2}
         >
-          {posts && posts.map((post, index) => (
+          {posts && posts.map((post) => (
             <Post
-              key={index}
+              key={post._id}
               post={post}
               navigation={navigation}
             />

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { View } from 'native-base'
+import { useFocusEffect } from '@react-navigation/native'
+
 import HeaderProfile from '../components/HeaderProfile'
 import InfoUserProfile from '../components/InfoUserProfile'
 
@@ -15,15 +17,17 @@ const ProfileScreen = ({ navigation, userData }) => {
     state: { user }
   } = useAuthContext()
 
-  useEffect(() => {
-    getUserById(userData || user?.id)
-      .then(res => {        
-        setUserInfo(res?.Data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      getUserById(userData || user?.id)
+        .then(res => {
+          setUserInfo(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }, [])
+  )
 
   return (
     <View>
@@ -31,14 +35,19 @@ const ProfileScreen = ({ navigation, userData }) => {
         navigation={navigation}
         userInfo={userInfo}
       />
-      <InfoUserProfile
-        userInfo={userInfo}
-        navigation={navigation}
-      />
-      <TabContainerProfile
-        navigation={navigation}
-        userInfo={userInfo}
-      />
+      {userInfo && (
+        <>
+          <InfoUserProfile
+            userInfo={userInfo}
+            navigation={navigation}
+          />
+          <TabContainerProfile
+            navigation={navigation}
+            userInfo={userInfo}
+          />
+        </>
+      )}
+
     </View>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   Avatar,
@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
 } from 'native-base'
+import mime from 'mime'
 import useCustomToast from '../../../hooks/useCustomToast'
 import useLoading from '../../../hooks/useLoading'
 import useAuthContext from '../../../hooks/useAuthContext'
@@ -18,8 +19,12 @@ import {
   pickImage,
   permisionFunction,
 } from '../../../utils/functions'
+
+import { setProfileImage } from '../../../services/user/userAPI'
+
 import COLORS from '../../../components/styled-components/Colors'
 import AccessDataForm from '../components/EditFormComponents/AccessDataForm'
+import { useFocusEffect } from '@react-navigation/native'
 
 const EditUserForm = ({ navigation }) => {
 
@@ -28,35 +33,24 @@ const EditUserForm = ({ navigation }) => {
     state: { user },
   } = useAuthContext()
 
-  const [image, setImage] = useState(null)
+  const [image, setImage] = useState(userInfo?.photo || null)
   const [userInfo, setUserInfo] = useState(null)
 
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  useEffect(() => {
-    permisionFunction()
-    getUserById(user?.id)
-      .then(res => {
-        setUserInfo(res?.Data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }, [])
-
-  const onSubmit = async (values) => {
-    startLoading()
-    try {
-
-      navigation?.goBack()
-
-    } catch (error) {
-      showErrorToast(error?.message)
-      console.log(error)
-    }
-    stopLoading()
-  }
+  useFocusEffect(
+    useCallback(() => {
+      permisionFunction()
+      getUserById(user?.id)
+        .then(res => {
+          setUserInfo(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }, [])
+  )
 
   return (
     <ScrollView>
@@ -74,24 +68,45 @@ const EditUserForm = ({ navigation }) => {
         >
           <TouchableOpacity
             activeOpacity={0.75}
+            disabled={isLoading}
             onPress={() => {
-              console.log('Upload image')
+              
               let pick = pickImage()
               pick.then(res => {
-                setImage(res)
-                showSuccessToast('¡Misión cumplica! Tu imagen de perfil ha sido actualizada con éxito')
+
+                const imageUri = Platform.OS === 'ios' ? 'file:///' + res.uri.split('file:/').join('') : res.uri
+
+                const formData = new FormData()
+                formData.append('photo', {
+                  uri: imageUri,
+                  type: mime.getType(imageUri),
+                  name: imageUri.split('/').pop()
+                })
+
+                startLoading()                            
+                setProfileImage(user.id, formData)
+                  .then(response => {
+                    stopLoading()
+                    showSuccessToast('¡Misión cumplida! Tu imagen de perfil ha sido actualizada con éxito')
+                    console.log(response)
+                    setImage(res.uri)
+                    navigation?.navigate('Profile')
+                  })
+                  .catch(error => {
+                    showErrorToast('¡Misión fallida! No se pudo actualizar tu imagen de perfil')
+                  })
+                  stopLoading()
+
               }).catch(err => {
-                console.log(err)
-                showErrorToast('¡Misión fallida! No se pudo actualizar tu imagen de perfil')
+                showErrorToast('¡Misión fallida! El archivo que seleccionaste es incorrecto')
               })
-              console.log(image)
             }}
           >
             <Avatar
               bg='purple.600'
               size='2xl'
               source={{
-                uri: image ? image : userInfo?.image,
+                uri: image ? image : userInfo?.photo,
               }}
               borderColor='white'
               borderWidth={3}

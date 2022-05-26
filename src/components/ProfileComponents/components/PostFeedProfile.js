@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
 import {
   View,
@@ -15,12 +15,13 @@ import COLORS from '../../styled-components/Colors'
 import useAuthContext from '../../../hooks/useAuthContext'
 import { getPostByUser } from '../../../services/post/postAPI'
 import Post from '../../Post/Post'
+import { useFocusEffect } from '@react-navigation/native'
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
-const PostFeedProfile = ({ navigation }) => {
+const PostFeedProfile = ({ navigation, userInfo }) => {
 
   const layout = useWindowDimensions()
 
@@ -37,15 +38,17 @@ const PostFeedProfile = ({ navigation }) => {
 
   const [posts, setPosts] = useState([])
 
-  useEffect(() => {
-    getPostByUser(user?.id)
-      .then(res => {
-        setPosts(res?.Data?.reverse())
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      getPostByUser(userInfo?._id || user?.id)
+        .then(res => {
+          setPosts(res?.Data?.reverse())
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }, [])
+  )
 
   return (
     <ScrollView
@@ -62,7 +65,7 @@ const PostFeedProfile = ({ navigation }) => {
         minW={layout.width}
         m={2}
         pr={4}
-        mb={20}
+        mb={layout.height * .2}
       >
         {posts?.length > 0 && posts ? posts.map((post, index) => (
           <Post
@@ -79,7 +82,7 @@ const PostFeedProfile = ({ navigation }) => {
               fontSize='sm'
               color={COLORS.primary}
             >
-              No tienes publicaciones aún
+              {user.id === userInfo?._id ? 'No tienes publicaciones aún...' : 'Este usuario no ha publicado aún...'}
             </Text>
           </Box>
         )}

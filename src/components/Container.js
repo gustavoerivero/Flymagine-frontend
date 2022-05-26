@@ -1,7 +1,4 @@
-import React, {
-  useState,
-  useCallback
-} from 'react'
+import React from 'react'
 import {
   ScrollView,
   View,
@@ -29,17 +26,6 @@ const Container = ({ children }) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    alignContent: 'center',
-    width: '100%',
-    minHeight: '100%',
-    backgroundColor: '#F9F7F8',
-  },
   children: {
     padding: 5,
     margin: 5,

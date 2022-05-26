@@ -1,85 +1,56 @@
-import React, {
-  useState
-} from 'react'
+import React from 'react'
 import {
-  View
-} from 'react-native'
-import {
-  Input,
+  Box,
+  TextArea,
   Icon,
-} from 'react-native-elements'
-
-import { FAB } from '@rneui/themed'
-
+  HStack,
+} from 'native-base'
 import {
   FontAwesome,
 } from '@expo/vector-icons'
+import { useWindowDimensions } from 'react-native'
 
-const CommentInput = ({ text, setText, placeholder }) => {
+const CommentInput = ({ style = {}, ...props }, {children}) => {
+
+  const layout = useWindowDimensions()
+
+  const [height, setHeight] = React.useState(20)
 
   return (
-    <View
-      style={{
-        minWidth: 400,
-        minHeight: 40,
-        height: 'auto',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        backgroundColor: '#fff',
-      }}
+    <Box
+      w={layout.width}
+      bgColor='white'
+      borderTopRadius={10}
+      p={2}
+      shadow={2}
     >
-      <Input
-        placeholder={placeholder || 'Dínos, ¿qué opinas?...'}
-        leftIcon={{
-          type: 'font-awesome',
-          name: 'comment',
-          color: '#aaa',
-        }}
-        leftIconContainerStyle={{
-          marginRight: 10,
-        }}
-        inputContainerStyle={{
-          borderBottomColor: 'transparent',
-          backgroundColor: 'rgba(215, 215, 215, .10)',
-          borderRadius: 5,
-          paddingTop: 5,
-          width: '100%',
-        }}
-        inputStyle={{
-          color: '#000000',
-          fontSize: 14,
-        }}
-        value={text || ''}
-        onChangeText={setText}
-        rightIconContainerStyle={{
-          left: '10%',
-        }}
-        rightIcon={
-          <FAB
-            icon={
-              <FontAwesome
-                name='send'
-                color='#fff'
-                size={25}
-                style={{
-                  position: 'relative',
-                  top: -2,
-                  right: 3,
-                }}
-              />
-            }
-            color='rgba(134, 48, 197, 1)'
-            onPress={() => {
-              console.log(text)
-              setText('')              
-            }}
-          />
-        }
-      />
-    </View>
+      <HStack alignItems='center' space={2} >
+        <Icon
+          as={FontAwesome}
+          name='comment'
+          size={7}
+          color='#aaa'
+        />
+        <TextArea
+          textAlignVertical='center'
+          textAlign='justify'
+          minH={16}
+          h={height}
+          maxH={120}
+          w={layout.width * .85}
+          bgColor='rgba(217, 179, 255, .08)'
+          color='black'
+          borderColor={'white'}
+          m={2}
+          onContentSizeChange={(event) => {
+            setHeight(event.nativeEvent.contentSize.height)
+          }}
+          variant='unstyled'
+          size='md'
+          {...props}          
+        />
+      </HStack>
+    </Box>
   )
 }
 

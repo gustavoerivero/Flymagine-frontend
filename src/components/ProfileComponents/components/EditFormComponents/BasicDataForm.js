@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { Button } from 'react-native-elements'
 import {
@@ -18,11 +19,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import useCustomToast from '../../../../hooks/useCustomToast'
 import useLoading from '../../../../hooks/useLoading'
-import {
-  dataBasicSchema,
-  dataBasicDefaultValues,
-} from '../../../../utils/formValidations/dataBasicFormValidation'
-import { updateBasicDataAdapter } from '../../../../adapters/User'
+import { dataBasicSchema, dataBasicDefaultValues } from '../../../../utils/formValidations/dataBasicFormValidation'
+import { updateDataUserAdapter } from '../../../../adapters/User'
 import { updateUser } from '../../../../services/user/userAPI'
 
 import COLORS from '../../../../components/styled-components/Colors'
@@ -48,21 +46,23 @@ const BasicDataForm = ({ navigation, userData }) => {
     defaultValues: dataBasicDefaultValues,
   })
 
-  useEffect(() => {
-    if (userInfo) {
-      setValue('firstName', userInfo?.firstName)
-      setValue('lastName', userInfo?.lastName)
-      setValue('phone', userInfo?.phone)
-      setValue('address', userInfo?.address)
-    }
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      if (userInfo) {
+        setValue('firstName', userInfo?.firstName)
+        setValue('lastName', userInfo?.lastName)
+        setValue('phone', userInfo?.phone)
+        setValue('address', userInfo?.address)
+        setValue('biography', userInfo?.biography)
+      }
+    }, [])
+  )
 
   const onSubmit = async (values) => {
     startLoading()
     try {
 
-      const response = await updateUser(userInfo?._id, updateBasicDataAdapter(values))
-      console.log(response)
+      const response = await updateUser(userInfo?._id, updateDataUserAdapter(values))
 
       showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
 

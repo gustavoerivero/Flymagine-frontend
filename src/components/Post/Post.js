@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   AlertDialog,
   Button,
   Avatar,
+  Badge,
   Image,
   Box,
   Stack,
@@ -15,19 +16,9 @@ import {
   Icon
 } from 'native-base'
 
-import { Chip } from 'react-native-paper'
-
-import {
-  parseDate,
-  parseTime,
-} from '../../utilities/Parsers'
-
-import {
-  previousFourteenHours,
-} from '../../utils/functions'
-
-import { TouchableOpacity } from 'react-native'
-
+import { parseDate, parseTime } from '../../utilities/Parsers'
+import { previousFourteenHours } from '../../utils/functions'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   FontAwesome,
   MaterialIcons,
@@ -36,17 +27,15 @@ import {
 
 import COLORS from '../styled-components/Colors'
 
-import { useWindowDimensions } from 'react-native'
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'
-import { deletePost } from '../../services/post/postAPI'
+import { deletePost, getHashtags, getUsertags } from '../../services/post/postAPI'
+import { getComments } from '../../services/comments/commentPostAPI'
 import { postReactionsByPost, getReactionsByPost } from '../../services/post/reactionAPI'
+import { useFocusEffect } from '@react-navigation/native'
 
-const Post = ({
-  navigation,
-  post = {},
-}) => {
+const Post = ({ navigation, post = {} }) => {
 
   const layout = useWindowDimensions()
   const { showSuccessToast, showErrorToast } = useCustomToast()
@@ -57,14 +46,13 @@ const Post = ({
   const [userLogged, setUserLogged] = useState(null)
   const [userPost, setUserPost] = useState(null)
   const [personTags, setPersonTags] = useState([])
-  const [hashtags, setHashtags] = useState([])
+  const [hashtags, setHashtags] = useState(null)
 
   const [isLiked, setIsLiked] = useState(false)
   const [postReactionInfo, setPostReactionInfo] = useState([])
   const [likes, setLikes] = useState(0)
-  const [comments, setComments] = useState(null)
+  const [comments, setComments] = useState(0)
 
-  const [editVisible, setEditVisible] = useState(false)
   const [deleteVisible, setDeleteVisible] = useState(false)
 
   const deletePostById = async () => {
@@ -96,31 +84,60 @@ const Post = ({
     }
   }
 
-  useEffect(() => {
-    getOnlyUser(user?.id)
-      .then(log => {
-        setUserLogged(log?.Data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    getUserById(post?.idUser)
-      .then(res => {
-        setUserPost(res?.Data)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    getReactionsByPost(post?._id)
-      .then(res => {
-        setPostReactionInfo(res?.Data[0]?.users || [])
-        setLikes(res?.Data[0]?.users?.length || 0)
-        setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      getOnlyUser(user?.id)
+        .then(res => {
+          setUserLogged(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      getUserById(post?.idUser)
+        .then(res => {
+          setUserPost(res?.Data)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+      getReactionsByPost(post?._id)
+        .then(res => {
+          setPostReactionInfo(res?.Data[0]?.users || [])
+          setLikes(res?.Data[0]?.users?.length || 0)
+          setIsLiked(res?.Data[0]?.users?.find((value) => user.id === value?._id))
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getHashtags(post?._id)
+        .then(res => {
+          setHashtags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getUsertags(post?._id)
+        .then(res => {
+          setPersonTags(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+      getComments(post?._id)
+        .then(res => {
+          setComments(res)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+
+    }, [])
+  )
+
+
 
   return (
     <Box
@@ -162,7 +179,9 @@ const Post = ({
             justifyContent='space-between'
             alignItems='center'
             h={7}
-            mr={2}
+            mr={2} 
+            w={290}           
+            maxW={290}
           >
             <HStack
               space={2}
@@ -194,6 +213,14 @@ const Post = ({
                     />
                   }
                   size='sm'
+                  onPress={() => {
+                    console.log(post?._id)
+                    navigation.navigate('EditPost', { 
+                      post: post,
+                      hashtags: hashtags,
+                      personTags: personTags
+                    })
+                  }}
                 />
                 <IconButton
                   icon={
@@ -257,46 +284,50 @@ const Post = ({
 
           <VStack>
 
-            <Stack
-              ml={2}
-            >
+            <Stack>
+              <Divider />
               {personTags?.length > 0 && (
                 <>
-                  <ScrollView horizontal >
-                    {personTags.map((tag, index) => (
-                      <Chip
-                        key={index}
-                        type='outlined'
-                        avatar={
-                          <Image
-                            source={{
-                              uri: tag.picture,
-                            }}
-                            style={{
-                              height: 15,
-                              width: 15,
-                            }}
-                          />
-                        }
-                        onPress={() => {
-                          console.log(`${tag.firstName} ${tag.lastName}'s profile`)
-                        }}
-                        style={{
-                          marginRight: 5,
-                          height: 20,
-                          justifyContent: 'center',
-                          backgroundColor: 'rgba(200, 90, 235, .5)',
-                        }}
-                        textStyle={{
-                          fontSize: 10,
-                          fontWeight: 'bold',
-                          color: '#fff',
-                        }}
-
-                      >
-                        {tag.firstName + ' ' + tag.lastName}
-                      </Chip>
-                    ))}
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                    <HStack space={1} mr={10} m={1}>
+                      {personTags.map((tag) => (
+                        <TouchableOpacity
+                          key={tag._id}
+                          onPress={() => {
+                            if (tag?._id === user?.id) {
+                              navigation.navigate('Profile')
+                            } else {
+                              navigation.navigate('UserProfile', { user: tag._id })
+                            }
+                          }}
+                        >
+                          <Badge
+                            size='sm'
+                            bgColor='rgba(223, 204, 255, .35)'
+                            rounded='full'
+                          >
+                            <HStack space={1}>
+                              <Avatar
+                                bg='purple.600'
+                                size='xs'
+                                source={{
+                                  uri: (tag?.photo === 'none' ? null : tag?.photo)
+                                }}
+                                borderColor='white'
+                                borderWidth={3}
+                              >
+                                {tag && (tag?.firstName[0] + tag?.lastName[0])}
+                              </Avatar>
+                              <Text
+                                color='rgba(95, 0, 255, .55)'
+                              >
+                                {tag.firstName + ' ' + tag.lastName}
+                              </Text>
+                            </HStack>
+                          </Badge>
+                        </TouchableOpacity>
+                      ))}
+                    </HStack>
                   </ScrollView>
                   <Divider />
                 </>
@@ -313,26 +344,44 @@ const Post = ({
               </Text>
             </Stack>
             <Divider />
+            <Stack alignItems='flex-start' >
+              {post?.photo && (post?.photo !== 'none') && (
+                <>
+                  <Image
+                    source={{ uri: post?.photo }}
+                    style={{ width: 300, height: 300 }}
+                    alt='post'
+                  />
+                  <Divider />
+                </>
+              )}
+            </Stack>
             {hashtags?.length > 0 && (
               <>
-                <ScrollView horizontal >
-                  {hashtags.map((hashtag, index) => (
-                    <Chip
-                      key={index}
-                      style={{
-                        margin: 2,
-                      }}
-                      onPress={() => {
-                        console.log(`Tag ${hashtag}`)
-                      }}
-                    >
-                      {hashtag}
-                    </Chip>
-                  ))}
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                  <HStack space={1} mr={10} m={1}>
+
+                  {hashtags.map((hashtag) => (
+                      <TouchableOpacity key={hashtag._id}>
+                        <Badge
+                          size='sm'
+                          bgColor='rgba(223, 204, 255, .35)'
+                          rounded='full'
+                        >
+                          <Text
+                            color='rgba(95, 0, 255, .55)'
+                          >
+                            {hashtag.name}
+                          </Text>
+                        </Badge>
+                      </TouchableOpacity>
+                    ))}
+                  </HStack>
                 </ScrollView>
                 <Divider />
               </>
             )}
+
             <HStack
               w={layout.width * .73}
               mt={1}
@@ -363,7 +412,14 @@ const Post = ({
                 </HStack>
               </TouchableOpacity>
 
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('CommentPage', {
+                    post: post,
+                    comments: comments
+                  })
+                }}
+              >
                 <HStack space={1} alignItems='center' >
                   <Icon
                     as={MaterialCommunityIcons}
@@ -371,7 +427,7 @@ const Post = ({
                     color={'gray.400'}
                   />
                   <Text fontSize='xs' color={'gray.400'} >
-                    {0}
+                    {comments?.length || 0}
                   </Text>
                 </HStack>
               </TouchableOpacity>
