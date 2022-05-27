@@ -11,6 +11,14 @@ import NotificationsPage from '../pages/NotificationsPage'
 import ProfilePage from '../pages/ProfilePage'
 import { View, StyleSheet } from 'react-native'
 
+//Pruebas
+import Book from '../pages/Book/Book' //Perfil del Libro con opcion Favorito
+import BookProfilePage from '../pages/Book/BookProfilePage' //Perfil del Libro con opcion a edicion y eliminar
+import BookEdit from '../pages/Book/EditBook' //Edicion del libro
+import MyBook from '../pages/Book/MyBook' //Mis libros, con opcion de Agregar un libro
+import RegisterBook from '../pages/Book/RegisterBook' //Pagina de Registro de un libro nuevo
+
+
 const Tab = createBottomTabNavigator()
 
 const bottomRoutes = [
@@ -54,7 +62,7 @@ const bottomRoutes = [
   },
   {
     name: 'Notifications',
-    component: NotificationsPage,
+    component: BookProfilePage,
     requireAuth: true,
     Icon: ({ color, size }) => (
       <Ionicons

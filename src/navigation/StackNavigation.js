@@ -18,7 +18,7 @@ import Followers from '../pages/User/Followers'
 
 // Book Pages
 import MyBook from '../pages/Book/MyBook'
-import BookProfile from '../pages/Book/BookProfile'
+import BookProfilePage from '../pages/Book/BookProfilePage'
 import RegisterBook from '../pages/Book/RegisterBook'
 import Book from '../pages/Book/Book'
 import EditBook from '../pages/Book/EditBook'
@@ -127,8 +127,8 @@ const stackRoutes = [
     },
   },
   {
-    name: 'BookProfile',
-    component: BookProfile,
+    name: 'BookProfilePage',
+    component: BookProfilePage,
     requireAuth: true,
     options: {
       title: 'Perfil del libro',
