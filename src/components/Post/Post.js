@@ -26,7 +26,6 @@ import {
 } from '@expo/vector-icons'
 
 import COLORS from '../styled-components/Colors'
-
 import useAuthContext from '../../hooks/useAuthContext'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById, getOnlyUser } from '../../services/user/userAPI'

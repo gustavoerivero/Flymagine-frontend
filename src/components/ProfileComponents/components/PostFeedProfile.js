@@ -5,12 +5,14 @@ import {
   Box,
   Stack,
   HStack,
+  Image,
   VStack,
   Text,
   ScrollView,
 } from 'native-base'
 import { useWindowDimensions } from 'react-native'
 import COLORS from '../../styled-components/Colors'
+import DontKnow from '../../../../assets/images/dontknow.png'
 
 import useAuthContext from '../../../hooks/useAuthContext'
 import { getPostByUser } from '../../../services/post/postAPI'
@@ -42,7 +44,7 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
     useCallback(() => {
       getPostByUser(userInfo?._id || user?.id)
         .then(res => {
-          setPosts(res?.Data?.reverse())
+          setPosts(res?.Data || [])
         })
         .catch(error => {
           console.log(error)
@@ -61,10 +63,11 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
     >
       <VStack
         space={2}
-        minH={layout.height}
+        minH={layout.height + 300}
         minW={layout.width}
         m={2}
         pr={4}
+        pb={layout.height * .2}
         mb={layout.height * .2}
       >
         {posts?.length > 0 && posts ? posts.map((post, index) => (
@@ -74,17 +77,17 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
             navigation={navigation}
           />
         )) : (
-          <Box
-            p={1}
-          >
-            <Text
-              bold
-              fontSize='sm'
-              color={COLORS.primary}
-            >
+          <VStack alignItems='center'>
+            <Image
+              source={DontKnow}
+              alt='DontKnow'
+              resizeMode='contain'
+              size={300}
+            />
+            <Text bold textAlign='center' color={COLORS.primary}>
               {user.id === userInfo?._id ? 'No tienes publicaciones aún...' : 'Este usuario no ha publicado aún...'}
             </Text>
-          </Box>
+          </VStack>
         )}
       </VStack>
 
