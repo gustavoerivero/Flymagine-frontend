@@ -13,7 +13,7 @@ const stylesSearch = StyleSheet.create({
     width: '100%',
     minHeight: '100%',
     backgroundColor: COLORS.base,
-    paddingBottom: '14%',
+
   },
   header: {
     flex: 1,

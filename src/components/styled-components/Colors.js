@@ -10,6 +10,7 @@ const COLORS = {
     gray3: '#555555',
     gray4: '#333333',
     gray5: '#111111', 
+    background: 'rgba(70, 0, 110,1.0)',
     button: {
       primary: 'rgba(84, 13, 110, 1)',
       primaryDisabled: 'rgba(84, 13, 110, 0.45)',

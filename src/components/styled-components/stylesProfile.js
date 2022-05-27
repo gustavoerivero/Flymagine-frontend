@@ -28,7 +28,7 @@ const stylesProfile = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 75,
         marginTop: 40,
-        borderRadius: 200,
+        borderRadius: 30,
         marginLeft: 25,
       },
       button: {
