@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 
 import { useNavigation } from '@react-navigation/native'
-import BookProfile from '../pages/Book/BookProfile'
+import BookProfilePage from '../pages/Book/BookProfilePage'
 
 const ListBook = (props) => {
 
@@ -17,7 +17,7 @@ const ListBook = (props) => {
     return (
         <TouchableOpacity
             activeOpacity={0.9}
-            onPress={() => Navegation.navigate(BookProfile)}
+            onPress={() => Navegation.navigate(BookProfilePage)}
             >
             <View style={styles.container}>
                 <View style={styles.photoContainer}>

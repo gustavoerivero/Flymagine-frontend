@@ -7,6 +7,12 @@ const getAllLiteraryGenre = async () => {
   return data?.Data || [] 
 }
 
+const getLiteraryGenereByBook = async(id) => {
+  const { data } = await http.get(`${BASE_URL}/book/${id}`)
+  return data?.Data || null
+}
+
 module.exports = {
   getAllLiteraryGenre,
+  getLiteraryGenereByBook
 }
