@@ -1,52 +1,52 @@
-import React, { useState, useCallback } from "react";
-import { useWindowDimensions } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
-import { Box, View } from "native-base";
-import { Tab, TabView } from "@rneui/themed";
-import COLORS from "../../styled-components/Colors";
-import ReviewFeedBook from "./ReviewFeedBook";
-import InfoBookProfile from "./InfoBookProfile";
-import useAuthContext from "../../../hooks/useAuthContext";
+import React, { useState, useCallback } from 'react'
+import { useWindowDimensions } from 'react-native'
+import { useFocusEffect } from '@react-navigation/native'
+import { Box, View } from 'native-base'
+import { Tab, TabView } from '@rneui/themed'
+import COLORS from '../../styled-components/Colors'
+import ReviewFeedBook from './ReviewFeedBook'
+import InfoBookProfile from './InfoBookProfile'
+import useAuthContext from '../../../hooks/useAuthContext'
 
-import { getBookById, getGenresByIdBook } from "../../../services/book/bookAPI";
-import { getUserById } from "../../../services/user/userAPI";
-import { getReviewByBook } from "../../../services/post/reviewAPI";
+import { getBookById, getGenresByIdBook } from '../../../services/book/bookAPI'
+import { getUserById } from '../../../services/user/userAPI'
+import { getReviewByBook } from '../../../services/post/reviewAPI'
 
 //<ReviewFeedBook/>
 
 const TabContainerBookProfile = ({ navigation, bookData }) => {
   const {
     state: { user },
-  } = useAuthContext();
+  } = useAuthContext()
 
-  const [bookInfo, setBookInfo] = useState(null);
-  const [bookGenres, setBookGenres] = useState([]);
-  const [author, setAuthor] = useState(null);
-  const [reviews, setReviews] = useState([]);
+  const [bookInfo, setBookInfo] = useState(null)
+  const [bookGenres, setBookGenres] = useState([])
+  const [author, setAuthor] = useState(null)
+  const [reviews, setReviews] = useState([])
 
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(0)
 
-  const layout = useWindowDimensions();
+  const layout = useWindowDimensions()
 
-  const tabs = ["Información", "Reviews"];
+  const tabs = ['Información', 'Reviews']
 
   useFocusEffect(
     useCallback(() => {
       getBookById(bookData)
         .then((res) => {
-          setBookInfo(res);
-          console.log(res);
-          let info = res;
+          setBookInfo(res)
+          console.log(res)
+          let info = res
 
           if (info) {
             getUserById(info?.idUser)
               .then((res) => {
                 setAuthor(res?.Data)
-                console.log("Autor", res)
+                console.log('Autor', res)
               })
               .catch((error) => {
                 console.log(error)
-              });
+              })
 
             getReviewByBook(info?._id)
               .then((res) => {
@@ -54,24 +54,24 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
               })
               .catch((err) => {
                 console.log(err)
-              });
+              })
 
             getGenresByIdBook(info?._id)
             .then((res) => {
               setBookGenres(res)
-              console.log("GENEROS", res)
+              console.log('GENEROS', res)
             })
             .catch((er) => {
               console.log(er)
-            });
+            })
 
           }
         })
         .catch((err) => {
-          console.log(err);
-        });
+          console.log(err)
+        })
     }, [])
-  );
+  )
 
   return (
     <Box minH={layout.height}>
@@ -94,7 +94,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
           />
         ))}
       </Tab>
-      <TabView value={index} onChange={setIndex} animationType="spring">
+      <TabView value={index} onChange={setIndex} animationType='spring'>
         <TabView.Item>
           <InfoBookProfile
             navigation={navigation}
@@ -112,7 +112,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
         </TabView.Item>
       </TabView>
     </Box>
-  );
-};
+  )
+}
 
-export default TabContainerBookProfile;
+export default TabContainerBookProfile
