@@ -17,9 +17,11 @@ import StyledField from '../components/SearchComponents/StyledField'
 import COLORS from '../components/styled-components/Colors'
 
 import UserItem from '../components/SearchComponents/UserItem'
+import BookItem from '../components/SearchComponents/BookItem'
 import Post from '../components/Post/Post'
 
 import { searchUsersNoLimits } from '../services/user/userAPI'
+import { searchBooks } from '../services/book/bookAPI'
 import { searchHashtag } from '../services/hashtag/hashtagAPI'
 import { searchPostByHashtags } from '../services/post/postAPI'
 
@@ -40,6 +42,7 @@ const Search = ({ navigation }) => {
   ]
 
   const [users, setUsers] = useState([])
+  const [books, setBooks] = useState([])
   const [posts, setPosts] = useState([])
 
   return (
@@ -62,6 +65,14 @@ const Search = ({ navigation }) => {
                 searchUsersNoLimits(text)
                   .then(res => {
                     setUsers(res?.Data || [])
+                  })
+                  .catch(err => {
+                    console.log(err)
+                  })
+
+                searchBooks(text)
+                  .then(res => {
+                    setBooks(res)
                   })
                   .catch(err => {
                     console.log(err)
@@ -178,7 +189,34 @@ const Search = ({ navigation }) => {
               </TabView.Item>
 
               <TabView.Item>
-
+                <ScrollView>
+                  <VStack
+                    minH={layout.height}
+                    pb={layout.height * .2}
+                    space={1}
+                  >
+                    {books.length ? books.map(book => (
+                      <BookItem
+                        key={book._id}
+                        bookItem={book}
+                        navigation={navigation}
+                      />
+                    ))
+                      :
+                      <VStack alignContent='center' alignItems='center'>
+                        <Image
+                          source={DontKnow}
+                          alt='DontKnow'
+                          resizeMode='contain'
+                          size={400}
+                        />
+                        <Text bold textAlign='center' color={COLORS.primary}>
+                          Discúlpanos, pero no pudimos encontrar lo que estás buscando
+                        </Text>
+                      </VStack>
+                    }
+                  </VStack>
+                </ScrollView>
               </TabView.Item>
 
               <TabView.Item>
