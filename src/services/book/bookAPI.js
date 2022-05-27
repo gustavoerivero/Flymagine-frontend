@@ -14,7 +14,7 @@ const getBookById = async (id) => {
 
 const getGenresByIdBook = async (id) => {
   const { data } = await http.get(`${BASE_URL}/${id}/genres`)
-  return data?.Data
+  return data?.Data[0]?.genres || []
 }
 
 const searchBooks = async (name) => {

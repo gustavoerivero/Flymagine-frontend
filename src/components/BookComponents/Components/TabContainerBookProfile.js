@@ -23,6 +23,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
   const [bookGenres, setBookGenres] = useState([])
   const [author, setAuthor] = useState(null)
   const [reviews, setReviews] = useState([])
+  const [rating, setRating] = useState(0)
 
   const [index, setIndex] = useState(0)
 
@@ -35,14 +36,12 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
       getBookById(bookData)
         .then((res) => {
           setBookInfo(res)
-          console.log(res)
           let info = res
 
           if (info) {
             getUserById(info?.idUser)
               .then((res) => {
                 setAuthor(res?.Data)
-                console.log('Autor', res)
               })
               .catch((error) => {
                 console.log(error)
@@ -51,25 +50,40 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
             getReviewByBook(info?._id)
               .then((res) => {
                 setReviews(res)
+
+                let sum = 0
+                let count = 0
+
+                res.forEach((review) => {
+                  sum += review.rating
+                  count++
+                })
+
+                if (count > 0) {
+                  let average = Math.floor(sum / count)
+                  setRating(average)
+                }
+
               })
               .catch((err) => {
                 console.log(err)
               })
 
             getGenresByIdBook(info?._id)
-            .then((res) => {
-              setBookGenres(res)
-              console.log('GENEROS', res)
-            })
-            .catch((er) => {
-              console.log(er)
-            })
+              .then((res) => {
+                setBookGenres(res)
+              })
+              .catch((er) => {
+                console.log(er)
+              })
 
           }
         })
         .catch((err) => {
           console.log(err)
         })
+
+
     }, [])
   )
 
@@ -99,6 +113,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
           <InfoBookProfile
             navigation={navigation}
             bookInfo={bookInfo}
+            rating={rating}
             author={author}
             bookGenres={bookGenres}
           />
