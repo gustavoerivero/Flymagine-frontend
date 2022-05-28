@@ -8,7 +8,7 @@ const getOnlyUser = async (id) => {
 }
 
 const setProfileImage = async (id, image) => {
-  fetch(`https://flymagine-backend.herokuapp.com/api/v1/${BASE_URL}/${id}/image`, {
+  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
