@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react'
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
-import { useFocusEffect } from '@react-navigation/native'
+import React, { useState, useCallback } from "react";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Box,
   VStack,
@@ -10,163 +10,150 @@ import {
   Avatar,
   Button,
   Icon,
-} from 'native-base'
-import {
-  MaterialIcons,
-  FontAwesome5,
-  AntDesign
-} from '@expo/vector-icons'
+  Divider,
+} from "native-base";
+import { MaterialIcons, FontAwesome5, AntDesign } from "@expo/vector-icons";
 
-import useAuthContext from '../../hooks/useAuthContext'
-import { setFollowsByUser, getFollows } from '../../services/user/userAPI'
-import COLORS from '../../components/styled-components/Colors'
+import useAuthContext from "../../hooks/useAuthContext";
+import { setFollowsByUser, getFollows } from "../../services/user/userAPI";
+import COLORS from "../../components/styled-components/Colors";
 
 const UserItem = ({ userItem, navigation }) => {
-
-  const layout = useWindowDimensions()
+  const layout = useWindowDimensions();
 
   const {
-    state: { user }
-  } = useAuthContext()
+    state: { user },
+  } = useAuthContext();
 
-  const [isFollow, setIsFollow] = useState(false)
-  const [follows, setFollows] = useState(null)
+  const [isFollow, setIsFollow] = useState(false);
+  const [follows, setFollows] = useState(null);
 
   useFocusEffect(
     useCallback(() => {
       getFollows(user?.id)
-        .then(res => {
-          setFollows(res?.Data?.follows)
+        .then((res) => {
+          setFollows(res?.Data?.follows);
 
-          if (follows?.find(f => f._id === userItem._id)) {
-            setIsFollow(true)
+          if (follows?.find((f) => f._id === userItem._id)) {
+            setIsFollow(true);
           }
-
         })
-        .catch(err => {
-          console.log(err)
-        })
+        .catch((err) => {
+          console.log(err);
+        });
     }, [follows])
-  )
+  );
 
   const handleFollow = async () => {
-
-    let newFollows = [...follows]
+    let newFollows = [...follows];
 
     if (isFollow) {
-      newFollows = newFollows.filter(f => f._id !== userItem?._id)
-      setIsFollow(false)
+      newFollows = newFollows.filter((f) => f._id !== userItem?._id);
+      setIsFollow(false);
     } else {
-      newFollows.push(userItem)
-      setIsFollow(true)
+      newFollows.push(userItem);
+      setIsFollow(true);
     }
 
     await setFollowsByUser(user.id, newFollows)
-      .then(res => {
-        console.log(res)
-        setFollows(res?.Data?.follows)
+      .then((res) => {
+        console.log(res);
+        setFollows(res?.Data?.follows);
       })
-      .catch(err => {
-        console.log(err)
-      })
-
-  }
-
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation?.navigate('UserProfile', { user: userItem?._id })
+        navigation?.navigate("UserProfile", { user: userItem?._id });
       }}
+      activeOpacity={0.8}
     >
       <Box
-        p={5}
-        m={1}
-        w='100%'
-        alignItems='center'
-        alignContent='center'
-        alignSelf='center'
-        justifyContent='center'
+        mb={1}
+        w="100%"
+        h={layout.height * 0.09}
+        alignItems="center"
+        alignContent="center"
+        alignSelf="center"
+        justifyContent="center"
+        borderRadius="lg"
       >
-        <HStack space={2}>
+        <HStack
+          alignItems="center"
+          justifyContent="space-between"
+          w="98%"
+          h="95%"
+        >
+          <Stack w="17%" h="90%" justifyContent="center">
+            <Avatar
+              bg="purple.600"
+              size="lg"
+              source={{
+                uri: userItem?.photo === "none" ? null : userItem?.photo,
+              }}
+              borderColor="white"
+              borderWidth={3}
+            >
+              {userItem && userItem?.firstName[0] + userItem?.lastName[0]}
+            </Avatar>
+          </Stack>
 
-          <Avatar
-            bg='purple.600'
-            size='lg'
-            source={{
-              uri: (userItem?.photo === 'none' ? null : userItem?.photo)
-            }}
-            borderColor='white'
-            borderWidth={3}
-          >
-            {userItem && (userItem?.firstName[0] + userItem?.lastName[0])}
-          </Avatar>
-
-          <VStack w={layout.width * .5} mt={2}>
-            <HStack>
-              <Text bold fontSize='sm'>
+          <VStack w="55%" h="80%" alignItems="center" justifyContent="center">
+            <HStack w="90%" h="50%">
+              <Text bold fontSize="md" w="100%">
                 {userItem?.firstName} {userItem?.lastName}
               </Text>
             </HStack>
-            <HStack
-              space={2}
-              alignItems='center'
-            >
+            <HStack space={2} alignItems="center" w="90%" h="30%">
               <Icon
-                as={userItem?.idRole?._id === '626aef37b4a9510568d6036d' ? FontAwesome5 : AntDesign}
-                name={userItem?.idRole?._id === '626aef37b4a9510568d6036d' ? 'book-reader' : 'edit'}
+                opacity={0.5}
+                color={"purple.600"}
+                as={
+                  userItem?.idRole?._id === "626aef37b4a9510568d6036d"
+                    ? FontAwesome5
+                    : AntDesign
+                }
+                name={
+                  userItem?.idRole?._id === "626aef37b4a9510568d6036d"
+                    ? "book-reader"
+                    : "edit"
+                }
               />
-              <Text
-                fontSize='xs'
-                color={'purple.600'}
-                italic
-              >
-                {userItem?.idRole?._id === '626aef37b4a9510568d6036d' ? 'Lector' : 'Escritor'}
+              <Text fontSize="xs" opacity={0.5} color={"purple.600"} italic>
+                {userItem?.idRole?._id === "626aef37b4a9510568d6036d"
+                  ? "Lector"
+                  : "Escritor"}
               </Text>
             </HStack>
-            <HStack space={2}>
-              <Icon
-                mr={1}
-                mt={.5}
-                as={MaterialIcons}
-                name='history-edu'
-              />
-              <Text fontSize='xs' alignContent='center'>
-                {userItem?.biography?.length > 22
-                  ? userItem?.biography?.substring(0, 99 - 3) + '...'
-                  : userItem?.biography}
-              </Text>
-            </HStack>
-
           </VStack>
 
-          <Stack
-            mt={3}
-            w={layout.width * .25}
-          >
+          <Stack w="27%" h="100%" alignItems="center" justifyContent="center">
             {user?.id !== userItem?._id && (
               <Button
-                size='xs'
-                variant='outline'
-                height={layout.height * .04}
+                w="95%"
+                size="xs"
+                variant="outline"
+                height={layout.height * 0.04}
                 borderRadius={50}
                 onPress={() => {
-                  console.log(isFollow ? 'unfollow' : 'follow')
-                  handleFollow()
+                  console.log(isFollow ? "unfollow" : "follow");
+                  handleFollow();
                 }}
               >
                 <Text fontSize={10} color={COLORS.primary}>
-                  {isFollow ? 'Dejar de seguir' : 'Seguir'}
+                  {isFollow ? "Dejar de seguir" : "Seguir"}
                 </Text>
               </Button>
             )}
           </Stack>
-
         </HStack>
-
       </Box>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
-export default UserItem
+export default UserItem;

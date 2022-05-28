@@ -70,46 +70,46 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
       p={1}
     >
       <Stack>
-      <ScrollView>
-        {reviewData.length > 0 && reviewData ? (
-          reviewData?.map((reviewData, id) => (
-            <Stack padding={1} key={id}>
-              <Review navigation={navigation} review={reviewData} />
-            </Stack>
-          ))
-        ) : (
-          <Stack alignItems="center">
-            <Image
-              size={150}
-              resizeMode={"cover"}
-              source={planet}
-              alt="New-Planet-Found"
-            />
-            <Text
-              bold
-              fontSize="20"
-              color={COLORS.primary}
-              textAlign="center"
-              mv="5"
-            >
-              ¡Oh! Un mundo no explorado aún
-            </Text>
-            <Text
-              fontSize="15"
-              color={COLORS.primary}
-              textAlign="center"
-              mv="5"
-            >
-              Parece que no hay reviews de este libro
-            </Text>
-            <Button mt="2" bg={COLORS.button.primary}>
-              <Text fontSize="xs" color={COLORS.button.text} px="3">
-                Actualizar
+        <ScrollView>
+          {reviewData.length > 0 && reviewData ? (
+            reviewData?.map((reviewData, id) => (
+              <Stack padding={1} key={id}>
+                <Review navigation={navigation} review={reviewData} />
+              </Stack>
+            ))
+          ) : (
+            <Stack alignItems="center">
+              <Image
+                size={150}
+                resizeMode={"cover"}
+                source={planet}
+                alt="New-Planet-Found"
+              />
+              <Text
+                bold
+                fontSize="20"
+                color={COLORS.primary}
+                textAlign="center"
+                mv="5"
+              >
+                ¡Oh! Un mundo no explorado aún
               </Text>
-            </Button>
-          </Stack>
-        )}
-      </ScrollView>
+              <Text
+                fontSize="15"
+                color={COLORS.primary}
+                textAlign="center"
+                mv="5"
+              >
+                Parece que no hay reviews de este libro
+              </Text>
+              <Button mt="2" bg={COLORS.button.primary}>
+                <Text fontSize="xs" color={COLORS.button.text} px="3">
+                  Actualizar
+                </Text>
+              </Button>
+            </Stack>
+          )}
+        </ScrollView>
       </Stack>
       <Fab
         renderInPortal={false}

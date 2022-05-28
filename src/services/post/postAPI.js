@@ -8,7 +8,7 @@ const createPost = async (post) => {
 }
 
 const postImage = async (postId, image) => {
-  fetch(`https://flymagine-backend.herokuapp.com/api/v1/${BASE_URL}/${postId}/image`, {
+  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${postId}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
