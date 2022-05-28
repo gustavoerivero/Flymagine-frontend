@@ -10,7 +10,7 @@ import {
   Avatar,
   Button,
   Icon,
-  Divider
+  Divider,
 } from "native-base";
 import { MaterialIcons, FontAwesome5, AntDesign } from "@expo/vector-icons";
 
@@ -70,16 +70,17 @@ const UserItem = ({ userItem, navigation }) => {
       onPress={() => {
         navigation?.navigate("UserProfile", { user: userItem?._id });
       }}
+      activeOpacity={0.8}
     >
       <Box
-        mb={2}
+        mb={1}
         w="100%"
-        h={layout.height * 0.1}
+        h={layout.height * 0.09}
         alignItems="center"
         alignContent="center"
         alignSelf="center"
         justifyContent="center"
-        borderRadius="lg" bg={COLORS.secundary} shadow={1}
+        borderRadius="lg"
       >
         <HStack
           alignItems="center"
@@ -87,7 +88,7 @@ const UserItem = ({ userItem, navigation }) => {
           w="98%"
           h="95%"
         >
-          <Stack w="17%" h="100%" justifyContent="center">
+          <Stack w="17%" h="90%" justifyContent="center">
             <Avatar
               bg="purple.600"
               size="lg"
@@ -101,14 +102,16 @@ const UserItem = ({ userItem, navigation }) => {
             </Avatar>
           </Stack>
 
-          <VStack w="55%" h="90%" alignItems="center">
-            <HStack w="90%" h="35%" alignItems="center">
-              <Text bold fontSize="sm" w="70%">
+          <VStack w="55%" h="80%" alignItems="center" justifyContent="center">
+            <HStack w="90%" h="50%">
+              <Text bold fontSize="md" w="100%">
                 {userItem?.firstName} {userItem?.lastName}
               </Text>
-              <HStack space={2} alignItems="center" w="30%" h="100%">
+            </HStack>
+            <HStack space={2} alignItems="center" w="90%" h="30%">
               <Icon
-              w="10%"
+                opacity={0.5}
+                color={"purple.600"}
                 as={
                   userItem?.idRole?._id === "626aef37b4a9510568d6036d"
                     ? FontAwesome5
@@ -120,20 +123,10 @@ const UserItem = ({ userItem, navigation }) => {
                     : "edit"
                 }
               />
-              <Text w="90%" fontSize="xs" color={"purple.600"} italic>
+              <Text fontSize="xs" opacity={0.5} color={"purple.600"} italic>
                 {userItem?.idRole?._id === "626aef37b4a9510568d6036d"
                   ? "Lector"
                   : "Escritor"}
-              </Text>
-            </HStack>
-            </HStack>
-            <Divider opacity={0.5} w="95%" my={0.5}/>
-            <HStack space={2} w="95%" h="63%">
-              <Icon w="10%" mr={1} mt={0.5} as={MaterialIcons} name="history-edu" />
-              <Text w="90%" fontSize="xs" alignContent="center">
-                {userItem?.biography?.length > 22
-                  ? userItem?.biography?.substring(0, 60 - 3) + "..."
-                  : userItem?.biography}
               </Text>
             </HStack>
           </VStack>

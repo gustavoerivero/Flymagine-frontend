@@ -35,10 +35,10 @@ const BookItem = ({ bookItem, navigation }) => {
             alignItems="center"
           >
             <Image
-              /*source={{ 
+              source={{ 
               uri: bookItem?.photo !== 'none' ? bookItem?.photo : 'https://via.placeholder.com/300.png?text=no+image' 
-            }}*/
-            source={book}
+            }}
+            /*source={book}*/
               w="90%"
               h="90%"
               borderRadius={5}

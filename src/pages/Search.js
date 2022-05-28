@@ -151,65 +151,63 @@ const Search = ({ navigation }) => {
               <TabView.Item></TabView.Item>
 
               <TabView.Item>
-                <ScrollView>
-                  <VStack
-                    h="77%" w={layout.width} p={2} bg={COLORS.base}
-                  >
-                    {users.length ? (
-                      users.map((user) => (
+                <VStack h="77%" w={layout.width} p={2} bg={COLORS.base}>
+                  {users.length ? (
+                    <FlatList
+                      showsVerticalScrollIndicator={false}
+                      data={users}
+                      keyExtractor={(item) => item?._id}
+                      renderItem={({ item }) => (
                         <UserItem
-                          key={user._id}
-                          userItem={user}
+                          key={item._id}
+                          userItem={item}
                           navigation={navigation}
                         />
-                      ))
-                    ) : (
-                      <VStack alignContent="center" alignItems="center">
-                        <Image
-                          source={DontKnow}
-                          alt="DontKnow"
-                          resizeMode="contain"
-                          size={400}
-                        />
-                        <Text bold textAlign="center" color={COLORS.primary}>
-                          Discúlpanos, pero no pudimos encontrar lo que estás
-                          buscando
-                        </Text>
-                      </VStack>
-                    )}
-                  </VStack>
-                </ScrollView>
+                      )}
+                    />
+                  ) : (
+                    <VStack alignContent="center" alignItems="center">
+                      <Image
+                        source={DontKnow}
+                        alt="DontKnow"
+                        resizeMode="contain"
+                        size={400}
+                      />
+                      <Text bold textAlign="center" color={COLORS.primary}>
+                        Discúlpanos, pero no pudimos encontrar lo que estás
+                        buscando
+                      </Text>
+                    </VStack>
+                  )}
+                </VStack>
               </TabView.Item>
 
               <TabView.Item>
-                  <VStack h="77%" w={layout.width} p={2} bg={COLORS.base}>
-                    {books.length > 0 ? (
-                      <FlatList
-                        showsVerticalScrollIndicator={false}
-                        data={books}
-                        keyExtractor={(item) => item?._id}
-                        renderItem={({ item }) => (
-                          <BookItem
-                            key={item._id}
-                            bookItem={item}
-                            navigation={navigation} />
-                        )}
+                <VStack h="77%" w={layout.width} p={2} bg={COLORS.base}>
+                  {books.length ? (
+                    <FlatList
+                      showsVerticalScrollIndicator={false}
+                      data={books}
+                      keyExtractor={(item) => item?._id}
+                      renderItem={({ item }) => (
+                        <BookItem bookItem={item} navigation={navigation} />
+                      )}
+                    />
+                  ) : (
+                    <VStack alignContent="center" alignItems="center">
+                      <Image
+                        source={DontKnow}
+                        alt="DontKnow"
+                        resizeMode="contain"
+                        size={400}
                       />
-                    ) : (
-                      <VStack alignContent="center" alignItems="center">
-                        <Image
-                          source={DontKnow}
-                          alt="DontKnow"
-                          resizeMode="contain"
-                          size={400}
-                        />
-                        <Text bold textAlign="center" color={COLORS.primary}>
-                          Discúlpanos, pero no pudimos encontrar lo que estás
-                          buscando
-                        </Text>
-                      </VStack>
-                    )}
-                  </VStack>
+                      <Text bold textAlign="center" color={COLORS.primary}>
+                        Discúlpanos, pero no pudimos encontrar lo que estás
+                        buscando
+                      </Text>
+                    </VStack>
+                  )}
+                </VStack>
               </TabView.Item>
 
               <TabView.Item>
