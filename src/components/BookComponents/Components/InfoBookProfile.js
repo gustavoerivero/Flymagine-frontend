@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
-
-import { Tab, TabView, AirbnbRating } from 'react-native-elements'
+import { Linking } from 'react-native'
+import { AirbnbRating } from 'react-native-elements'
 
 import { useNavigation } from '@react-navigation/native'
 
@@ -30,22 +29,19 @@ import {
   Button,
   IconButton,
   Image,
+  ScrollView,
 } from 'native-base'
 
 import useAuthContext from '../../../hooks/useAuthContext'
 
 import { useFocusEffect } from '@react-navigation/native'
 
-//Image
-
-//Components
-import Review from '../../Post/Review'
 import StatusBookButton from './StatusBookButton'
 
 //Data
-import dataReviews from '../../../utilities/data/reviews.json'
 import { getAllLiteraryGenre } from '../../../services/literaryGenre/literaryGenre'
 import { getUserById } from '../../../services/user/userAPI'
+import { previousFourteenHours } from '../../../utils/functions'
 
 //Colors
 import COLORS from '../../styled-components/Colors'
@@ -53,7 +49,7 @@ import COLORS from '../../styled-components/Colors'
 //Styles
 import stylesBook from '../../styled-components/stylesBook'
 
-const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
+const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) => {
   //Colors
   const backgroundColor = COLORS.primary
   const text = COLORS.base
@@ -70,8 +66,6 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
   const [index, setIndex] = React.useState(0)
 
   const [show, setShow] = useState(true)
-
-  const [signIn, setSignIn] = useState('Adam Meddler')
 
   const [literaryGenres, setLiteraryGenres] = useState([])
 
@@ -112,13 +106,13 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
           </HStack>
 
           <HStack h='10%'>
-            <AirbnbRating 
-              count={5} 
-              showRating={false} 
-              size={16} 
-              defaultRating={4} 
-              isDisabled={true} 
-              selectedColor={'#FF00F0'} 
+            <AirbnbRating
+              count={5}
+              showRating={false}
+              size={16}
+              defaultRating={rating ? rating : 0}
+              isDisabled={true}
+              selectedColor={'#FF00F0'}
               unSelectedColor={COLORS.button.secundaryDisabled}
             />
           </HStack>
@@ -133,7 +127,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
           <HStack alignItems='center' pt={1} h='10%'>
             <Entypo name='book' color={icon} />
             <Text fontSize='sm' color={text} pl={1}>
-              Géneros: {bookInfo && bookInfo?.geners}
+              Géneros:
             </Text>
           </HStack>
 
@@ -142,7 +136,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
               <FlatList
                 horizontal
                 showsHorizontalScrollIndicator={false}
-                data={literaryGenres}
+                data={bookGenres}
                 keyExtractor={(item) => item?._id}
                 ItemSeparatorComponent={() => <Box w={1} />}
                 renderItem={({ item }) => (
@@ -162,7 +156,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
             </Box>
           </HStack>
 
-          
+
         </VStack>
       </HStack>
 
@@ -174,10 +168,11 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
               Sinopsis:
             </Text>
           </HStack>
-
-          <Text fontSize='md' color={text} pl={1} textAlign='justify'>
-            {bookInfo && bookInfo?.sypnosis}
-          </Text>
+          <ScrollView>
+            <Text fontSize='md' color={text} pl={1} textAlign='justify'>
+              {bookInfo && bookInfo?.sypnosis}
+            </Text>
+          </ScrollView>
         </VStack>
       </HStack>
 
@@ -198,11 +193,14 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
                 />
               }
               borderRadius='full'
-              onPress={() => [
-                setButtonToRead(false),
-                setButtonReading(true),
-                setButtonRead(false),
-              ]}
+              onPress={() => {
+                [
+                  setButtonToRead(false),
+                  setButtonReading(true),
+                  setButtonRead(false),
+                ]
+                Linking.openURL(bookInfo?.document)
+              }}
             >
               <Text fontSize='md' bold color={elementsButton}>
                 Descargar libro
@@ -227,7 +225,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, bookGenres}) => {
             />
           </HStack>
 
-          {author?._id == user?.id ? (
+          {author?._id === user?.id && previousFourteenHours(bookInfo?.createdAt) ? (
             <HStack
               justifyContent='space-between'
               h='30%'
