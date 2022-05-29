@@ -154,7 +154,7 @@ const Review = ({ navigation, review = {} }) => {
             bg="purple.600"
             size="md"
             source={{
-              uri: userReview?.photo === "none" ? null : userReview?.photo,
+              uri: (userReview?.photo === "none" ? null : userReview?.photo)
             }}
             borderColor="white"
             borderWidth={3}

@@ -1,24 +1,29 @@
 import React, { useState, useCallback } from 'react'
-import { ScrollView, RefreshControl } from 'react-native'
+import { RefreshControl, useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { VStack } from 'native-base'
+import { VStack, Box, StatusBar, FlatList} from 'native-base'
 
 //Components
-import StatusBar from "../components/StatusBar"
-import Container from '../components/Container'
 import Post from '../components/Post/Post'
+import TopBar from '../components/TopBar'
 
 import useAuthContext from '../hooks/useAuthContext'
 
 import { getFollows } from '../services/user/userAPI'
 import { getFeed } from '../services/post/postAPI'
+import COLORS from '../components/styled-components/Colors'
 
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
+const STYLES = ['default', 'dark-content', 'light-content'];
+const TRANSITIONS = ['fade', 'slide', 'none'];
+
 const HomeView = ({ navigation }) => {
 
+  const layout = useWindowDimensions();
+  
   const {
     state: { user },
   } = useAuthContext()
@@ -62,29 +67,39 @@ const HomeView = ({ navigation }) => {
     }, [])
   )
 
+  const [hidden, setHidden] = useState(false);
+  const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0]);
+  const [statusBarTransition, setStatusBarTransition] = useState(TRANSITIONS[0]);
+
+
   return (
-    <Container>
-      <StatusBar />
-      <ScrollView
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        }
-      >
-        <VStack space={2} >
-          {posts && posts.map((post) => (
-            <Post
-              key={post._id}
-              post={post}
+    <Box w={layout.width}>
+      <StatusBar animated={true} backgroundColor={COLORS.primary}/>
+      <TopBar />
+        <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
+          {posts && (
+            <FlatList
+            py={2}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }
+            showsVerticalScrollIndicator={false}
+            data={posts}
+            keyExtractor={(item) => item?._id}
+            renderItem={({ item }) => (
+              <Post
+              key={item._id}
+              post={item}
               navigation={navigation}
             />
-          ))}
+            )}
+          /> 
+          )}
         </VStack>
-
-      </ScrollView>
-    </Container>
+    </Box>
   )
 }
 
