@@ -17,6 +17,11 @@ const getGenresByIdBook = async (id) => {
   return data?.Data[0]?.genres || []
 }
 
+const getBooksByUser = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/user/${id}`)
+  return data?.Data || []
+}
+
 const searchBooks = async (name) => {
   const { data } = await http.get(`${BASE_URL}/search/${name}`)
   return data?.Data || []
@@ -27,4 +32,5 @@ module.exports = {
   getBookById,
   getGenresByIdBook,
   searchBooks,
+  getBooksByUser,
 }

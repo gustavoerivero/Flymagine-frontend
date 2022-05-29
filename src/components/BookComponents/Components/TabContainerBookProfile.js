@@ -84,7 +84,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
         })
 
 
-    }, [])
+    }, [reviews])
   )
 
   return (

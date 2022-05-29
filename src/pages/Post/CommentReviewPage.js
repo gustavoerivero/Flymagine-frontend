@@ -1,21 +1,17 @@
 import React, { useState, useCallback } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import {
-  ScrollView,
-  Stack,
-  VStack,
-} from 'native-base'
+import { ScrollView, Stack, VStack } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 import { FAB } from '@rneui/themed'
 
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import CommentPost from '../../components/Post/CommentPost'
-import Comment from '../../components/Post/Comment'
+import CommentReviewHeader from '../../components/Post/CommentReviewHeader'
+import CommentReview from '../../components/Post/CommentReview'
 import CommentInput from '../../components/Post/CommentInput'
-import { getComments, createComment } from '../../services/comments/commentPostAPI'
+import { getComments, createComment } from '../../services/comments/commentReviewAPI'
 
 import useAuthContext from '../../hooks/useAuthContext'
 import useLoading from '../../hooks/useLoading'
@@ -23,7 +19,7 @@ import useCustomToast from '../../hooks/useCustomToast'
 
 import { commentSchema, commentDefaultValue } from '../../utils/formValidations/dataCommentValidation'
 
-const CommentPage = ({ navigation, route }) => {
+const CommentReviewPage = ({ navigation, route }) => {
 
   const {
     state: { user },
@@ -32,7 +28,7 @@ const CommentPage = ({ navigation, route }) => {
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [post, setPost] = useState(route.params.post || {})
+  const [review, setReview] = useState(route.params.review || {})
   const [comments, setComments] = useState(route.params.comments || [])
 
   const layout = useWindowDimensions()
@@ -50,16 +46,15 @@ const CommentPage = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
-      getComments(post?._id)
+      getComments(review?._id)
         .then(res => {
           setComments(res)
         })
         .catch(error => {
           console.log(error)
         })
-    }, [comments])
+    }, [review])
   )
-
 
   const onSubmit = async (values) => {
 
@@ -68,7 +63,7 @@ const CommentPage = ({ navigation, route }) => {
     try {
 
       const response = await createComment({
-        'idPost': post._id,
+        'idReview': review._id,
         'idUser': user.id,
         'description': values.description,
       })
@@ -87,19 +82,18 @@ const CommentPage = ({ navigation, route }) => {
     stopLoading()
   }
 
-
   return (
     <ScrollView>
       <VStack minH={layout.height} justifyContent='space-between' space={3}>
         <VStack alignItems='center' space={2}>
           <Stack alignItems='center' w='100%'>
-            <CommentPost
+            <CommentReviewHeader
               navigation={navigation}
-              post={post}
+              post={review}
             />
           </Stack>
           {comments && comments?.map((element) =>
-            <Comment
+            <CommentReview
               key={element._id}
               comment={element}
               navigation={navigation}
@@ -147,4 +141,4 @@ const CommentPage = ({ navigation, route }) => {
   )
 }
 
-export default CommentPage
+export default CommentReviewPage

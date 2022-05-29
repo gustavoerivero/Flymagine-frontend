@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 import { AirbnbRating } from 'react-native-elements'
 
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import useAuthContext from '../../../hooks/useAuthContext'
-import useCustomToast from '../../../hooks/useCustomToast'
-import useLoading from '../../../hooks/useLoading'
+import useCustomToast from '../../hooks/useCustomToast'
+import useLoading from '../../hooks/useLoading'
 
-import { createReview } from '../../../services/post/reviewAPI'
-import { reviewAdapter } from '../../../adapters/Review'
+import { updateReview } from '../../services/post/reviewAPI'
+import { reviewAdapter } from '../../adapters/Review'
 
 import {
   Text,
@@ -19,23 +19,20 @@ import {
 } from 'native-base'
 
 //Colors
-import COLORS from '../../styled-components/Colors'
+import COLORS from '../styled-components/Colors'
 
-import { reviewSchema, reviewDefaultValues } from '../../../utils/formValidations/dataReviewValidation'
+import { reviewSchema, reviewDefaultValues } from '../../utils/formValidations/dataReviewValidation'
 
-const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
+const EditReviewModal = ({ navigation, showModal, setShowModal, review }) => {
 
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
   const {
-    state: { user },
-  } = useAuthContext()
-
-  const {
     control,
     handleSubmit,
     formState: { isValid },
+    setValue,
     reset,
   } = useForm({
     mode: 'onChange',
@@ -43,31 +40,35 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
     defaultvalue: reviewDefaultValues,
   })
 
+  useFocusEffect(
+    useCallback(() => {
+      setValue('description', review.description)
+      setValue('rating', review.rating)
+    }, [])
+  )
+
   const onSubmit = async (values) => {
 
     startLoading()
 
     try {
 
-      const review = reviewAdapter({
+      const data = reviewAdapter({
         ...values,
-        bookId: book._id,
-        userId: user.id,
+        userId: review.idUser,
+        bookId: review.idBook,
       })
+      const response = await updateReview(review._id, data)
+      console.log(response)
 
-      console.log(review)
-
-      const data = await createReview(review)
-      console.log(data)
-
-      showSuccessToast('¡Misión cumplida! La review fue creada con éxito')
+      showSuccessToast('¡Misión cumplida! La review fue modificada con éxito')
       setShowModal(false)
       reset(reviewDefaultValues)
       navigation?.goBack()
 
     } catch (error) {
       console.log(error)
-      showErrorToast('¡Misión fallida! No se pudo crear la review')
+      showErrorToast('¡Misión fallida! No se pudo modificar la review')
     }
     stopLoading()
   }
@@ -78,11 +79,11 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
         <Modal.CloseButton />
         <Modal.Header bg={COLORS.primary}>
           <Text bold color={COLORS.base} fontSize={'md'}>
-            Nueva Review
+            Modifica tu review
           </Text>
         </Modal.Header>
         <Modal.Body>
-          <Text>Cuentanos tu experiencia al leer el libro...</Text>
+          <Text>¿Te equivocaste en algo?</Text>
 
           <Controller
             name='description'
@@ -91,7 +92,7 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
               <FormControl
                 isRequired
               >
-                <FormControl.Label>¿Que tal te parecio?</FormControl.Label>
+                <FormControl.Label>¿Cuál es tu nueva opinión?</FormControl.Label>
                 <TextArea 
                   placeholder='Coméntanos, ¿cómo estuvo?...'
                   onChangeText={onChange}
@@ -105,7 +106,7 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
           <Controller
             name='rating'
             control={control}
-            render={({ field: { onChange, value = 1 } }) => (
+            render={({ field: { onChange, value = review.rating } }) => (
               <FormControl mt='3'
                 isRequired
               >
@@ -146,7 +147,7 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
               onPress={handleSubmit(onSubmit)}
             >
               <Text bold color={COLORS.base} fontSize={'sm'}>
-                Enviar
+                Modificar
               </Text>
             </Button>
           </Button.Group>
@@ -156,4 +157,4 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
   )
 }
 
-export default NewReviewModal
+export default EditReviewModal

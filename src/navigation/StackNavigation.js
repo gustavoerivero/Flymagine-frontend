@@ -8,6 +8,7 @@ import PasswordRecoveryRequestPage from '../pages/Login/PasswordRecorveryRequest
 // Post pages
 import PostEditPage from '../pages/Post/PostEditPage'
 import CommentPage from '../pages/Post/CommentPage'
+import CommentReviewPage from '../pages/Post/CommentReviewPage'
 import ModifyCommentPage from '../pages/Post/ModifyCommentPage'
 
 // User Pages
@@ -26,6 +27,7 @@ import EditBook from '../pages/Book/EditBook'
 import BottomNavigation from './BottomNavigation'
 import useAuthContext from '../hooks/useAuthContext'
 import COLORS from '../components/styled-components/Colors'
+import CommentReviewEditPage from '../pages/Post/CommentReviewEditPage'
 
 const Stack = createNativeStackNavigator()
 
@@ -95,8 +97,24 @@ const stackRoutes = [
     }
   },
   {
+    name: 'CommentReviewPage',
+    component: CommentReviewPage,
+    requireAuth: true,
+    options: {
+      title: '¿Qué están pasando?',
+    }
+  },
+  {
     name: 'ModifyCommentPage',
     component: ModifyCommentPage,
+    requireAuth: true,
+    options: {
+      title: 'Editar comentario',
+    }
+  },
+  {
+    name: 'CommentReviewEditPage',
+    component: CommentReviewEditPage,
     requireAuth: true,
     options: {
       title: 'Editar comentario',
