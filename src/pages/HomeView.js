@@ -17,12 +17,12 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
-const STYLES = ['default', 'dark-content', 'light-content'];
-const TRANSITIONS = ['fade', 'slide', 'none'];
+const STYLES = ['default', 'dark-content', 'light-content']
+const TRANSITIONS = ['fade', 'slide', 'none']
 
 const HomeView = ({ navigation }) => {
 
-  const layout = useWindowDimensions();
+  const layout = useWindowDimensions()
   
   const {
     state: { user },
@@ -67,9 +67,9 @@ const HomeView = ({ navigation }) => {
     }, [])
   )
 
-  const [hidden, setHidden] = useState(false);
-  const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0]);
-  const [statusBarTransition, setStatusBarTransition] = useState(TRANSITIONS[0]);
+  const [hidden, setHidden] = useState(false)
+  const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0])
+  const [statusBarTransition, setStatusBarTransition] = useState(TRANSITIONS[0])
 
 
   return (
