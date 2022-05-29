@@ -1,78 +1,57 @@
 import React from 'react'
-import {
-  View,
-  StyleSheet,
-} from 'react-native'
-import {
-  Button,
-  Image,
-} from 'react-native-elements'
+import { HStack, Button, IconButton, Icon } from 'native-base'
+import { Image } from 'react-native-elements'
 import useAuthContext from '../hooks/useAuthContext'
+import useCustomToast from '../hooks/useCustomToast'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-//Colors
 import COLORS from './styled-components/Colors'
-
 import FlymagineIcon from '../../assets/favicon.png'
 
 const TopBar = () => {
 
   const { dispatch } = useAuthContext()
+  const { showSuccessToast } = useCustomToast()
 
   return (
-    <View
-      style={styles.container}
+    <HStack
+      h='8%'
+      bgColor={COLORS.primary}
+      shadow={5}
+      justifyContent='space-between'
     >
       <Button
-        icon={
+        leftIcon={
           <Image
             source={FlymagineIcon}
-            style={styles.image}
+            style={{
+              height: '95%',
+              width: 50,
+            }}
           />
         }
-        buttonStyle={styles.button}
-        containerStyle={{
-          borderRadius: 50,
-        }}
+        variant='ghost'
+        borderRadius='full'
+        onPress={() => showSuccessToast('¡Bienvenido a Flymagine!')}
+      />
+      <IconButton
+        icon={
+          <Icon
+            as={MaterialCommunityIcons}
+            name='logout'
+            size={7}
+            color='white'
+          />
+        }
         type='clear'
         onPress={() => {
-          console.log('pressed')
+          console.log('User logout')
           dispatch({ type: 'LOGOUT' })
+          showSuccessToast('¡Esperamos verte proximamente por acá!')
         }}
       />
-    </View>
+    </HStack>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    alignContent: 'center',
-    alignItems: 'center',
-    height: '8%',
-    width: '100%',
-    backgroundColor: COLORS.primary,
-    borderBottomWidth: 1,
-    shadowColor: COLORS.gray5,
-    shadowOpacity: 0.75,
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    elevation: 10,
-  },
-  image: {
-    height: '95%',
-    width: 50,
-  },
-  button: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
-    borderWidth: 0,
-    borderRadius: 50,
-  }
-})
 
 export default TopBar

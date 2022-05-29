@@ -210,12 +210,7 @@ const LoginForm = ({ navigation }) => {
               </FormControl>
             )}
           />
-          <Checkbox colorScheme="purple">
-            <Text style={{ color: 'rgb(14, 0, 20)' }}>
-              Recordar datos de acceso
-            </Text>
-          </Checkbox>
-
+          
           <HStack>
             <Button
               title='Iniciar sesión'
