@@ -1,21 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { View, useWindowDimensions } from "react-native";
-import * as Animatable from "react-native-animatable";
-import NewReviewModal from "./NewReviewModal";
+import React, { useState, useEffect } from 'react'
+import { useWindowDimensions } from 'react-native'
+import NewReviewModal from './NewReviewModal'
 
-import { Tab, TabView, AirbnbRating } from "react-native-elements";
-
-import { useNavigation } from "@react-navigation/native";
-
-import {
-  Ionicons,
-  MaterialIcons,
-  Entypo,
-  Foundation,
-  AntDesign,
-  MaterialCommunityIcons,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons'
 
 import {
   ScrollView,
@@ -35,38 +22,30 @@ import {
   Modal,
   Input,
   Button,
-} from "native-base";
+} from 'native-base'
 
 //image
-import newplanet from "../../../../assets/new-planet.png";
-import planet from "../../../../assets/planet.png";
+import newplanet from '../../../../assets/new-planet.png'
+import planet from '../../../../assets/planet.png'
 
 //Components
-import Review from "../../Post/Review";
-
-//Data
+import Review from '../../Post/Review'
 
 //Colors
-import COLORS from "../../styled-components/Colors";
+import COLORS from '../../styled-components/Colors'
 
 const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [index, setIndex] = React.useState(0);
-  const layout = useWindowDimensions();
-
-  //const Navegation = useNavigation();
-  //const [reviews, setReviews] = useState([]);
-  // const [bookInfo, setBookInfo] = useState(null);
-
-  useEffect(() => {}, []);
+  const [showModal, setShowModal] = useState(false)
+  const [index, setIndex] = useState(0)
+  const layout = useWindowDimensions()
 
   return (
     <Box
-      maxH="93%"
+      maxH='93%'
       minW={layout.width}
       bg={COLORS.base}
-      justifyContent="center"
-      alignItems="center"
+      justifyContent='center'
+      alignItems='center'
       p={1}
     >
       <Stack>
@@ -78,35 +57,31 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
               </Stack>
             ))
           ) : (
-            <Stack alignItems="center">
+            <Stack alignItems='center' alignContent='center'>
               <Image
+                mt='60%'
                 size={150}
-                resizeMode={"cover"}
+                resizeMode={'cover'}
                 source={planet}
-                alt="New-Planet-Found"
+                alt='New-Planet-Found'
               />
               <Text
                 bold
-                fontSize="20"
+                fontSize='20'
                 color={COLORS.primary}
-                textAlign="center"
-                mv="5"
+                textAlign='center'
+                mv='5'
               >
                 ¡Oh! Un mundo no explorado aún
               </Text>
               <Text
-                fontSize="15"
+                fontSize='15'
                 color={COLORS.primary}
-                textAlign="center"
-                mv="5"
+                textAlign='center'
+                mv='5'
               >
                 Parece que no hay reviews de este libro
               </Text>
-              <Button mt="2" bg={COLORS.button.primary}>
-                <Text fontSize="xs" color={COLORS.button.text} px="3">
-                  Actualizar
-                </Text>
-              </Button>
             </Stack>
           )}
         </ScrollView>
@@ -114,14 +89,14 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
       <Fab
         renderInPortal={false}
         shadow={2}
-        size="lg"
-        icon={<Icon color="white" as={<AntDesign name="plus" />} size="2xl" />}
+        size='lg'
+        icon={<Icon color='white' as={<AntDesign name='plus' />} size='2xl' />}
         onPress={() => setShowModal(true)}
         bgColor={COLORS.button.primary}
       />
       <NewReviewModal showModal={showModal} setShowModal={setShowModal} />
     </Box>
-  );
-};
+  )
+}
 
-export default ReviewFeedBook;
+export default ReviewFeedBook
