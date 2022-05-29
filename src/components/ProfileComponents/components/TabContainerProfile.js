@@ -1,12 +1,7 @@
 import React, { useState } from 'react'
 import { useWindowDimensions } from 'react-native'
-import {
-  View,
-} from 'native-base'
-import {
-  Tab,
-  TabView
-} from '@rneui/themed'
+import { View } from 'native-base'
+import { Tab, TabView } from '@rneui/themed'
 import PostFeedProfile from './PostFeedProfile'
 import COLORS from '../../styled-components/Colors'
 import ReviewFeedProfile from './ReviewFeedProfile'
@@ -61,19 +56,34 @@ const TabContainerProfile = ({ navigation, userInfo }) => {
           />
         </TabView.Item>
         <TabView.Item>
-          <ReviewFeedProfile />
+          <ReviewFeedProfile 
+            navigation={navigation}
+            userInfo={userInfo}
+          />
         </TabView.Item>
         <TabView.Item>
-          <FavFeedProfile />
+          <FavFeedProfile 
+            navigation={navigation}
+            userInfo={userInfo}
+          />
         </TabView.Item>
         <TabView.Item>
-          <ToReadFeedProfile />
+          <ToReadFeedProfile 
+            navigation={navigation}
+            userInfo={userInfo}
+          />
         </TabView.Item>
         <TabView.Item>
-          <ReadingFeedProfile />
+          <ReadingFeedProfile 
+            navigation={navigation}
+            userInfo={userInfo}
+          />
         </TabView.Item>
         <TabView.Item>
-          <ReadFeedProfile />
+          <ReadFeedProfile 
+            navigation={navigation}
+            userInfo={userInfo}
+          />
         </TabView.Item>
       </TabView>
     </View>

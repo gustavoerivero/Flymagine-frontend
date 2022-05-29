@@ -1,23 +1,27 @@
-import React, { useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { Box, VStack, HStack, Image, Text, Icon, Stack } from 'native-base'
+import { Box, VStack, HStack, Image, Text, Icon } from 'native-base'
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons'
+import { getUserById } from '../../../services/user/userAPI'
 
-import useAuthContext from '../../hooks/useAuthContext'
-
-//Image
-import book from '../../../assets/book.jpg'
-import COLORS from '../styled-components/Colors'
+import COLORS from '../../styled-components/Colors'
 
 const BookItem = ({ bookItem, navigation }) => {
   const layout = useWindowDimensions()
 
-  const {
-    state: { user },
-  } = useAuthContext()
+  const [author, setAuthor] = useState({})
 
-  useFocusEffect(useCallback(() => {}, []))
+  useFocusEffect(
+    useCallback(() => {
+      getUserById(bookItem.idUser)
+        .then(res => {
+          setAuthor(res?.Data || {})
+        })
+        .catch(error => {
+          console.log(error)
+        })
+  }, []))
 
   return (
     <TouchableOpacity
@@ -72,7 +76,7 @@ const BookItem = ({ bookItem, navigation }) => {
                   textAlign='justify'
                   italic
                 >
-                  {bookItem?.idUser?.firstName} {bookItem?.idUser?.lastName}
+                  {author?.firstName} {author?.lastName}
                 </Text>
               </HStack>
               <HStack
@@ -101,8 +105,8 @@ const BookItem = ({ bookItem, navigation }) => {
             <HStack space={1} h='55%' w='95%'>
               <Icon w='10%' mr={1} mt={0.5} as={MaterialIcons} name='history-edu' />
               <Text w='90%' h='90%' fontSize='xs' alignContent='center' textAlign='justify'>
-                {bookItem?.sypnosis?.length > 22
-                  ? bookItem?.sypnosis?.substring(0, 150 - 3) + '...'
+                {bookItem?.sypnosis?.length > 159
+                  ? bookItem?.sypnosis?.substring(0, 159 - 3) + '...'
                   : bookItem?.sypnosis}
               </Text>
             </HStack>
