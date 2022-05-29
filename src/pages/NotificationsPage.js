@@ -11,7 +11,6 @@ import { Button } from 'react-native-elements'
 
 import Notification from '../components/Notification'
 import dataNotifications from '../utilities/data/notifications'
-import Container from '../components/Container'
 
 import { FontAwesome } from '@expo/vector-icons'
 import Dialog from '../components/Dialog'
