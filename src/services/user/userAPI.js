@@ -73,6 +73,46 @@ const searchUsersNoLimits = async (search) => {
   return data
 }
 
+const setFavBooks = async (id, books) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/fav`, books)	
+  return data
+}
+
+const getFavBooks = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}/fav`)
+  return data?.Data[0]?.booksFav || []
+}
+
+const setToReadBooks = async (id, books) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/to-read`, books)
+  return data
+}
+
+const getToReadBooks = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}/to-read`)
+  return data?.Data[0]?.booksToRead || []
+}
+
+const setReadingBooks = async (id, books) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/reading`, books)
+  return data
+}
+
+const getReadingBooks = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}/reading`)
+  return data?.Data[0]?.booksReading || []
+}
+
+const setReadBooks = async (id, books) => {
+  const { data } = await http.post(`${BASE_URL}/${id}/read`, books)
+  return data
+}
+
+const getReadBooks = async (id) => {
+  const { data } = await http.get(`${BASE_URL}/${id}/read`)
+  return data?.Data[0]?.booksRead || []
+}
+
 module.exports = {
   getOnlyUser,
   getUserById,
@@ -89,4 +129,13 @@ module.exports = {
 
   searchUsers,
   searchUsersNoLimits,
+
+  setFavBooks,
+  getFavBooks,
+  setToReadBooks,
+  getToReadBooks,
+  setReadingBooks,
+  getReadingBooks,
+  setReadBooks,
+  getReadBooks
 }

@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
 import {
-  View,
-  Box,
-  Stack,
-  HStack,
   Image,
   VStack,
   Text,

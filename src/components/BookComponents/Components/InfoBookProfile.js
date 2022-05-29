@@ -1,27 +1,20 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Linking } from 'react-native'
 import { AirbnbRating } from 'react-native-elements'
-
-import { useNavigation } from '@react-navigation/native'
 
 import {
   Ionicons,
   MaterialIcons,
-  Entypo,
-  Foundation,
-  AntDesign,
   MaterialCommunityIcons,
+  Entypo,
   FontAwesome,
 } from '@expo/vector-icons'
 
 import {
-  Avatar,
   Box,
   Text,
   VStack,
-  FormControl,
   Icon,
-  WarningOutlineIcon,
   HStack,
   FlatList,
   Badge,
@@ -36,11 +29,17 @@ import useAuthContext from '../../../hooks/useAuthContext'
 
 import { useFocusEffect } from '@react-navigation/native'
 
-import StatusBookButton from './StatusBookButton'
-
 //Data
-import { getAllLiteraryGenre } from '../../../services/literaryGenre/literaryGenre'
-import { getUserById } from '../../../services/user/userAPI'
+import {
+  setFavBooks,
+  getFavBooks,
+  setToReadBooks,
+  getToReadBooks,
+  setReadingBooks,
+  getReadingBooks,
+  setReadBooks,
+  getReadBooks
+} from '../../../services/user/userAPI'
 import { previousFourteenHours } from '../../../utils/functions'
 
 //Colors
@@ -57,17 +56,21 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
   const icon = COLORS.button.icon
   const buttonColor = COLORS.button.terciary
   const categoryBgColor = COLORS.button.secundary
+  const textActivated = COLORS.button.text
+  const textDisabled = COLORS.button.textDisabled
 
   //Status Book
-  const [buttonToRead, setButtonToRead] = useState(true)
+  const [notRead, setNotRead] = useState(true)
+  const [buttonToRead, setButtonToRead] = useState(false)
   const [buttonReading, setButtonReading] = useState(false)
   const [buttonRead, setButtonRead] = useState(false)
 
-  const [index, setIndex] = React.useState(0)
+  const [fav, setFav] = useState(false)
+  const [favouriteBooks, setFavouriteBooks] = useState(null)
 
-  const [show, setShow] = useState(true)
-
-  const [literaryGenres, setLiteraryGenres] = useState([])
+  const [userToReadBooks, setUserToReadBooks] = useState(null)
+  const [userReadingBooks, setUserReadingBooks] = useState(null)
+  const [userReadBooks, setUserReadBooks] = useState(null)
 
   const {
     state: { user },
@@ -75,17 +78,158 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
   useFocusEffect(
     useCallback(() => {
-      getAllLiteraryGenre()
-        .then((response) => {
-          setLiteraryGenres(response)
+      getFavBooks(user.id)
+        .then((res) => {
+          setFavouriteBooks(res)
+          setFav(res.find((book) => book._id === bookInfo?._id))
+
         })
         .catch((error) => {
           console.log(error)
-          showErrorToast('Error al agregar los géneros literarios')
         })
-      console.log(bookInfo?.photo)
-    }, [])
+
+      getToReadBooks(user.id)
+        .then((res) => {
+          setUserToReadBooks(res)
+          let response = res.find((book) => book._id === bookInfo?._id)
+
+          if (response) {
+            setButtonToRead(true)
+            setNotRead(false)
+          }
+
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      getReadingBooks(user.id)
+        .then((res) => {
+          setUserReadingBooks(res)
+          let response = res.find((book) => book._id === bookInfo?._id)
+
+          if (response) {
+            setButtonReading(true)
+            setNotRead(false)
+          }
+
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+      getReadBooks(user.id)
+        .then((res) => {
+          setUserReadBooks(res)
+          let response = res.find((book) => book._id === bookInfo?._id)
+
+          if (response) {
+            setButtonRead(true)
+            setNotRead(false)
+          }
+
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+
+    }, [bookInfo])
   )
+
+  const handleFav = async () => {
+
+    let newFavBooks = favouriteBooks
+    if (fav) {
+      setFav(false)
+      newFavBooks = favouriteBooks.filter((book) => book._id !== bookInfo?._id)
+      setFavouriteBooks(newFavBooks)
+      const response = await setFavBooks(user.id, newFavBooks)
+      console.log(response)
+    } else {
+      setFav(true)
+      newFavBooks.push(bookInfo)
+      setFavouriteBooks(newFavBooks)
+      const response = await setFavBooks(user.id, newFavBooks)
+      console.log(response)
+    }
+
+  }
+
+  const handleToRead = async () => {
+
+    let newToReadBooks = userToReadBooks
+
+    if (buttonToRead) {
+      setNotRead(true)
+      setButtonToRead(false)
+      newToReadBooks = userToReadBooks.filter((book) => book._id !== bookInfo?._id)
+      setUserToReadBooks(newToReadBooks)
+      const response = await setToReadBooks(user.id, newToReadBooks)
+      console.log(response)
+    } else {
+      setNotRead(false)
+      setButtonToRead(true)
+      newToReadBooks.push(bookInfo)
+      setUserToReadBooks(newToReadBooks)
+      const response = await setToReadBooks(user.id, newToReadBooks)
+      console.log(response)
+    }
+
+  }
+
+  const handleReading = async () => {
+
+    let newReadingBooks = userReadingBooks
+    let newReadBooks = userReadBooks
+
+    if (buttonReading) {
+      setButtonReading(false)
+      newReadingBooks = userReadingBooks.filter((book) => book._id !== bookInfo?._id)
+      setUserReadingBooks(newReadingBooks)
+      const response = await setReadingBooks(user.id, newReadingBooks)
+      console.log(response)
+
+      setButtonRead(true)
+      newReadBooks.push(bookInfo)
+      setUserReadBooks(newReadBooks)
+      const response2 = await setReadBooks(user.id, newReadBooks)
+      console.log(response2)
+
+    } else {
+
+      let newToReadBooks = userToReadBooks
+
+      if (newToReadBooks.find((book) => book._id === bookInfo?._id)) {
+        setNotRead(false)
+        setButtonToRead(false)
+        newToReadBooks = userToReadBooks.filter((book) => book._id !== bookInfo?._id)
+        setUserToReadBooks(newToReadBooks)
+        const response = await setToReadBooks(user.id, newToReadBooks)
+        console.log(response)
+      }
+
+      if(newReadBooks.find((book) => book._id === bookInfo?._id)){
+        setButtonRead(false)
+        newReadBooks = userReadBooks.filter((book) => book._id !== bookInfo?._id)
+        setUserReadBooks(newReadBooks)
+        const response = await setReadBooks(user.id, newReadBooks)
+        console.log(response)
+      }
+
+      setButtonReading(true)
+
+      if (newReadingBooks.find((book) => book._id === bookInfo?._id)) {} else {
+        newReadingBooks.push(bookInfo)
+        setUserReadingBooks(newReadingBooks)
+        const response = await setReadingBooks(user.id, newReadingBooks)
+        console.log(response)
+      }
+
+      Linking.openURL(bookInfo?.document)
+
+    }
+
+  }
 
   return (
     <Box h='100%' bg={backgroundColor} opacity='0.95'>
@@ -193,14 +337,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
                 />
               }
               borderRadius='full'
-              onPress={() => {
-                [
-                  setButtonToRead(false),
-                  setButtonReading(true),
-                  setButtonRead(false),
-                ]
-                Linking.openURL(bookInfo?.document)
-              }}
+              onPress={handleReading}
             >
               <Text fontSize='md' bold color={elementsButton}>
                 Descargar libro
@@ -215,59 +352,128 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
               icon={
                 <MaterialIcons
                   name='favorite'
-                  size={20}
-                  color={show ? icon : 'red'}
+                  size={35}
+                  color={fav ? 'red' : icon}
                 />
               }
               borderRadius='100'
               activeOpacity={0.85}
-              onPress={() => setShow(!show)}
+              onPress={handleFav}
             />
           </HStack>
 
-          {author?._id === user?.id && previousFourteenHours(bookInfo?.createdAt) ? (
-            <HStack
-              justifyContent='space-between'
-              h='30%'
-              alignItems='center'
-              mt='3'
-            >
-              <Button
-                h='95%'
-                variant='unstyled'
-                borderRadius='full'
-                startIcon={<FontAwesome name='edit' size={15} color={icon} />}
-              >
-                <Text fontSize='md' bold color={text}>
-                  Editar libro
-                </Text>
-              </Button>
-              <StatusBookButton
-                buttonRead={buttonRead}
-                setButtonRead={setButtonRead}
-                buttonReading={buttonReading}
-                setButtonReading={setButtonReading}
-                buttonToRead={buttonToRead}
-                setButtonToRead={setButtonToRead}
-              />
-            </HStack>
-          ) : (
-            <HStack
-              justifyContent='flex-end'
-              h='30%'
-              alignItems='center'
-              mt='3'
-            >
-              <StatusBookButton
-                buttonRead={buttonRead}
-                setButtonRead={setButtonRead}
-                buttonReading={buttonReading}
-                setButtonReading={setButtonReading}
-                buttonToRead={buttonToRead}
-                setButtonToRead={setButtonToRead}
-              />
-            </HStack>
-          )}
+          <HStack
+            justifyContent='space-between'
+            h='30%'
+            alignItems='center'
+            mt='3'
+          >
+            <Stack>
+              {author?._id === user?.id && previousFourteenHours(bookInfo?.createdAt) && (
+                <Button
+                  h='95%'
+                  variant='unstyled'
+                  borderRadius='full'
+                  startIcon={
+                    <FontAwesome
+                      name='edit'
+                      size={15}
+                      color={icon}
+                    />
+                  }
+                >
+                  <Text fontSize='md' bold color={text}>
+                    Editar libro
+                  </Text>
+                </Button>
+              )}
+            </Stack>
+
+            <>
+
+              {notRead && (
+                <Button
+                  h='95%'
+                  variant='ghost'
+                  borderRadius='full'
+                  startIcon={
+                    <MaterialCommunityIcons
+                      name='bookmark'
+                      size={15}
+                      color={textDisabled}
+                    />
+                  }
+                  onPress={handleToRead}
+                >
+                  <Text fontSize='md' bold color={textDisabled}>
+                    Por leer
+                  </Text>
+                </Button>
+              )}
+
+              {buttonToRead && (
+                <Button
+                  h='95%'
+                  variant='ghost'
+                  borderRadius='full'
+                  startIcon={
+                    <MaterialCommunityIcons
+                      name='bookmark-check'
+                      size={15}
+                      color={textActivated}
+                    />
+                  }
+                  onPress={handleToRead}
+                >
+                  <Text fontSize='md' bold color={textActivated}>
+                    Por leer
+                  </Text>
+                </Button>
+              )}
+
+              {buttonReading && (
+                <Button
+                  h='95%'
+                  variant='ghost'
+                  borderRadius='full'
+                  startIcon={
+                    <MaterialCommunityIcons
+                      name='book-open-page-variant'
+                      size={15}
+                      color={icon}
+                    />
+                  }
+                  onPress={handleReading}
+                >
+                  <Text fontSize='md' bold color={textActivated}>
+                    Leyendo...
+                  </Text>
+                </Button>
+              )}
+
+              {buttonRead && (
+                <Button
+                  h='95%'
+                  variant='unstyled'
+                  borderRadius='full'
+                  startIcon={
+                    <MaterialCommunityIcons
+                      name='sticker-check-outline'
+                      size={15}
+                      color={icon}
+                    />
+                  }
+                  alignItems='center'
+                >
+                  <Text fontSize='md' bold color={textActivated}>
+                    Leído
+                  </Text>
+                </Button>
+              )}
+            </>
+
+          </HStack>
+
         </VStack>
       </HStack>
     </Box>

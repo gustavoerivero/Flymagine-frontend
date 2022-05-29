@@ -184,7 +184,7 @@ const Search = ({ navigation }) => {
 
               <TabView.Item>
                 <VStack h="77%" w={layout.width} p={2} bg={COLORS.base}>
-                  {books.length ? (
+                  {books.length > 0 ? (
                     <FlatList
                       showsVerticalScrollIndicator={false}
                       data={books}
