@@ -15,11 +15,13 @@ import {
 import { useFocusEffect } from '@react-navigation/native'
 
 import { getFollows, getFollowers } from '../../../services/user/userAPI'
+import { getBooksByUser } from '../../../services/book/bookAPI'
 
 const InfoUserProfile = ({ userInfo, navigation }) => {
 
   const [follows, setFollows] = useState(null)
   const [followers, setFollowers] = useState(null)
+  const [books, setBooks] = useState(null)
 
   useFocusEffect(
     useCallback(() => {
@@ -34,6 +36,13 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
         getFollows(userInfo?._id)
           .then(res => {
             setFollows(res?.Data?.follows)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+        getBooksByUser(userInfo?._id)
+          .then(res => {
+            setBooks(res)
           })
           .catch(error => {
             console.log(error)
@@ -117,6 +126,23 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                 {''} Seguidores
               </Text>
             </Link>
+            {userInfo?.idRole && userInfo?.idRole?.name === 'Writter' &&
+              <Link
+                onPress={() => navigation?.navigate('BooksPage', { userId: userInfo?._id, books: books })}
+              >
+                <Text
+                  fontSize='md'
+                >
+                  <Text
+                    fontSize='lg'
+                    bold
+                  >
+                    {books ? books?.length : 0}
+                  </Text>
+                  {''} {books?.length === 1 ? 'Libro' : 'Libros'}
+                </Text>
+              </Link>
+            }
           </HStack>
         </VStack>
       </Stack>

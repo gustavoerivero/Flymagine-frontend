@@ -17,11 +17,11 @@ import useAuthContext from '../../hooks/useAuthContext'
 import useLoading from '../../hooks/useLoading'
 import useCustomToast from '../../hooks/useCustomToast'
 import { getUserById } from '../../services/user/userAPI'
-import { updateComment } from '../../services/comments/commentPostAPI'
+import { updateComment } from '../../services/comments/commentReviewAPI'
 
 import { commentSchema, commentDefaultValue } from '../../utils/formValidations/dataCommentValidation'
 
-const ModifyCommentPage = ({ navigation, route }) => {
+const CommentReviewEditPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
@@ -44,6 +44,17 @@ const ModifyCommentPage = ({ navigation, route }) => {
 
   const _handleChange = (item, value) => handleChange(comment, setComment, item, value)
 
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+    reset,
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(commentSchema),
+    defaultvalue: commentDefaultValue,
+  })
+
   useFocusEffect(
     useCallback(() => {
 
@@ -58,17 +69,6 @@ const ModifyCommentPage = ({ navigation, route }) => {
     }, [])
   )
 
-  const {
-    control,
-    handleSubmit,
-    formState: { isValid },
-    reset,
-  } = useForm({
-    mode: 'onChange',
-    resolver: yupResolver(commentSchema),
-    defaultvalue: commentDefaultValue,
-  })
-  
   const onSubmit = async (values) => {
     startLoading()
     try {
@@ -147,4 +147,4 @@ const ModifyCommentPage = ({ navigation, route }) => {
   )
 }
 
-export default ModifyCommentPage
+export default CommentReviewEditPage
