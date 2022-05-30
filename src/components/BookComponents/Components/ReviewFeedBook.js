@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useWindowDimensions } from 'react-native'
 import NewReviewModal from './NewReviewModal'
 
@@ -6,26 +6,15 @@ import { AntDesign } from '@expo/vector-icons'
 
 import {
   ScrollView,
-  Avatar,
   Box,
   Text,
-  VStack,
-  FormControl,
   Icon,
-  WarningOutlineIcon,
-  HStack,
-  FlatList,
-  Badge,
   Stack,
   Image,
   Fab,
-  Modal,
-  Input,
-  Button,
 } from 'native-base'
 
 //image
-import newplanet from '../../../../assets/new-planet.png'
 import planet from '../../../../assets/planet.png'
 
 //Components
@@ -36,7 +25,6 @@ import COLORS from '../../styled-components/Colors'
 
 const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
   const [showModal, setShowModal] = useState(false)
-  const [index, setIndex] = useState(0)
   const layout = useWindowDimensions()
 
   return (
@@ -51,9 +39,9 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
       <Stack>
         <ScrollView>
           {reviewData.length > 0 && reviewData ? (
-            reviewData?.map((reviewData, id) => (
+            reviewData?.map((review, id) => (
               <Stack padding={1} key={id}>
-                <Review navigation={navigation} review={reviewData} />
+                <Review navigation={navigation} dataReview={review} />
               </Stack>
             ))
           ) : (
@@ -89,12 +77,27 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
       <Fab
         renderInPortal={false}
         shadow={2}
-        size='lg'
-        icon={<Icon color='white' as={<AntDesign name='plus' />} size='2xl' />}
+        icon={
+          <Icon 
+            color='white' 
+            as={
+              <AntDesign 
+                name='plus' 
+                size={24}
+              />
+            } 
+            size={7}
+          />
+        }
         onPress={() => setShowModal(true)}
         bgColor={COLORS.button.primary}
       />
-      <NewReviewModal showModal={showModal} setShowModal={setShowModal} />
+      <NewReviewModal 
+        navigation={navigation}
+        showModal={showModal} 
+        setShowModal={setShowModal} 
+        book={bookInfo}
+      />
     </Box>
   )
 }
