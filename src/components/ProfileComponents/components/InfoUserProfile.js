@@ -128,7 +128,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
             </Link>
             {userInfo?.idRole && userInfo?.idRole?.name === 'Writter' &&
               <Link
-                onPress={() => navigation?.navigate('MyFollower', { userId: userInfo?._id, followers: followers })}
+                onPress={() => navigation?.navigate('BooksPage', { userId: userInfo?._id, books: books })}
               >
                 <Text
                   fontSize='md'

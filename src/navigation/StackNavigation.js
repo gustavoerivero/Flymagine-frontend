@@ -16,6 +16,7 @@ import UserProfilePage from '../pages/User/UserProfilePage'
 import EditProfile from '../pages/User/EditProfile'
 import Follows from '../pages/User/Follows'
 import Followers from '../pages/User/Followers'
+import BooksPage from '../pages/User/BooksPage'
 
 // Book Pages
 import MyBook from '../pages/Book/MyBook'
@@ -143,6 +144,14 @@ const stackRoutes = [
     options: {
       title: 'Seguidos',
     },
+  },
+  {
+    name: 'BooksPage',
+    component: BooksPage,
+    requireAuth: true,
+    options: {
+      title: 'Libros',
+    }
   },
   {
     name: 'BookProfilePage',
