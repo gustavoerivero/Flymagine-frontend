@@ -319,6 +319,7 @@ const RegisterForm = ({ navigation }) => {
                       placeholder='Dirección de vivienda'
                       onChangeText={onChange}
                       value={value}
+                      textAlignVertical='center'
                       borderColor={errors?.address && value !== '' ? 'red.500' : 'grey'}
                       {...field}
                       InputLeftElement={
@@ -413,6 +414,7 @@ const RegisterForm = ({ navigation }) => {
                     </FormControl.Label>
                     <StyledArea
                       placeholder='Biografía'
+                      textAlignVertical='center'
                       onChangeText={onChange}
                       value={value}
                       borderColor={errors?.biography && value !== '' ? 'red.500' : 'grey'}
