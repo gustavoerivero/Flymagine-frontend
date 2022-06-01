@@ -88,7 +88,7 @@ const BooksPage = ({ navigation, route }) => {
                 size={7}
               />
             }
-            onPress={() => console.log('Deja de presionarme!')}
+            onPress={() => navigation?.navigate('RegisterBook')}
             bgColor={COLORS.button.primary}
           />
         )}

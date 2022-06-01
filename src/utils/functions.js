@@ -71,22 +71,16 @@ const phoneValidator = (phone) => {
 
 const selectOneFile = async () => {
 
-	await DocumentPicker.getDocumentAsync({
+	let result = await DocumentPicker.getDocumentAsync({
 		type: 'application/pdf',
 		allowsMultipleSelection: false
-	}).
-	then((result) => {
-		console.log(`Document selected: ${result.name}`)
-		console.log(`Document uri: ${result.uri}`)
-		console.log(`Document type: ${result.type}`)
-		console.log(`Document size: ${result.size}`)
-
-		return result
-
-	}).catch(error => {
-		console.log(`We have an error: ${error}`)
-		return null
 	})
+
+	if (!result.cancelled) {
+		return result
+	}
+
+	return null
 
 }
 
