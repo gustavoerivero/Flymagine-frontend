@@ -27,6 +27,7 @@ import useCustomToast from '../../../hooks/useCustomToast'
 import useLoading from '../../../hooks/useLoading'
 
 import { Button } from 'react-native-elements'
+import mime from 'mime'
 
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -35,7 +36,7 @@ import StyledField from '../Components/StyledField'
 import StyledArea from '../Components/StyledArea'
 
 import { getAllLiteraryGenre } from '../../../services/literaryGenre/literaryGenre'
-import { 
+import {
   createBook,
   uploadImage,
   uploadDocument,
@@ -59,7 +60,7 @@ const BookRegisterForm = ({ navigation }) => {
   const [image, setImage] = useState(null)
   const [document, setDocument] = useState(null)
 
-  const [literaryGenres, setLiteraryGenres] = useState([])
+  const [litGenres, setLitGenres] = useState([])
 
   const [showDatePicker, setShowDatePicker] = useState(false)
 
@@ -95,7 +96,7 @@ const BookRegisterForm = ({ navigation }) => {
 
       getAllLiteraryGenre()
         .then(res => {
-          setLiteraryGenres(res)
+          setLitGenres(res)
         })
         .catch(error => {
           console.log(error)
@@ -104,7 +105,7 @@ const BookRegisterForm = ({ navigation }) => {
     }, [])
   )
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     startLoading()
 
     if (data.name === '') {
@@ -144,14 +145,47 @@ const BookRegisterForm = ({ navigation }) => {
     }
 
     try {
-      
-      console.log(data)
-      console.log(isValid)
 
+      const book = createBookAdapter({
+        idUser: user.id,
+        name: data.name,
+        synopsis: data.synopsis,
+        creationDate: data.creationDate,
+      })
+      const response = await createBook(book)
+      const idBook = response?.Data?._id
 
+      let imageUri = Platform.OS === 'ios' ? 'file:///' + image.uri.split('file:/').join('') : image.uri
+      let formData = new FormData()
+      formData.append('photo', {
+        uri: imageUri,
+        type: mime.getType(imageUri),
+        name: imageUri.split('/').pop()
+      })
+      const responseImage = await uploadImage(idBook, formData)
+      console.log('Second upload', responseImage)
+        
+      let documentUri = Platform.OS === 'ios' ? 'file:///' + document.uri.split('file:/').join('') : document.uri
+      let formDataDocument = new FormData()
+      formDataDocument.append('document', {
+        uri: documentUri,
+        type: mime.getType(documentUri),
+        name: documentUri.split('/').pop()
+      })
+      const responseDocument = await uploadDocument(idBook, formDataDocument)
+      console.log('Third upload', responseDocument)
+
+      const responseGenres = await setLiteraryGenres(idBook, data.literaryGenres)
+      console.log('last upload', responseGenres)
+
+      showSuccessToast('¡Misión cumplida! El libro fue registrado correctamente')
+      reset()
+      stopLoading()
+      navigation.goBack()
 
     } catch (error) {
-      console.log(error)
+      console.log('an error', error)
+      showErrorToast('¡Misión fallida! No se pudo registrar el libro')
     }
     stopLoading()
   }
@@ -433,7 +467,7 @@ const BookRegisterForm = ({ navigation }) => {
                     <FlatList
                       horizontal
                       showsHorizontalScrollIndicator={false}
-                      data={literaryGenres}
+                      data={litGenres}
                       keyExtractor={(item) => item?._id}
                       ItemSeparatorComponent={() => <Box w={2} />}
                       renderItem={({ item }) => (

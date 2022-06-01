@@ -1,6 +1,6 @@
 const createBookAdapter = (values) => {
   return {
-    idUser: values.id,
+    idUser: values.idUser,
     name: values.name,
     sypnosis: values.synopsis,
     photo: 'none',
