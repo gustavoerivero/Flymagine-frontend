@@ -39,7 +39,8 @@ const ReadFeedProfile = ({ navigation, userInfo }) => {
     useCallback(() => {
       getReadBooks(userInfo?._id || user?.id)
         .then(res => {
-          setBooks(res)
+          let read = res.filter(book => book.status === 'A')
+          setBooks(read)
         })
         .catch(error => {
           console.log(error)

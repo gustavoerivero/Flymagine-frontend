@@ -12,13 +12,13 @@ import {
 
 import {
   Box,
+  AlertDialog,
   Text,
   VStack,
   Icon,
   HStack,
   FlatList,
   Badge,
-  Stack,
   Button,
   IconButton,
   Image,
@@ -40,6 +40,7 @@ import {
   setReadBooks,
   getReadBooks
 } from '../../../services/user/userAPI'
+import { deleteBook } from '../../../services/book/bookAPI'
 import { previousFourteenHours } from '../../../utils/functions'
 
 //Colors
@@ -72,6 +73,8 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
   const [userReadingBooks, setUserReadingBooks] = useState(null)
   const [userReadBooks, setUserReadBooks] = useState(null)
 
+  const [deleteVisible, setDeleteVisible] = useState(false)
+
   const {
     state: { user },
   } = useAuthContext()
@@ -82,7 +85,6 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
         .then((res) => {
           setFavouriteBooks(res)
           setFav(res.find((book) => book._id === bookInfo?._id))
-
         })
         .catch((error) => {
           console.log(error)
@@ -182,6 +184,8 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
     let newReadingBooks = userReadingBooks
     let newReadBooks = userReadBooks
 
+    setNotRead(false)
+
     if (buttonReading) {
       setButtonReading(false)
       newReadingBooks = userReadingBooks.filter((book) => book._id !== bookInfo?._id)
@@ -208,7 +212,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
         console.log(response)
       }
 
-      if(newReadBooks.find((book) => book._id === bookInfo?._id)){
+      if (newReadBooks.find((book) => book._id === bookInfo?._id)) {
         setButtonRead(false)
         newReadBooks = userReadBooks.filter((book) => book._id !== bookInfo?._id)
         setUserReadBooks(newReadBooks)
@@ -218,7 +222,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
       setButtonReading(true)
 
-      if (newReadingBooks.find((book) => book._id === bookInfo?._id)) {} else {
+      if (newReadingBooks.find((book) => book._id === bookInfo?._id)) { } else {
         newReadingBooks.push(bookInfo)
         setUserReadingBooks(newReadingBooks)
         const response = await setReadingBooks(user.id, newReadingBooks)
@@ -229,6 +233,19 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
     }
 
+  }
+
+  const handleDelete = async () => {
+
+    try {
+
+      const response = await deleteBook(bookInfo?._id)
+      console.log(response)
+      showSuccessToast('¡Misión cumplida! El libro fue eliminado con éxito')
+
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -364,31 +381,94 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
           <HStack
             justifyContent='space-between'
-            h='30%'
-            alignItems='center'
             mt='3'
+            maxH='30%'
           >
-            <Stack>
+            <VStack alignItems='flex-start'>
               {author?._id === user?.id && previousFourteenHours(bookInfo?.createdAt) && (
-                <Button
-                  h='95%'
-                  variant='unstyled'
-                  borderRadius='full'
-                  startIcon={
-                    <FontAwesome
-                      name='edit'
-                      size={15}
-                      color={icon}
-                    />
-                  }
-                  onPress={() => navigation.navigate('EditBook', { bookInfo })}
-                >
-                  <Text fontSize='md' bold color={text}>
-                    Editar libro
-                  </Text>
-                </Button>
+                <>
+                  <Button
+                    h='95%'
+                    variant='unstyled'
+                    borderRadius='full'
+                    startIcon={
+                      <FontAwesome
+                        name='edit'
+                        size={15}
+                        color={icon}
+                      />
+                    }
+                    onPress={() => navigation.navigate('EditBook', { bookInfo })}
+                  >
+                    <Text fontSize='md' bold color={text}>
+                      Editar libro
+                    </Text>
+                  </Button>
+
+                  <Button
+                    h='95%'
+                    variant='unstyled'
+                    borderRadius='full'
+                    startIcon={
+                      <FontAwesome
+                        name='trash'
+                        size={15}
+                        color={icon}
+                      />
+                    }
+                    onPress={() => setDeleteVisible(true)}
+                  >
+                    <Text fontSize='md' bold color={text}>
+                      Eliminar libro
+                    </Text>
+                  </Button>
+                  <AlertDialog
+                      isOpen={deleteVisible}
+                      onClose={() => {
+                        setDeleteVisible(false)
+                      }}
+                    >
+                      <AlertDialog.Content>
+                        <AlertDialog.CloseButton />
+                        <AlertDialog.Header>
+                          Eliminación de libro
+                        </AlertDialog.Header>
+                        <AlertDialog.Body>
+                          ¿Estás seguro de que quieres eliminar este
+                          libro?
+                        </AlertDialog.Body>
+                        <AlertDialog.Footer>
+                          <Button.Group space={2}>
+                            <Button
+                              variant='unstyled'
+                              colorScheme='coolGray'
+                              onPress={() => {
+                                setDeleteVisible(false)
+                              }}
+                            >
+                              Cancelar
+                            </Button>
+                            <Button
+                              colorScheme='danger'
+                              onPress={() => {
+                                try {
+                                  handleDelete()
+                                  setDeleteVisible(false)
+                                  navigation?.goBack()
+                                } catch {
+                                  showErrorToast('¡Misión fallida! No se pudo eliminar el libro')
+                                }
+                              }}
+                            >
+                              Eliminar
+                            </Button>
+                          </Button.Group>
+                        </AlertDialog.Footer>
+                      </AlertDialog.Content>
+                    </AlertDialog>
+                </>
               )}
-            </Stack>
+            </VStack>
 
             <>
 
