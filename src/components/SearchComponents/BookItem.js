@@ -36,7 +36,7 @@ const BookItem = ({ bookItem, navigation }) => {
           >
             <Image
               source={{ 
-              uri: bookItem?.photo !== 'none' ? bookItem?.photo : 'https://via.placeholder.com/300.png?text=no+image' 
+              uri: bookItem?.photo !== 'none' ? bookItem?.photo : 'https://via.placeholder.com/300/?text=no+image' 
             }}
             /*source={book}*/
               w='90%'
