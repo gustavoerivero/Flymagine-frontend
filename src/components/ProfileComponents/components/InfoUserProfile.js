@@ -7,143 +7,141 @@ import {
   Text,
   Icon,
   Link,
+  Button,
+  IconButton,
 } from 'native-base'
-import {
-  MaterialIcons,
-  FontAwesome,
-} from '@expo/vector-icons'
+import { MaterialIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 import { useFocusEffect } from '@react-navigation/native'
+import useAuthContext from '../../../hooks/useAuthContext'
 
-import { getFollows, getFollowers } from '../../../services/user/userAPI'
+import {
+  getFollows,
+  getFollowers,
+  setFollowsByUser,
+} from '../../../services/user/userAPI'
 import { getBooksByUser } from '../../../services/book/bookAPI'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
+import COLORS from '../../styled-components/Colors'
 
 const InfoUserProfile = ({ userInfo, navigation }) => {
+  const {
+    state: { user },
+  } = useAuthContext()
 
+  const [isFollow, setIsFollow] = useState(false)
   const [follows, setFollows] = useState(null)
-  const [followers, setFollowers] = useState(null)
-  const [books, setBooks] = useState(null)
 
   useFocusEffect(
     useCallback(() => {
-      if (userInfo) {
-        getFollowers(userInfo?._id)
-          .then(res => {
-            setFollowers(res?.Data)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-        getFollows(userInfo?._id)
-          .then(res => {
-            setFollows(res?.Data?.follows)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-        getBooksByUser(userInfo?._id)
-          .then(res => {
-            setBooks(res)
-          })
-          .catch(error => {
-            console.log(error)
-          })
-      }
-    }, [])
+      getFollows(user?.id)
+        .then((res) => {
+          setFollows(res?.Data?.follows)
+
+          if (follows?.find((f) => f._id === userInfo?._id)) {
+            setIsFollow(true)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }, [follows])
   )
 
+  const handleFollow = async () => {
+    let newFollows = [...follows]
+
+    if (isFollow) {
+      newFollows = newFollows.filter((f) => f._id !== userInfo?._id)
+      setIsFollow(false)
+    } else {
+      newFollows.push(userInfo)
+      setIsFollow(true)
+    }
+
+    await setFollowsByUser(user.id, newFollows)
+      .then((res) => {
+        console.log(res)
+        setFollows(res?.Data?.follows)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
   return (
-    <Box
-      px={3}
-      bgColor='white'
-      w='100%'
-    >
+    <Box px={3} bgColor='white' w='100%'>
       <Stack>
         <VStack>
-          <HStack
-            mr={3}
+          <HStack /* BIOGRAPHY */
+            mr={2}
+            pt={1}
+            w='100%'
+            alignItems='flex-start'
           >
-            <Icon
-              mt={1}
-              mr={4}
-              as={MaterialIcons}
-              name='history-edu'
-            />
-            <Text
-              fontSize='xs'
-            >
-              {userInfo ? userInfo?.biography : null}
-            </Text>
-          </HStack>
-          <HStack
-            mr={3}
-          >
-            <Icon
-              mr={4}
-              as={FontAwesome}
-              name='birthday-cake'
-            />
-            <Text
-              fontSize='xs'
-              italic
-            >
-              {userInfo ? userInfo?.birthday.split('T')[0].split('-').reverse().join('/') : '-'}
-            </Text>
-          </HStack>
-          <HStack
-            mb={2}
-            space={5}
-            alignItems='center'
-          >
-            <Link
-              onPress={() => {
-                navigation?.navigate('MyFollow', { userId: userInfo?._id, follows: follows })
-              }}
-            >
-              <Text
-                fontSize='md'
-              >
-                <Text
-                  fontSize='lg'
-                  bold
-                >
-                  {follows ? follows?.length : 0}
-                </Text>
-                {''} Siguiendo
+            <VStack w='5%' pt={0.5} alignItems='center'>
+              <Icon as={MaterialIcons} name='history-edu' />
+            </VStack>
+            <VStack w='95%' pl={2}>
+              <Text fontSize='xs' textAlign='justify'>
+                {userInfo ? userInfo?.biography : null}
               </Text>
-            </Link>
-            <Link
-              onPress={() => navigation?.navigate('MyFollower', { userId: userInfo?._id, followers: followers })}
-            >
-              <Text
-                fontSize='md'
+            </VStack>
+          </HStack>
+
+          {userInfo && userInfo?._id === user?.id ? (
+            <HStack /* FOLLOW & EDIT BUTTON */ my={2} alignItems='center'>
+              <Button
+                w='100%'
+                borderRadius='full'
+                variant='solid'
+                colorScheme='blueGray'
+                shadow={true}
+                bg={COLORS.button.terciary}
+                onPress={() => {
+                  navigation?.navigate('EditProfile')
+                }}
               >
-                <Text
-                  fontSize='lg'
-                  bold
-                >
-                  {followers ? followers?.length : 0}
+                <Text bold color={COLORS.button.text}>
+                  Editar Perfil
                 </Text>
-                {''} Seguidores
-              </Text>
-            </Link>
-            {userInfo?.idRole && userInfo?.idRole?.name === 'Writter' &&
-              <Link
-                onPress={() => navigation?.navigate('BooksPage', { userId: userInfo?._id, books: books })}
+              </Button>
+            </HStack>
+          ) : (
+            <HStack mt={2}>
+              <Button
+                borderRadius='full'
+                w='100%'
+                variant={'outline'}
+                borderColor={
+                  isFollow ? COLORS.button.secundary : COLORS.button.terciary
+                }
+                startIcon={
+                  <FontAwesome5
+                    name={isFollow ? 'user-times' : 'user-plus'}
+                    size={20}
+                    color={
+                      isFollow
+                        ? COLORS.button.secundary
+                        : COLORS.button.terciary
+                    }
+                  />
+                }
+                onPress={() => {
+                  handleFollow()
+                }}
               >
                 <Text
+                  bold
                   fontSize='md'
+                  color={
+                    isFollow ? COLORS.button.secundary : COLORS.button.terciary
+                  }
                 >
-                  <Text
-                    fontSize='lg'
-                    bold
-                  >
-                    {books ? books?.length : 0}
-                  </Text>
-                  {''} {books?.length === 1 ? 'Libro' : 'Libros'}
+                  {isFollow ? 'Dejar de seguir' : 'Seguir'}
                 </Text>
-              </Link>
-            }
-          </HStack>
+              </Button>
+            </HStack>
+          )}
         </VStack>
       </Stack>
     </Box>

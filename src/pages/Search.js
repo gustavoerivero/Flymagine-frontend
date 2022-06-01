@@ -149,7 +149,9 @@ const Search = ({ navigation }) => {
               ))}
             </Tab>
             <TabView value={index} onChange={setIndex} animationType='spring'>
-              <TabView.Item></TabView.Item>
+              <TabView.Item>
+                
+              </TabView.Item>
 
               <TabView.Item>
                 <VStack h='77%' w={layout.width} p={2} bg={COLORS.base}>
