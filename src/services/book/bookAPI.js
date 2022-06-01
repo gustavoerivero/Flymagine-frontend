@@ -69,6 +69,16 @@ const setLiteraryGenres = async (id, genres) => {
   return data
 }
 
+const updateBook = async (id, book) => {
+  const { data } = await http.put(`${BASE_URL}/${id}`, book)
+  return data
+}
+
+const deleteBook = async (id) => {
+  const { data } = await http.delete(`${BASE_URL}/${id}`)
+  return data
+}
+
 module.exports = {
   createBook,
   getBooks,
@@ -79,4 +89,6 @@ module.exports = {
   uploadImage,
   uploadDocument,
   setLiteraryGenres,
+  updateBook,
+  deleteBook
 }

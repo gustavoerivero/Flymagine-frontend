@@ -39,7 +39,8 @@ const FavFeedProfile = ({ navigation, userInfo }) => {
     useCallback(() => {
       getFavBooks(userInfo?._id || user?.id)
         .then(res => {
-          setBooks(res)
+          let favs = res.filter(book => book.status === 'A')
+          setBooks(favs)
         })
         .catch(error => {
           console.log(error)

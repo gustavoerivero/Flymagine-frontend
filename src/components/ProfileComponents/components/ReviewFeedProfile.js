@@ -43,7 +43,8 @@ const ReviewFeedProfile = ({ navigation, userInfo }) => {
 
       getReviewByUser(userInfo._id || user._id)
         .then(res => {
-          setReviews(res)
+          let revs = res.filter(review => review.idBook.status === 'A')
+          setReviews(revs)
         })
         .catch(err => {
           console.log(err)
