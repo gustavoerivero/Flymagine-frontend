@@ -381,6 +381,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
                       color={icon}
                     />
                   }
+                  onPress={() => navigation.navigate('EditBook', { bookInfo })}
                 >
                   <Text fontSize='md' bold color={text}>
                     Editar libro
