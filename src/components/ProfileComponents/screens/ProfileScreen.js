@@ -10,20 +10,19 @@ import { getUserById } from '../../../services/user/userAPI'
 import TabContainerProfile from '../components/TabContainerProfile'
 
 const ProfileScreen = ({ navigation, userData }) => {
-
   const [userInfo, setUserInfo] = useState(null)
 
   const {
-    state: { user }
+    state: { user },
   } = useAuthContext()
 
   useFocusEffect(
     useCallback(() => {
       getUserById(userData || user?.id)
-        .then(res => {
+        .then((res) => {
           setUserInfo(res?.Data)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     }, [])
@@ -31,23 +30,13 @@ const ProfileScreen = ({ navigation, userData }) => {
 
   return (
     <View>
-      <HeaderProfile
-        navigation={navigation}
-        userInfo={userInfo}
-      />
       {userInfo && (
         <>
-          <InfoUserProfile
-            userInfo={userInfo}
-            navigation={navigation}
-          />
-          <TabContainerProfile
-            navigation={navigation}
-            userInfo={userInfo}
-          />
+          <HeaderProfile navigation={navigation} userInfo={userInfo} />
+          <InfoUserProfile userInfo={userInfo} navigation={navigation} />
+          <TabContainerProfile navigation={navigation} userInfo={userInfo} />
         </>
       )}
-
     </View>
   )
 }

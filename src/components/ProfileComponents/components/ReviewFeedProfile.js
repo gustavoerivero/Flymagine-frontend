@@ -1,11 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
-import {
-  Image,
-  VStack,
-  Text,
-  ScrollView,
-} from 'native-base'
+import { Image, VStack, Text, ScrollView, FlatList, Stack } from 'native-base'
 import { useWindowDimensions } from 'react-native'
 import COLORS from '../../styled-components/Colors'
 import DontKnow from '../../../../assets/images/dontknow.png'
@@ -21,7 +16,6 @@ const wait = (timeout) => {
 }
 
 const ReviewFeedProfile = ({ navigation, userInfo }) => {
-
   const layout = useWindowDimensions()
 
   const [refreshing, setRefreshing] = useState(false)
@@ -32,7 +26,7 @@ const ReviewFeedProfile = ({ navigation, userInfo }) => {
   }, [])
 
   const {
-    state: { user }
+    state: { user },
   } = useAuthContext()
 
   const [books, setBooks] = useState([])
@@ -40,59 +34,60 @@ const ReviewFeedProfile = ({ navigation, userInfo }) => {
 
   useFocusEffect(
     useCallback(() => {
-
       getReviewByUser(userInfo._id || user._id)
-        .then(res => {
-          let revs = res.filter(review => review.idBook.status === 'A')
+        .then((res) => {
+          let revs = res.filter((review) => review.idBook.status === 'A')
           setReviews(revs)
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
-
     }, [])
   )
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
+    <VStack
+      minH={layout.height * 0.5}
+      minW={layout.width}
+      pb={layout.height * 0.2}
+      mb={layout.height * 0.2}
+      px={1}
     >
-      <VStack
-        space={2}
-        minH={layout.height + 300}
-        minW={layout.width}
-        m={2}
-        pr={4}
-        pb={layout.height * .2}
-        mb={layout.height * .2}
-      >
-        {reviews?.length > 0 ? reviews.map((review, index) => (
-          <ReviewItem 
-            key={index}
-            dataReview={review}
-            navigation={navigation}
+      {reviews?.length > 0 ? (
+        <FlatList
+          py={2}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          showsVerticalScrollIndicator={false}
+          data={reviews}
+          keyExtractor={(item) => item?._id}
+          renderItem={({ item }) => (
+            <Stack p={1}>
+              <ReviewItem
+                key={item?._id}
+                dataReview={item}
+                navigation={navigation}
+              />
+            </Stack>
+          )}
+        />
+      ) : (
+        <VStack alignItems='center'>
+          <Image
+            source={DontKnow}
+            alt='DontKnow'
+            resizeMode='contain'
+            size={300}
           />
-        )) : (
-          <VStack alignItems='center'>
-            <Image
-              source={DontKnow}
-              alt='DontKnow'
-              resizeMode='contain'
-              size={300}
-            />
-            <Text bold textAlign='center' color={COLORS.primary}>
-              {user.id === userInfo?._id ? 'No haz realizado alguna review aún...' : 'Este usuario no tiene ha hecho alguna review aún...'}
-            </Text>
-          </VStack>
-        )}
-      </VStack>
-
-    </ScrollView>
+          <Text bold textAlign='center' color={COLORS.primary}>
+            {user.id === userInfo?._id
+              ? 'No haz realizado alguna review aún...'
+              : 'Este usuario no tiene ha hecho alguna review aún...'}
+          </Text>
+        </VStack>
+      )}
+    </VStack>
   )
 }
 

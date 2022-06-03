@@ -1,57 +1,65 @@
 import React from 'react'
 import {
   View,
-  Text,
   StyleSheet,
-  Modal
 } from 'react-native'
 
 import {
-  Button,
   Divider,
 } from 'react-native-elements'
 
-const Dialog = ({ visible, setVisible, setChoice, content, toNavigate, params, cancelButton, navigation }) => {
+import {
+  Text,
+  FormControl,
+  Modal,
+  Button,
+  TextArea,
+} from 'native-base'
+
+import COLORS from './styled-components/Colors'
+
+const Dialog = ({ visible, setVisible, content, navigation }) => {
 
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={visible}
-      onRequestClose={() => {
-        setVisible(!visible)
-      }}
-    >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            {content}
+     <Modal isOpen={visible} onClose={() => setVisible(false)} animationType='slide'
+      transparent={true}>
+      <Modal.Content width='90%'>
+        <Modal.CloseButton />
+        <Modal.Header bg={COLORS.primary}>
+          <Text bold color={COLORS.base} fontSize={'md'}>
+            Hay notificaciones sin leer
           </Text>
-          <View style={styles.buttonContainer}>
+        </Modal.Header>
+        <Modal.Body>
+          <Text>{content}</Text>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
             <Button
-              title='Aceptar'
-              containerStyle={styles.buttonDialog}
+              variant='ghost'
+              colorScheme='blueGray'
               onPress={() => {
-                setVisible(!visible)
-                setChoice(true)
-                if (toNavigate)
-                  params ? navigation?.navigate(toNavigate, { props: params }) : navigation?.navigate(toNavigate)
+                setVisible(false)
               }}
-            />
-            {cancelButton &&
-              <Button
-                title='Cancelar'
-                containerStyle={styles.buttonDialog}
-                buttonStyle={{ backgroundColor: 'rgba(125, 50, 140, .75)' }}
-                onPress={() => {
-                  setVisible(!visible)
-                  setChoice(false)
-                }}
-              />
-            }
-          </View>
-        </View>
-      </View>
+            >
+              Cancelar
+            </Button>
+            <Button
+              bgColor={COLORS.button.primary}
+              size={'md'}
+              minW={'30%'}
+              onPress={() => {
+                setVisible(false)
+              }}
+            >
+              <Text bold color={COLORS.base} fontSize={'sm'}>
+                Aceptar
+              </Text>
+            </Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
     </Modal>
   )
 }
@@ -59,22 +67,22 @@ const Dialog = ({ visible, setVisible, setChoice, content, toNavigate, params, c
 const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
+    textAlign: 'center',
     color: '#000',
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 22
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 20,
     padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
+    alignItems: 'center',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2

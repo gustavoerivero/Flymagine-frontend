@@ -1,11 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
-import {
-  Image,
-  VStack,
-  Text,
-  ScrollView,
-} from 'native-base'
+import { Image, VStack, Text, ScrollView, Stack, FlatList } from 'native-base'
 import { useWindowDimensions } from 'react-native'
 import COLORS from '../../styled-components/Colors'
 import DontKnow from '../../../../assets/images/dontknow.png'
@@ -19,7 +14,6 @@ const wait = (timeout) => {
 }
 
 const FavFeedProfile = ({ navigation, userInfo }) => {
-
   const layout = useWindowDimensions()
 
   const [refreshing, setRefreshing] = useState(false)
@@ -30,7 +24,7 @@ const FavFeedProfile = ({ navigation, userInfo }) => {
   }, [])
 
   const {
-    state: { user }
+    state: { user },
   } = useAuthContext()
 
   const [books, setBooks] = useState([])
@@ -38,56 +32,59 @@ const FavFeedProfile = ({ navigation, userInfo }) => {
   useFocusEffect(
     useCallback(() => {
       getFavBooks(userInfo?._id || user?.id)
-        .then(res => {
-          let favs = res.filter(book => book.status === 'A')
+        .then((res) => {
+          let favs = res.filter((book) => book.status === 'A')
           setBooks(favs)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     }, [])
   )
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
+    <VStack
+      px={1}
+      minH={layout.height * 0.5}
+      minW={layout.width}
+      pb={layout.height * 0.2}
+      mb={layout.height * 0.2}
     >
-      <VStack
-        space={2}
-        minH={layout.height + 300}
-        minW={layout.width}
-        m={2}
-        pr={4}
-        pb={layout.height * .2}
-        mb={layout.height * .2}
-      >
-        {books?.length > 0 ? books.map((book, index) => (
-          <BookItem
-            key={index}
-            bookItem={book}
-            navigation={navigation}
+      {books?.length > 0 ? (
+        <FlatList
+          py={2}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          showsVerticalScrollIndicator={false}
+          data={books}
+          keyExtractor={(item) => item?._id}
+          renderItem={({ item }) => (
+            <Stack p={0.5}>
+              <BookItem
+                key={item?._id}
+                bookItem={item}
+                navigation={navigation}
+              />
+            </Stack>
+          )}
+        />
+      ) : (
+        <VStack alignItems='center'>
+          <Image
+            source={DontKnow}
+            alt='DontKnow'
+            resizeMode='contain'
+            size={300}
           />
-        )) : (
-          <VStack alignItems='center'>
-            <Image
-              source={DontKnow}
-              alt='DontKnow'
-              resizeMode='contain'
-              size={300}
-            />
-            <Text bold textAlign='center' color={COLORS.primary}>
-              {user.id === userInfo?._id ? 'No tienes libros favoritos aún...' : 'Este usuario no tiene algún libro favorito...'}
-            </Text>
-          </VStack>
-        )}
-      </VStack>
-
-    </ScrollView>
+          <Text bold textAlign='center' color={COLORS.primary}>
+            {user.id === userInfo?._id
+              ? 'No tienes libros favoritos aún...'
+              : 'Este usuario no tiene algún libro favorito...'}
+          </Text>
+        </VStack>
+      )}
+    </VStack>
   )
 }
 
