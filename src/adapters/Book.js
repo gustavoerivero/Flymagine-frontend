@@ -9,6 +9,16 @@ const createBookAdapter = (values) => {
   }
 }
 
+const updateBookAdapter = (values) => {
+  return {
+    idUser: values.idUser,
+    name: values.name,
+    sypnosis: values.synopsis,
+    creationDate: values.creationDate
+  }
+}
+
 module.exports = {
   createBookAdapter,
+  updateBookAdapter,
 }
