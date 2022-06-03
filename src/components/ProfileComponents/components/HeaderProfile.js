@@ -39,7 +39,6 @@ const HeaderProfile = ({ userInfo, navigation }) => {
         getFollowers(userInfo?._id)
           .then((res) => {
             setFollowers(res?.Data)
-            console.log('SEGUIDORES', res?.Data)
           })
           .catch((error) => {
             console.log(error)
@@ -47,7 +46,6 @@ const HeaderProfile = ({ userInfo, navigation }) => {
         getFollows(userInfo?._id)
           .then((res) => {
             setFollows(res?.Data?.follows)
-            console.log('SIGUIENDO', res?.Data?.follows)
           })
           .catch((error) => {
             console.log(error)
@@ -55,7 +53,6 @@ const HeaderProfile = ({ userInfo, navigation }) => {
         getBooksByUser(userInfo?._id)
           .then((res) => {
             setBooks(res)
-            console.log('LIBROS', res)
           })
           .catch((error) => {
             console.log(error)

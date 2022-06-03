@@ -30,7 +30,7 @@ const BookItem = ({ bookItem, navigation }) => {
         navigation?.navigate('BookProfilePage', { book: bookItem?._id })
       }}
     >
-      <Box maxH={layout.height * .20} w='100%' mb={2} borderRadius='lg' bg={COLORS.secundary} shadow={1}>
+      <Box maxH={layout.height * .20} w='100%' mb={1} borderRadius='lg' bg={COLORS.secundary} shadow={1}>
         <HStack h='100%' w='100%' justifyContent='center' alignItems='center'>
           <VStack
             h='100%'

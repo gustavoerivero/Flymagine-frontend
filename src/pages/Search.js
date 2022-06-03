@@ -12,6 +12,7 @@ import {
   Box,
   FlatList,
   Badge,
+  StatusBar,
 } from 'native-base'
 import { Tab, TabView } from '@rneui/themed'
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
@@ -22,14 +23,19 @@ import COLORS from '../components/styled-components/Colors'
 import UserItem from '../components/SearchComponents/UserItem'
 import BookItem from '../components/SearchComponents/BookItem'
 import Post from '../components/Post/Post'
+import FoundCard from '../components/SearchComponents/FoundCard'
 
 import { searchUsersNoLimits } from '../services/user/userAPI'
 import { searchBooks } from '../services/book/bookAPI'
 import { searchHashtag } from '../services/hashtag/hashtagAPI'
 import { searchPostByHashtags } from '../services/post/postAPI'
 
+//image
 import Pana from '../../assets/images/pana.png'
 import DontKnow from '../../assets/images/dontknow.png'
+import userfound from '../../assets/images/userfound.png'
+import bookfound from '../../assets/images/bookfound.png'
+import postfound from '../../assets/images/postfound.png'
 
 const Search = ({ navigation }) => {
   const layout = useWindowDimensions()
@@ -44,19 +50,20 @@ const Search = ({ navigation }) => {
 
   return (
     <Box maxH={layout.height} bg={COLORS.base}>
+      <StatusBar animated={true} backgroundColor={COLORS.primary}/>
       <VStack alignItems='center'>
         <Stack
           bgColor={COLORS.primary}
           alignItems='flex-start'
           w='100%'
-          p={4}
+          p={3}
           pl={6}
         >
-          <Text bold fontSize={20} color='white'>
+          <Text bold fontSize='lg' color='white'>
             Descubre nuevos mundos...
           </Text>
         </Stack>
-        <Stack bgColor={COLORS.primary} w='100%' alignItems='center' pb={2}>
+        <Stack bgColor={COLORS.primary} w='100%' alignItems='center' pb={3}>
           <StyledField
             placeholder='¿Qué estás buscando?'
             onChangeText={(text) => {
@@ -87,7 +94,9 @@ const Search = ({ navigation }) => {
                       searchPostByHashtags(hashtags)
                         .then((res) => {
                           let pubs = res.map((element) => element.idPost)
-                          let pubsActive = pubs.filter((pub) => pub.status === 'A')
+                          let pubsActive = pubs.filter(
+                            (pub) => pub.status === 'A'
+                          )
                           setPosts(pubsActive || [])
                         })
                         .catch((err) => {
@@ -150,7 +159,29 @@ const Search = ({ navigation }) => {
             </Tab>
             <TabView value={index} onChange={setIndex} animationType='spring'>
               <TabView.Item>
-                
+                <VStack p={2}>
+                  {users?.length > 0 && (
+                    <FoundCard
+                      imageCard={userfound}
+                      section={'Usuarios'}
+                      index={setIndex}
+                    />
+                  )}
+                  {books?.length > 0 && (
+                    <FoundCard
+                      imageCard={bookfound}
+                      section={'Libros'}
+                      index={setIndex}
+                    />
+                  )}
+                  {posts?.length > 0 && (
+                    <FoundCard
+                      imageCard={postfound}
+                      section={'Publicaciones'}
+                      index={setIndex}
+                    />
+                  )}
+                </VStack>
               </TabView.Item>
 
               <TabView.Item>

@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl, useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { VStack, Box, StatusBar, FlatList} from 'native-base'
+import { VStack, Box, StatusBar, FlatList, Stack } from 'native-base'
 
 //Components
 import Post from '../components/Post/Post'
@@ -21,9 +21,8 @@ const STYLES = ['default', 'dark-content', 'light-content']
 const TRANSITIONS = ['fade', 'slide', 'none']
 
 const HomeView = ({ navigation }) => {
-
   const layout = useWindowDimensions()
-  
+
   const {
     state: { user },
   } = useAuthContext()
@@ -41,27 +40,26 @@ const HomeView = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-
       getFollows(user?.id)
-        .then(res => {
+        .then((res) => {
           setFollows(res?.Data?.follows)
 
           let followsReceived = res?.Data?.follows
 
           if (followsReceived?.length >= 0) {
-            let f = followsReceived.map(follow => follow._id)
+            let f = followsReceived.map((follow) => follow._id)
             f.push(user?.id)
 
             getFeed(f)
-              .then(res => {
+              .then((res) => {
                 setPosts(res?.Data)
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err)
               })
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     }, [])
@@ -69,36 +67,32 @@ const HomeView = ({ navigation }) => {
 
   const [hidden, setHidden] = useState(false)
   const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0])
-  const [statusBarTransition, setStatusBarTransition] = useState(TRANSITIONS[0])
-
+  const [statusBarTransition, setStatusBarTransition] = useState(
+    TRANSITIONS[0]
+  )
 
   return (
     <Box w={layout.width}>
-      <StatusBar animated={true} backgroundColor={COLORS.primary}/>
+      <StatusBar animated={true} backgroundColor={COLORS.primary} />
       <TopBar />
-        <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
-          {posts && (
-            <FlatList
+      <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
+        {posts && (
+          <FlatList
             py={2}
             refreshControl={
-              <RefreshControl
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
             showsVerticalScrollIndicator={false}
             data={posts}
             keyExtractor={(item) => item?._id}
             renderItem={({ item }) => (
-              <Post
-              key={item._id}
-              post={item}
-              navigation={navigation}
-            />
+              <Stack p={0.5}>
+                <Post key={item._id} post={item} navigation={navigation} />
+              </Stack>
             )}
-          /> 
-          )}
-        </VStack>
+          />
+        )}
+      </VStack>
     </Box>
   )
 }

@@ -74,6 +74,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
         <VStack>
           <HStack /* BIOGRAPHY */
             mr={2}
+            mb={2}
             pt={1}
             w='100%'
             alignItems='flex-start'
@@ -82,7 +83,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
               <Icon as={MaterialIcons} name='history-edu' />
             </VStack>
             <VStack w='95%' pl={2}>
-              <Text fontSize='xs' textAlign='justify'>
+              <Text fontSize='xs' /*textAlign='justify'*/>
                 {userInfo ? userInfo?.biography : null}
               </Text>
             </VStack>

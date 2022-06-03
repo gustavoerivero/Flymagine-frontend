@@ -62,7 +62,7 @@ const bottomRoutes = [
   },
   {
     name: 'Notifications',
-    component: BookProfilePage,
+    component: NotificationsPage,
     requireAuth: true,
     Icon: ({ color, size }) => (
       <Ionicons

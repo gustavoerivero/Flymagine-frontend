@@ -1,11 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
-import {
-  Image,
-  VStack,
-  Text,
-  ScrollView,
-} from 'native-base'
+import { Image, VStack, Text, ScrollView, FlatList, Stack } from 'native-base'
 import { useWindowDimensions } from 'react-native'
 import COLORS from '../../styled-components/Colors'
 import DontKnow from '../../../../assets/images/dontknow.png'
@@ -19,7 +14,6 @@ const wait = (timeout) => {
 }
 
 const ToReadFeedProfile = ({ navigation, userInfo }) => {
-
   const layout = useWindowDimensions()
 
   const [refreshing, setRefreshing] = useState(false)
@@ -30,7 +24,7 @@ const ToReadFeedProfile = ({ navigation, userInfo }) => {
   }, [])
 
   const {
-    state: { user }
+    state: { user },
   } = useAuthContext()
 
   const [books, setBooks] = useState([])
@@ -38,11 +32,11 @@ const ToReadFeedProfile = ({ navigation, userInfo }) => {
   useFocusEffect(
     useCallback(() => {
       getToReadBooks(userInfo?._id || user?.id)
-        .then(res => {
-          let toRead = res.filter(book => book.status === 'A')
+        .then((res) => {
+          let toRead = res.filter((book) => book.status === 'A')
           setBooks(toRead)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
     }, [])
@@ -51,28 +45,36 @@ const ToReadFeedProfile = ({ navigation, userInfo }) => {
   return (
     <ScrollView
       refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
     >
       <VStack
-        space={2}
-        minH={layout.height + 300}
+        px={1}
+        minH={layout.height * 0.5}
         minW={layout.width}
-        m={2}
-        pr={4}
-        pb={layout.height * .2}
-        mb={layout.height * .2}
+        pb={layout.height * 0.2}
+        mb={layout.height * 0.2}
       >
-        {books?.length > 0 ? books.map((book, index) => (
-          <BookItem
-            key={index}
-            bookItem={book}
-            navigation={navigation}
+        {books?.length > 0 ? (
+          <FlatList
+            py={2}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            showsVerticalScrollIndicator={false}
+            data={books}
+            keyExtractor={(item) => item?._id}
+            renderItem={({ item }) => (
+              <Stack p={0.5}>
+                <BookItem
+                  key={item?._id}
+                  bookItem={item}
+                  navigation={navigation}
+                />
+              </Stack>
+            )}
           />
-        )) : (
+        ) : (
           <VStack alignItems='center'>
             <Image
               source={DontKnow}
@@ -81,12 +83,13 @@ const ToReadFeedProfile = ({ navigation, userInfo }) => {
               size={300}
             />
             <Text bold textAlign='center' color={COLORS.primary}>
-              {user.id === userInfo?._id ? 'No tienes libros por leer aún...' : 'Este usuario no tiene libros que desee leer...'}
+              {user.id === userInfo?._id
+                ? 'No tienes libros por leer aún...'
+                : 'Este usuario no tiene libros que desee leer...'}
             </Text>
           </VStack>
         )}
       </VStack>
-
     </ScrollView>
   )
 }
