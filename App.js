@@ -1,19 +1,23 @@
-import { StyleSheet, View } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { NativeBaseProvider } from 'native-base'
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { AuthProvider } from './src/context/AuthContext'
+import StackNavigation from './src/navigation/StackNavigation'
 
-import LoginForm from './pages/LoginForm'
-
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <LoginForm />
-    </View>
+    <SafeAreaProvider>
+        <NavigationContainer>
+          <NativeBaseProvider>
+            <AuthProvider>
+              <SafeAreaView style={{ flex: 1 }}>
+                <StackNavigation />
+              </SafeAreaView>
+            </AuthProvider>
+          </NativeBaseProvider>
+        </NavigationContainer>
+    </SafeAreaProvider>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-})
+export default App
