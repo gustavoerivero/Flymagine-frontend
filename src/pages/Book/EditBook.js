@@ -7,7 +7,8 @@ const EditBook = ({ navigation, route }) => {
   return (
     <View>
       <EditBookForm
-        navigation={navigation} bookData={ route?.params?.bookInfo }
+        navigation={navigation}
+        bookData={ route?.params?.bookInfo }
       />
     </View>
   )

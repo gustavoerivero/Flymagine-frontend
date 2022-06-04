@@ -5,7 +5,11 @@ import {
   selectOneFile,
   permisionFunction,
 } from '../../../utils/functions'
-import { TouchableOpacity, ImageBackground, useWindowDimensions } from 'react-native'
+import {
+  TouchableOpacity,
+  ImageBackground,
+  useWindowDimensions,
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import {
@@ -46,7 +50,7 @@ import {
 
 import {
   registerBookSchema,
-  registerBookDefaultValue
+  registerBookDefaultValue,
 } from '../../../utils/formValidations/dataBookFormValidation'
 
 import { updateBookAdapter } from '../../../adapters/Book'
@@ -55,7 +59,6 @@ import COLORS from '../../styled-components/Colors'
 import noImage from '../../../../assets/images/noImage.png'
 
 const EditBookForm = ({ navigation, bookData }) => {
-
   const layout = useWindowDimensions()
 
   const [image, setImage] = useState(null)
@@ -69,7 +72,7 @@ const EditBookForm = ({ navigation, bookData }) => {
   const { isLoading, startLoading, stopLoading } = useLoading()
 
   const {
-    state: { user }
+    state: { user },
   } = useAuthContext()
 
   const {
@@ -95,26 +98,22 @@ const EditBookForm = ({ navigation, bookData }) => {
     useCallback(() => {
       permisionFunction()
       getGenresByIdBook(bookData._id)
-        .then(res => {
-
+        .then((res) => {
           setValue('name', bookData?.name)
           setValue('synopsis', bookData.sypnosis)
           setValue('literaryGenres', res)
 
           getAllLiteraryGenre()
-            .then(response => {
+            .then((response) => {
               setLitGenres(response)
             })
-            .catch(error => {
+            .catch((error) => {
               console.log(error)
             })
-
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
-
-
     }, [bookData])
   )
 
@@ -158,7 +157,6 @@ const EditBookForm = ({ navigation, bookData }) => {
     }
 
     try {
-
       const book = updateBookAdapter({
         idUser: user.id,
         name: data.name,
@@ -168,34 +166,47 @@ const EditBookForm = ({ navigation, bookData }) => {
       const response = await updateBook(bookData._id, book)
       console.log('First upload', response)
 
-      let imageUri = Platform.OS === 'ios' ? 'file:///' + image.uri.split('file:/').join('') : image.uri
+      let imageUri =
+        Platform.OS === 'ios'
+          ? 'file:///' + image.uri.split('file:/').join('')
+          : image.uri
       let formData = new FormData()
       formData.append('photo', {
         uri: imageUri,
         type: mime.getType(imageUri),
-        name: imageUri.split('/').pop()
+        name: imageUri.split('/').pop(),
       })
       const responseImage = await uploadImage(bookData._id, formData)
       console.log('Second upload', responseImage)
 
-      let documentUri = Platform.OS === 'ios' ? 'file:///' + document.uri.split('file:/').join('') : document.uri
+      let documentUri =
+        Platform.OS === 'ios'
+          ? 'file:///' + document.uri.split('file:/').join('')
+          : document.uri
       let formDataDocument = new FormData()
       formDataDocument.append('document', {
         uri: documentUri,
         type: mime.getType(documentUri),
-        name: documentUri.split('/').pop()
+        name: documentUri.split('/').pop(),
       })
-      const responseDocument = await uploadDocument(bookData._id, formDataDocument)
+      const responseDocument = await uploadDocument(
+        bookData._id,
+        formDataDocument
+      )
       console.log('Third upload', responseDocument)
 
-      const responseGenres = await setLiteraryGenres(bookData._id, data.literaryGenres)
+      const responseGenres = await setLiteraryGenres(
+        bookData._id,
+        data.literaryGenres
+      )
       console.log('last upload', responseGenres)
 
-      showSuccessToast('¡Misión cumplida! El libro ha sido actualizado correctamente')
+      showSuccessToast(
+        '¡Misión cumplida! El libro ha sido actualizado correctamente'
+      )
       reset()
       stopLoading()
       navigation.goBack()
-
     } catch (error) {
       console.log('an error... F', error)
       showErrorToast('¡Misión fallida! No se pudo actualizar el libro')
@@ -211,20 +222,18 @@ const EditBookForm = ({ navigation, bookData }) => {
         alignSelf='center'
         alignItems='center'
       >
-        <Box
+        <Box /* HEADER */
           bgColor={COLORS.primary}
           w={layout.width}
-          minH={200}
+          minH={layout.height * 0.24}
           p={3}
+          shadow={5}
         >
           <Controller
             control={control}
             name='photo'
             render={({ value }) => (
-              <FormControl
-                isRequired
-                isInvalid={errors.photo}
-              >
+              <FormControl isRequired isInvalid={errors.photo}>
                 <TouchableOpacity
                   style={{
                     alignSelf: 'center',
@@ -236,12 +245,14 @@ const EditBookForm = ({ navigation, bookData }) => {
                   onPress={() => {
                     console.log('Upload image')
                     let imageUp = pickImage()
-                    imageUp.then(res => {
-                      setImage(res)
-                      setValue('photo', res.type)
-                    }).catch(err => {
-                      console.log(err)
-                    })
+                    imageUp
+                      .then((res) => {
+                        setImage(res)
+                        setValue('photo', res.type)
+                      })
+                      .catch((err) => {
+                        console.log(err)
+                      })
                   }}
                 >
                   <ImageBackground
@@ -257,12 +268,7 @@ const EditBookForm = ({ navigation, bookData }) => {
                     resizeMode='stretch'
                   >
                     <Icon
-                      as={
-                        <Ionicons
-                          name='camera'
-                          color='white'
-                        />
-                      }
+                      as={<Ionicons name='camera' color='white' />}
                       size={30}
                       color='white'
                       alignSelf='flex-end'
@@ -276,10 +282,10 @@ const EditBookForm = ({ navigation, bookData }) => {
           />
         </Box>
 
-        <Box
+        <Box /* INPUTS EDIT */
           alignItems='center'
           rounded='lg'
-          bg='rgba(224, 218, 227, 1)'
+          bg={COLORS.secundary}
           opacity={0.95}
           shadow={2}
           borderColor='coolGray.300'
@@ -287,33 +293,19 @@ const EditBookForm = ({ navigation, bookData }) => {
           p={3}
           py={5}
           m={5}
-          w={350}
-          mw={350}
+          w='90%'
         >
-          <VStack
-            space={4}
-            alignItems='center'
-          >
-            <Text
-              bold
-              fontSize='xl'
-              color='purple.800'
-            >
+          <VStack space={4} alignItems='center'>
+            <Text bold fontSize='xl' color={COLORS.primary}>
               Datos del libro
             </Text>
 
             <Controller
               control={control}
               name='name'
-              render={({
-                field: { onChange, onBlur, value, ...field } }) => (
-                <FormControl
-                  isInvalid={errors.name && value !== ''}
-                  isRequired
-                >
-                  <FormControl.Label>
-                    Nombre del libro
-                  </FormControl.Label>
+              render={({ field: { onChange, onBlur, value, ...field } }) => (
+                <FormControl isInvalid={errors.name && value !== ''} isRequired>
+                  <FormControl.Label>Nombre del libro</FormControl.Label>
                   <StyledField
                     label='Nombre del libro'
                     placeholder='Nombre del libro'
@@ -321,28 +313,24 @@ const EditBookForm = ({ navigation, bookData }) => {
                     onBlur={onBlur}
                     value={value}
                     {...field}
-                    borderColor={errors?.name && value !== '' ? 'red.500' : 'grey'}
+                    borderColor={
+                      errors?.name && value !== '' ? 'red.500' : 'grey'
+                    }
                     InputLeftElement={
                       <Icon
-                        as={
-                          <FontAwesome5
-                            name='book'
-                          />
-                        }
+                        as={<FontAwesome5 name='book' />}
                         size={4}
                         ml='4'
-                        color={errors?.name && value !== '' ? 'red.500' : 'muted.900'}
+                        color={
+                          errors?.name && value !== '' ? 'red.500' : 'muted.900'
+                        }
                       />
                     }
                   />
                   {errors?.name && (
                     <FormControl.ErrorMessage
                       maxWidth={300}
-                      leftIcon={
-                        <WarningOutlineIcon
-                          size='xs'
-                        />
-                      }
+                      leftIcon={<WarningOutlineIcon size='xs' />}
                     >
                       {errors?.name?.message}
                     </FormControl.ErrorMessage>
@@ -354,16 +342,13 @@ const EditBookForm = ({ navigation, bookData }) => {
             <Controller
               control={control}
               name='synopsis'
-              render={({
-                field: { onChange, onBlur, value, ...field } }) => (
+              render={({ field: { onChange, onBlur, value, ...field } }) => (
                 <FormControl
                   isInvalid={errors.synopsis && value !== ''}
                   isRequired
                   mb={errors?.biography && value !== '' ? 0 : 3}
                 >
-                  <FormControl.Label>
-                    Sinopsis del libro
-                  </FormControl.Label>
+                  <FormControl.Label>Sinopsis del libro</FormControl.Label>
                   <StyledArea
                     label='Sinopsis del libro'
                     placeholder='Sinopsis del libro'
@@ -372,28 +357,26 @@ const EditBookForm = ({ navigation, bookData }) => {
                     onBlur={onBlur}
                     value={value}
                     {...field}
-                    borderColor={errors?.synopsis && value !== '' ? 'red.500' : 'grey'}
+                    borderColor={
+                      errors?.synopsis && value !== '' ? 'red.500' : 'grey'
+                    }
                     InputLeftElement={
                       <Icon
-                        as={
-                          <MaterialIcons
-                            name='menu-book'
-                          />
-                        }
+                        as={<MaterialIcons name='menu-book' />}
                         size={5}
                         ml='3'
-                        color={errors?.synopsis && value !== '' ? 'red.500' : 'muted.900'}
+                        color={
+                          errors?.synopsis && value !== ''
+                            ? 'red.500'
+                            : 'muted.900'
+                        }
                       />
                     }
                   />
                   {errors?.synopsis && (
                     <FormControl.ErrorMessage
                       maxWidth={300}
-                      leftIcon={
-                        <WarningOutlineIcon
-                          size='xs'
-                        />
-                      }
+                      leftIcon={<WarningOutlineIcon size='xs' />}
                     >
                       {errors?.synopsis?.message}
                     </FormControl.ErrorMessage>
@@ -405,8 +388,7 @@ const EditBookForm = ({ navigation, bookData }) => {
             <Controller
               name='creationDate'
               control={control}
-              render={({
-                field: { value = new Date() } }) => (
+              render={({ field: { value = new Date() } }) => (
                 <>
                   <FormControl
                     isRequired
@@ -418,24 +400,33 @@ const EditBookForm = ({ navigation, bookData }) => {
                       onPress={() => setShowDatePicker(true)}
                       style={{
                         alignItems: 'center',
-                        width: '100%'
+                        width: '100%',
                       }}
                     >
                       <StyledField
                         placeholder='Fecha de creación'
                         isReadOnly
-                        borderColor={errors?.creationDate && value !== '' ? 'red.500' : 'grey'}
-                        value={value?.toISOString()?.split('T')[0].split('-').reverse().join('/')}
+                        borderColor={
+                          errors?.creationDate && value !== ''
+                            ? 'red.500'
+                            : 'grey'
+                        }
+                        value={value
+                          ?.toISOString()
+                          ?.split('T')[0]
+                          .split('-')
+                          .reverse()
+                          .join('/')}
                         InputLeftElement={
                           <Icon
-                            as={
-                              <MaterialIcons
-                                name='calendar-today'
-                              />
-                            }
+                            as={<MaterialIcons name='calendar-today' />}
                             size={5}
                             ml='4'
-                            color={errors?.creationDate && value !== '' ? 'red.500' : 'muted.900'}
+                            color={
+                              errors?.creationDate && value !== ''
+                                ? 'red.500'
+                                : 'muted.900'
+                            }
                           />
                         }
                       />
@@ -451,11 +442,7 @@ const EditBookForm = ({ navigation, bookData }) => {
                     {errors?.creationDate && (
                       <FormControl.ErrorMessage
                         maxWidth={300}
-                        leftIcon={
-                          <WarningOutlineIcon
-                            size='xs'
-                          />
-                        }
+                        leftIcon={<WarningOutlineIcon size='xs' />}
                       >
                         {errors?.creationDate?.message}
                       </FormControl.ErrorMessage>
@@ -473,7 +460,7 @@ const EditBookForm = ({ navigation, bookData }) => {
                   isRequired
                   isInvalid={errors?.literaryGenres && value?.length === 0}
                 >
-                  <Box ml={2} mr={2} >
+                  <Box ml={2} mr={2}>
                     <FormControl.Label>
                       ¿De qué género es el libro?
                     </FormControl.Label>
@@ -481,17 +468,25 @@ const EditBookForm = ({ navigation, bookData }) => {
                       horizontal
                       showsHorizontalScrollIndicator={false}
                       data={litGenres}
-
                       keyExtractor={(item) => item?._id}
                       ItemSeparatorComponent={() => <Box w={2} />}
                       renderItem={({ item }) => (
                         <TouchableOpacity
-                          activeOpacity={.7}
+                          activeOpacity={0.7}
                           onPress={() => {
                             const newValue = [...value]
 
-                            if (newValue.find((genre) => genre?.name === item?.name)) {
-                              newValue.splice(newValue.findIndex((genre) => genre?.name === item?.name), 1)
+                            if (
+                              newValue.find(
+                                (genre) => genre?.name === item?.name
+                              )
+                            ) {
+                              newValue.splice(
+                                newValue.findIndex(
+                                  (genre) => genre?.name === item?.name
+                                ),
+                                1
+                              )
                             } else {
                               newValue.push(item)
                             }
@@ -506,16 +501,20 @@ const EditBookForm = ({ navigation, bookData }) => {
                             style={{
                               borderRadius: 30,
                               borderWidth: 1,
-                              borderColor: 'white',
-                              backgroundColor:
-                                value.find((genre) => genre?._id === item?._id)
-                                  ? COLORS.primary : "#fff",
+                              borderColor: COLORS.bgPrimary,
+                              backgroundColor: value.find(
+                                (genre) => genre?._id === item?._id
+                              )
+                                ? COLORS.button.primary
+                                : COLORS.base,
                             }}
                           >
                             <Text
                               color={
                                 value.find((genre) => genre?._id === item?._id)
-                                  ? 'white' : 'purple.900'}
+                                  ? 'white'
+                                  : 'purple.900'
+                              }
                             >
                               {item?.name}
                             </Text>
@@ -542,39 +541,44 @@ const EditBookForm = ({ navigation, bookData }) => {
                     isRequired
                     isInvalid={errors?.document && document === ''}
                   >
-                    <FormControl.Label>Documento PDF del libro</FormControl.Label>
+                    <FormControl.Label>
+                      Documento PDF del libro
+                    </FormControl.Label>
                     <TouchableOpacity
                       activeOpacity={1}
                       onPress={() => {
                         console.log('Upload document')
-                        selectOneFile().then(res => {
-                          setValue('document', res.name)
-                          setDocument(res)
-                        }).catch(err => {
-                          console.log(err)
-                        })
+                        selectOneFile()
+                          .then((res) => {
+                            setValue('document', res.name)
+                            setDocument(res)
+                          })
+                          .catch((err) => {
+                            console.log(err)
+                          })
                       }}
                       style={{
                         alignItems: 'center',
-                        width: '100%'
+                        width: '100%',
                       }}
                     >
-                      
                       <StyledField
                         placeholder='Documento PDF del libro'
                         isReadOnly
                         value={document ? document.name : value}
-                        borderColor={errors?.document && value !== '' ? 'red.500' : 'grey'}
+                        borderColor={
+                          errors?.document && value !== '' ? 'red.500' : 'grey'
+                        }
                         InputLeftElement={
                           <Icon
-                            as={
-                              <Ionicons
-                                name='document-attach'
-                              />
-                            }
+                            as={<Ionicons name='document-attach' />}
                             size={5}
                             ml='4'
-                            color={errors?.document && value !== '' ? 'red.500' : 'muted.900'}
+                            color={
+                              errors?.document && value !== ''
+                                ? 'red.500'
+                                : 'muted.900'
+                            }
                           />
                         }
                       />
@@ -594,13 +598,12 @@ const EditBookForm = ({ navigation, bookData }) => {
               buttonStyle={{
                 width: 170,
                 marginHorizontal: 2,
-                backgroundColor: COLORS.button.primary
+                backgroundColor: COLORS.button.primary,
               }}
               isLoading={isLoading}
               disabled={isLoading}
               onPress={handleSubmit(onSubmit)}
             />
-
           </VStack>
         </Box>
       </View>
