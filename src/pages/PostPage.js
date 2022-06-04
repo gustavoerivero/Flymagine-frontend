@@ -11,7 +11,13 @@ import {
 } from 'native-base'
 import { Button, Image } from 'react-native-elements'
 import { FAB } from '@rneui/themed'
-import { AntDesign, MaterialCommunityIcons, Ionicons, FontAwesome, MaterialIcons } from '@expo/vector-icons'
+import {
+  AntDesign,
+  MaterialCommunityIcons,
+  Ionicons,
+  FontAwesome,
+  MaterialIcons,
+} from '@expo/vector-icons'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import mime from 'mime'
@@ -19,11 +25,7 @@ import mime from 'mime'
 import CommentInput from '../components/Post/CommentInput'
 import PostModify from '../components/Post/PostModify'
 import COLORS from '../components/styled-components/Colors'
-import {
-  handleChange,
-  pickImage,
-  permisionFunction,
-} from '../utils/functions'
+import { handleChange, pickImage, permisionFunction } from '../utils/functions'
 import AddTag from '../components/Post/AddTag'
 import StyledField from '../components/StyledField'
 
@@ -32,11 +34,15 @@ import useLoading from '../hooks/useLoading'
 import useCustomToast from '../hooks/useCustomToast'
 import { getUserById, searchUsers } from '../services/user/userAPI'
 import { searchHashtag, createHashtag } from '../services/hashtag/hashtagAPI'
-import { createPost, postImage, setHashtags, setUsertags } from '../services/post/postAPI'
+import {
+  createPost,
+  postImage,
+  setHashtags,
+  setUsertags,
+} from '../services/post/postAPI'
 import { postAdapter } from '../adapters/Post'
 
 const CreatePostPage = ({ navigation }) => {
-
   const layout = useWindowDimensions()
 
   const {
@@ -55,7 +61,7 @@ const CreatePostPage = ({ navigation }) => {
     description: '',
     createdAt: new Date(),
     hashtags: [],
-    personTags: []
+    personTags: [],
   })
 
   const [image, setImage] = useState(null)
@@ -70,36 +76,47 @@ const CreatePostPage = ({ navigation }) => {
   const [tagSearch, setTagSearch] = useState('')
   const [tagsSearched, setTagsSearched] = useState([])
 
-  const _handleChange = (item, value) => handleChange(post, setPost, item, value)
+  const _handleChange = (item, value) =>
+    handleChange(post, setPost, item, value)
 
   useFocusEffect(
     useCallback(() => {
-
       permisionFunction()
 
       getUserById(user?.id)
-        .then(res => {
+        .then((res) => {
           setUserData(res?.Data)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error)
         })
-
     }, [])
   )
 
   return (
     <KeyboardAwareScrollView>
-      <VStack h={layout.height * .94}>
-        <Stack bgColor='white' alignItems='center' py={3} pt={4}>
-          <Text bold fontSize={20} color={COLORS.primary}>
-            Comparte tu experiencia
+      <VStack h={layout.height * 0.93}>
+        <HStack
+          /* HEADER */ bgColor={COLORS.primary}
+          alignItems='center'
+          justifyContent='center'
+          py={3}
+          pt={4}
+          shadow={5}
+        >
+          <Text bold fontSize={20} color={COLORS.secundary}>
+            Comparte tus experiencia
           </Text>
-        </Stack>
+          <Icon
+            as={MaterialCommunityIcons}
+            name={'draw'}
+            color={COLORS.secundary}
+            size={6}
+          />
+        </HStack>
+
         <ScrollView>
-          <VStack
-            maxH='65%'
-          >
+          <VStack /* USER POST */ maxH='65%' py={1} alignItems='center'>
             <PostModify
               user={userData}
               post={post}
@@ -107,7 +124,6 @@ const CreatePostPage = ({ navigation }) => {
             />
           </VStack>
         </ScrollView>
-
 
         <VStack justifyContent='flex-end'>
           <HStack
@@ -120,13 +136,13 @@ const CreatePostPage = ({ navigation }) => {
             borderColor='gray.200'
             borderRadius={10}
           >
-            <Stack justifyContent='flex-end' >
+            <Stack justifyContent='flex-end'>
               {post?.photo !== '' && (
                 <Button
                   icon={
                     <Image
                       source={{
-                        uri: post.photo
+                        uri: post.photo,
                       }}
                       style={{
                         width: 40,
@@ -152,7 +168,6 @@ const CreatePostPage = ({ navigation }) => {
               )}
             </Stack>
             <HStack space={2}>
-
               <AddTag
                 visible={addPersonDialog}
                 setVisible={setAddPersonDialog}
@@ -167,16 +182,19 @@ const CreatePostPage = ({ navigation }) => {
                         setUserSearch(text)
                         if (text !== '') {
                           searchUsers(text)
-                            .then(res => {
-
-                              let filtered = res.Data.filter(user => {
-                                return userData._id !== user._id && post.personTags.find(tag => tag._id === user._id) === undefined
+                            .then((res) => {
+                              let filtered = res.Data.filter((user) => {
+                                return (
+                                  userData._id !== user._id &&
+                                  post.personTags.find(
+                                    (tag) => tag._id === user._id
+                                  ) === undefined
+                                )
                               })
 
                               setUserSearched(filtered)
-
                             })
-                            .catch(error => {
+                            .catch((error) => {
                               console.log(error)
                             })
                         } else {
@@ -187,11 +205,7 @@ const CreatePostPage = ({ navigation }) => {
                     />
                     <Button
                       icon={
-                        <MaterialIcons
-                          name='cancel'
-                          color='#fff'
-                          size={20}
-                        />
+                        <MaterialIcons name='cancel' color='#fff' size={20} />
                       }
                       buttonStyle={{
                         backgroundColor: 'rgba(255, 84, 138, 1)',
@@ -211,29 +225,25 @@ const CreatePostPage = ({ navigation }) => {
                             setUserSearched([])
                             setPost({
                               ...post,
-                              personTags: [...post.personTags, item]
+                              personTags: [...post.personTags, item],
                             })
                             setAddPersonDialog(false)
                             console.log(post)
                           }}
                         >
-                          <HStack
-                            space={2}
-                            alignItems='center'
-                          >
+                          <HStack space={2} alignItems='center'>
                             <Avatar
                               bg='purple.600'
                               size='xs'
                               source={{
-                                uri: item?.photo === 'none' ?
-                                  null
-                                  : item?.photo
+                                uri:
+                                  item?.photo === 'none' ? null : item?.photo,
                               }}
                               borderColor='white'
                               borderWidth={3}
                             >
                               <Text bold color='white' fontSize={8}>
-                                {item && (item?.firstName[0] + item?.lastName[0])}
+                                {item && item?.firstName[0] + item?.lastName[0]}
                               </Text>
                             </Avatar>
 
@@ -246,17 +256,10 @@ const CreatePostPage = ({ navigation }) => {
                     </VStack>
                   </ScrollView>
                 </VStack>
-
               </AddTag>
 
               <FAB
-                icon={
-                  <Ionicons
-                    name='ios-person-add'
-                    color='#fff'
-                    size={20}
-                  />
-                }
+                icon={<Ionicons name='ios-person-add' color='#fff' size={20} />}
                 containerStyle={{
                   position: 'relative',
                   marginBottom: 5,
@@ -287,16 +290,18 @@ const CreatePostPage = ({ navigation }) => {
                         setTagSearch(text)
                         if (text !== '') {
                           searchHashtag(text)
-                            .then(res => {
-
-                              let filtered = res.filter(hashtag => {
-                                return post.hashtags.find(tag => tag._id === hashtag._id) === undefined
+                            .then((res) => {
+                              let filtered = res.filter((hashtag) => {
+                                return (
+                                  post.hashtags.find(
+                                    (tag) => tag._id === hashtag._id
+                                  ) === undefined
+                                )
                               })
 
                               setTagsSearched(filtered)
-
                             })
-                            .catch(error => {
+                            .catch((error) => {
                               console.log(error)
                             })
                         } else {
@@ -318,41 +323,40 @@ const CreatePostPage = ({ navigation }) => {
                       }}
                       disabled={
                         tagSearch === '' ||
-                        post.hashtags.find(tag => tag.name === tagSearch) ||
-                        tagsSearched.find(tag => tag.name === tagSearch) ||
+                        post.hashtags.find((tag) => tag.name === tagSearch) ||
+                        tagsSearched.find((tag) => tag.name === tagSearch) ||
                         isLoading
                       }
                       onPress={() => {
                         startLoading()
                         createHashtag({
-                          name: tagSearch
+                          name: tagSearch,
                         })
-                          .then(res => {
+                          .then((res) => {
                             setPost({
                               ...post,
-                              hashtags: [...post.hashtags, res]
+                              hashtags: [...post.hashtags, res],
                             })
 
                             setTagSearch('')
                             setTagsSearched([])
                             setAddTagDialog(false)
-                            showSuccessToast('¡Misión cumplida! Has creado una etiqueta')
-
+                            showSuccessToast(
+                              '¡Misión cumplida! Has creado una etiqueta'
+                            )
                           })
-                          .catch(error => {
+                          .catch((error) => {
                             console.log(error)
-                            showErrorToast('¡Misión fallida! No se ha podido crear la etiqueta')
+                            showErrorToast(
+                              '¡Misión fallida! No se ha podido crear la etiqueta'
+                            )
                           })
                         stopLoading()
                       }}
                     />
                     <Button
                       icon={
-                        <MaterialIcons
-                          name='cancel'
-                          color='#fff'
-                          size={20}
-                        />
+                        <MaterialIcons name='cancel' color='#fff' size={20} />
                       }
                       buttonStyle={{
                         backgroundColor: 'rgba(255, 84, 138, 1)',
@@ -372,16 +376,13 @@ const CreatePostPage = ({ navigation }) => {
                             setTagsSearched([])
                             setPost({
                               ...post,
-                              hashtags: [...post.hashtags, item]
+                              hashtags: [...post.hashtags, item],
                             })
                             setAddTagDialog(false)
                             console.log(post)
                           }}
                         >
-                          <HStack
-                            space={2}
-                            alignItems='center'
-                          >
+                          <HStack space={2} alignItems='center'>
                             <Icon
                               as={Ionicons}
                               name='pricetag'
@@ -397,17 +398,10 @@ const CreatePostPage = ({ navigation }) => {
                     </VStack>
                   </ScrollView>
                 </VStack>
-
               </AddTag>
 
               <FAB
-                icon={
-                  <AntDesign
-                    name='tags'
-                    color='#fff'
-                    size={20}
-                  />
-                }
+                icon={<AntDesign name='tags' color='#fff' size={20} />}
                 containerStyle={{
                   position: 'relative',
                   marginBottom: 5,
@@ -426,11 +420,7 @@ const CreatePostPage = ({ navigation }) => {
 
               <FAB
                 icon={
-                  <Ionicons
-                    name='ios-image-outline'
-                    color='#fff'
-                    size={20}
-                  />
+                  <Ionicons name='ios-image-outline' color='#fff' size={20} />
                 }
                 containerStyle={{
                   position: 'relative',
@@ -444,13 +434,15 @@ const CreatePostPage = ({ navigation }) => {
                 color='rgba(90, 85, 220, 1)'
                 onPress={() => {
                   let image = pickImage()
-                  image.then(res => {
-                    _handleChange('photo', res.uri)
-                    setImage(res)
-                    console.log(res)
-                  }).catch(err => {
-                    console.log(err)
-                  })
+                  image
+                    .then((res) => {
+                      _handleChange('photo', res.uri)
+                      setImage(res)
+                      console.log(res)
+                    })
+                    .catch((err) => {
+                      console.log(err)
+                    })
                 }}
               />
             </HStack>
@@ -459,16 +451,10 @@ const CreatePostPage = ({ navigation }) => {
           <CommentInput
             value={post.description}
             onChangeText={(text) => _handleChange('description', text)}
-            placeholder='Dinos, ¿qué opinas?...'
+            placeholder='Cuentanos, ¿Qué hay de nuevo?'
             rightElement={
               <FAB
-                icon={
-                  <FontAwesome
-                    name='send'
-                    color='#fff'
-                    size={20}
-                  />
-                }
+                icon={<FontAwesome name='send' color='#fff' size={20} />}
                 color='#b973ff'
                 containerStyle={{
                   position: 'relative',
@@ -478,52 +464,55 @@ const CreatePostPage = ({ navigation }) => {
                   justifyContent: 'center',
                   width: 50,
                   height: 50,
+                  backgroundColor: COLORS.secundary,
                 }}
                 disabled={post.description === '' || isLoading}
                 onPress={() => {
                   startLoading()
                   createPost(postAdapter(post))
-                    .then(res => {
+                    .then((res) => {
                       console.log(res)
 
                       let idPost = res._id
 
                       if (image) {
-
-                        const imageUri = Platform.OS === 'ios' ? 'file:///' + image.uri.split('file:/').join('') : image.uri
+                        const imageUri =
+                          Platform.OS === 'ios'
+                            ? 'file:///' + image.uri.split('file:/').join('')
+                            : image.uri
 
                         const formData = new FormData()
                         formData.append('photo', {
                           uri: imageUri,
                           type: mime.getType(imageUri),
-                          name: imageUri.split('/').pop()
+                          name: imageUri.split('/').pop(),
                         })
 
                         postImage(idPost, formData)
-                          .then(res => {
+                          .then((res) => {
                             console.log(res)
                           })
-                          .catch(err => {
+                          .catch((err) => {
                             console.log(err)
                           })
                       }
 
                       if (post.personTags.length > 0) {
                         setUsertags(idPost, post.personTags)
-                          .then(res => {
+                          .then((res) => {
                             console.log(res)
                           })
-                          .catch(err => {
+                          .catch((err) => {
                             console.log(err)
                           })
                       }
 
                       if (post.hashtags.length > 0) {
                         setHashtags(idPost, post.hashtags)
-                          .then(res => {
+                          .then((res) => {
                             console.log(res)
                           })
-                          .catch(err => {
+                          .catch((err) => {
                             console.log(err)
                           })
                       }
@@ -533,16 +522,20 @@ const CreatePostPage = ({ navigation }) => {
                         description: '',
                         photo: '',
                         hashtags: [],
-                        personTags: []
+                        personTags: [],
                       })
                       setImage(null)
 
-                      showSuccessToast('¡Misión cumplida! Has creado una publicación')
+                      showSuccessToast(
+                        '¡Misión cumplida! Has creado una publicación'
+                      )
                       navigation.navigate('Home')
                     })
-                    .catch(error => {
+                    .catch((error) => {
                       console.log(error)
-                      showErrorToast('¡Misión fallida! No se ha podido crear la publicación')
+                      showErrorToast(
+                        '¡Misión fallida! No se ha podido crear la publicación'
+                      )
                     })
                   stopLoading()
                 }}

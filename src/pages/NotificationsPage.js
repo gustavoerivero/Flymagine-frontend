@@ -1,150 +1,167 @@
-import React, { useState, } from 'react'
+import React, { useState } from 'react'
+import { StyleSheet, Modal, RefreshControl } from 'react-native'
+
 import {
   View,
+  Image,
+  IconButton,
+  Icon,
+  VStack,
+  Stack,
   Text,
-  StyleSheet,
-  Modal,
   ScrollView,
-} from 'react-native'
-
-import { Button } from 'react-native-elements'
+  Box,
+  FlatList,
+  Badge,
+  HStack,
+  Button,
+  StatusBar,
+} from 'native-base'
 
 import Notification from '../components/Notification'
 import dataNotifications from '../utilities/data/notifications'
 
-import { FontAwesome } from '@expo/vector-icons'
+import DontKnow from '../../assets/images/dontknow.png'
+
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import Dialog from '../components/Dialog'
 
-import {
-  handleChange
-} from '../utils/functions'
+import { handleChange } from '../utils/functions'
+import COLORS from '../components/styled-components/Colors'
+
+const wait = (timeout) => {
+  return new Promise((resolve) => setTimeout(resolve, timeout))
+}
 
 const NotificationsPage = () => {
-
   const [notifications, setNotifications] = useState(dataNotifications)
-  const [data, setData] = useState([])
-  const [shouldShow, setShouldShow] = useState(true)
   const [modalVisible, setModalVisible] = useState(false)
   const [choiceSelected, setChoiceSelected] = useState(false)
 
+  const [refreshing, setRefreshing] = useState(false)
 
-  const _handleChange = (item, value) => handleChange(notifications, setNotifications, item, value)
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(2000).then(() => setRefreshing(false))
+  }, [])
 
-  if (choiceSelected==false){
+  const _handleChange = (item, value) =>
+    handleChange(notifications, setNotifications, item, value)
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text
-          style={styles.headerText}
+    <Box w='100%' h='100%'>
+      <StatusBar animated={true} backgroundColor={COLORS.primary}/>
+      <VStack w='100%' h='100%'>
+        <HStack /* HEADER */
+          w='100%'
+          h='7%'
+          bg={COLORS.primary}
+          alignItems='center'
+          px={3}
+          py={1}
         >
-          Notificaciones
-        </Text>
-      </View>
-      <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <Stack w='88%' h='95%' justifyContent='center'>
+            <Text bold fontSize='xl' color={COLORS.secundary}>
+              Notificaciones
+            </Text>
+          </Stack>
+
+          <Stack w='12%' h='95%'>
+            <IconButton
+              h='100%'
+              w='100%'
+              colorScheme='blueGray'
+              bg={COLORS.button.primary}
+              icon={
+                <MaterialCommunityIcons
+                  name='checkbox-multiple-marked-circle'
+                  size={25}
+                  color={COLORS.button.icon}
+                />
+              }
+              onPress={() => {
+                setModalVisible(true)
+              }}
+            />
+            <Dialog
+              visible={modalVisible}
+              setVisible={setModalVisible}
+              content='¿Seguro que desea marcar todo como leído?'
+            />
+          </Stack>
+        </HStack>
+
         {/**<Button
           buttonStyle={styles.button}
-          icon={<FontAwesome name="eye" size={15} color="black" />}
+          icon={<FontAwesome name='eye' size={15} color='black' />}
           onPress={() => read(notifications)}
   />*/}
-        <Button
-          buttonStyle={styles.button}
-          icon={<FontAwesome name="trash" size={15} color="black" />}
-          onPress={() => {
-            setModalVisible(true)
-
-          }}
-        />
-        <Dialog
-          visible={modalVisible}
-          setVisible={setModalVisible}
-          setChoice={setChoiceSelected}
-          cancelButton={true}
-          content='¿Seguro que desea eliminar la bandeja de entrada?'
-        />
-      </View>
-      {shouldShow ? (
-        <ScrollView>
-          {notifications?.map((notification) => (
-            <Notification
-              key={notification.id}
-              person={notification.transmitter.firstName + ' ' + notification.transmitter.lastName}
-              avatar={notification.transmitter.picture}
-              date={notification.notificationDate}
-              text={notification.text}
-              check={notification.check}
-              page={notification.page}
+        <VStack /* NOTIFICATION LIST */ w='100%'
+          pt={1}
+          justifyContent='center'
+          alignItems='center'
+          alignContent='center'
+        >
+          {notifications ? (
+            <FlatList
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+              }
+              showsVerticalScrollIndicator={false}
+              data={notifications}
+              keyExtractor={(item) => item?._id}
+              renderItem={({ item }) => (
+                <Stack p={1}>
+                  <Notification
+                    key={item.id}
+                    person={
+                      item.transmitter.firstName +
+                      ' ' +
+                      item.transmitter.lastName
+                    }
+                    avatar={item.transmitter.picture}
+                    date={item.notificationDate}
+                    text={item.text}
+                    check={item.check}
+                    page={item.page}
+                  />
+                </Stack>
+              )}
             />
-          ))}
-        </ScrollView>
-      ) : false}
-    </View>
-  )}
-  if (choiceSelected==true){
-    return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text
-            style={styles.headerText}
-          >
-            Notificaciones
-          </Text>
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-          {/**<Button
-            buttonStyle={styles.button}
-            icon={<FontAwesome name="eye" size={15} color="black" />}
-            onPress={() => read(notifications)}
-    />*/}
-          <Button
-            buttonStyle={styles.button}
-            icon={<FontAwesome name="trash" size={15} color="black" />}
-          />
-        </View>
-          <ScrollView>
-          </ScrollView>
-      </View>
-    )}
+          ) : (
+            <VStack
+              alignContent='center'
+              alignItems='center'
+              mt={10}
+            >
+              <Image
+                source={DontKnow}
+                alt='DontKnow'
+                resizeMode='contain'
+                size={400}
+              />
+              <Text
+                bold
+                fontSize='2xl'
+                textAlign='center'
+                color={COLORS.primary}
+              >
+                Esto aquí se ve muy solo...
+              </Text>
+              <Text
+                bold
+                fontSize='xs'
+                textAlign='center'
+                color={COLORS.primary}
+              >
+                Parece que no tienes notificaciones nuevas.
+              </Text>
+            </VStack>
+          )}
+        </VStack>
+      </VStack>
+    </Box>
+  )
 }
-
-const styles = StyleSheet.create({
-  button: {
-    backgroundColor: 'rgba(150, 129, 223, .75)',
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 200,
-    width: '100%',
-    maxWidth: 250,
-    marginTop: 5,
-    marginBottom: 5,
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    alignItems: 'stretch',
-    alignContent: 'center',
-    width: '100%',
-    minHeight: '100%',
-    backgroundColor: '#F9F7F8',
-  },
-  header: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignContent: 'center',
-    width: '100%',
-    paddingTop: '10%',
-    paddingBottom: 10,
-    backgroundColor: '#fff'
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'rgba(90, 85, 220, 1)',
-
-  },
-})
 
 export default NotificationsPage

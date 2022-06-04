@@ -9,154 +9,191 @@ import {
   Avatar,
   Icon,
   IconButton,
+  Link,
 } from 'native-base'
 import {
   AntDesign,
   FontAwesome5,
+  FontAwesome,
   MaterialCommunityIcons,
 } from '@expo/vector-icons'
 import useAuthContext from '../../../hooks/useAuthContext'
-import { setFollowsByUser, getFollows } from '../../../services/user/userAPI'
+import {
+  setFollowsByUser,
+  getFollows,
+  getFollowers,
+} from '../../../services/user/userAPI'
+import { getBooksByUser } from '../../../services/book/bookAPI'
 import COLORS from '../../styled-components/Colors'
+import { TouchableOpacity } from 'react-native'
 
 const HeaderProfile = ({ userInfo, navigation }) => {
 
-  const {
-    state: { user },
-  } = useAuthContext()
-
-  const [isFollow, setIsFollow] = useState(false)
   const [follows, setFollows] = useState(null)
+  const [followers, setFollowers] = useState(null)
+  const [books, setBooks] = useState(null)
 
   useFocusEffect(
     useCallback(() => {
-      getFollows(user?.id)
-        .then(res => {
-          setFollows(res?.Data?.follows)
-
-          if (follows?.find(f => f._id === userInfo?._id)) {
-            setIsFollow(true)
-          }
-          
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }, [follows])
+      if (userInfo) {
+        getFollowers(userInfo?._id)
+          .then((res) => {
+            setFollowers(res?.Data)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        getFollows(userInfo?._id)
+          .then((res) => {
+            setFollows(res?.Data?.follows)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        getBooksByUser(userInfo?._id)
+          .then((res) => {
+            setBooks(res)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
+    }, [])
   )
 
-  const handleFollow = async () => {
-
-    let newFollows = [...follows]
-
-    if (isFollow) {
-      newFollows = newFollows.filter(f => f._id !== userInfo?._id)
-      setIsFollow(false)
-    } else {
-      newFollows.push(userInfo)
-      setIsFollow(true)
-    }
-
-    await setFollowsByUser(user.id, newFollows)
-      .then(res => {
-        console.log(res)
-        setFollows(res?.Data?.follows)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-
-  }
-
   return (
-    <Box
-      px={3}
-      pt={3}
-      bgColor="white"
-    >
-      <Stack>
-        <HStack>
-          <VStack
-            w='85%'
-          >
+    <Box px={3} pt={3} bgColor='white' w='100%'>
+      <VStack w='100%'>
+        <HStack w='100%' /* AVATAR & BUTTONS */>
+          <Stack w='25%' /* AVATAR */>
             <Avatar
               bg='purple.600'
               size='xl'
               source={{
-                uri: userInfo?.photo === 'none' ?
-                  null
-                  : userInfo?.photo
+                uri: userInfo?.photo === 'none' ? null : userInfo?.photo,
               }}
               borderColor='white'
               borderWidth={3}
             >
-              {userInfo && (userInfo?.firstName[0] + userInfo?.lastName[0])}
+              {userInfo && userInfo?.firstName[0] + userInfo?.lastName[0]}
             </Avatar>
-            <Text
-              fontSize='xl'
-              bold
-              color={'purple.900'}
-            >
-              {userInfo && (userInfo?.firstName + ' ' + userInfo?.lastName)}
-            </Text>
+          </Stack>
 
-            <HStack
-              space={2}
-              alignItems='center'
-            >
-              <Icon
-                as={userInfo?.idRole?.name === 'Reader' ? FontAwesome5 : AntDesign}
-                name={userInfo?.idRole?.name === 'Reader' ? 'book-reader' : 'edit'}
-              />
-              <Text
-                fontSize='sm'
-                color={'purple.600'}
-                italic
+          <Stack /* BOOKS */
+            w='25%'
+            pl={4}
+            alignItems='center'
+            justifyContent='center'
+          >
+            {userInfo?.idRole && userInfo?.idRole?.name === 'Writter' && (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation?.navigate('BooksPage', {
+                    userId: userInfo?._id,
+                    books: books,
+                  })
+                }
               >
-                - {userInfo?.idRole?.name === 'Reader' ? 'Lector' : 'Escritor'} desde {userInfo?.createdAt ? userInfo?.createdAt.split('T')[0].split('-').reverse().join('/') : '-'}
-              </Text>
-            </HStack>
-          </VStack>
-          {userInfo && userInfo?._id === user?.id ?
-            <VStack>
-              <IconButton
-                borderRadius='full'
-                variant='solid'
-                shadow={true}
-                icon={
-                  <MaterialCommunityIcons
-                    name='account-edit'
-                    size={24}
-                    color='white'
-                  />
-                }
-                onPress={() => {
-                  navigation?.navigate('EditProfile')
-                }}
-              />
-            </VStack>
-            :
-            <VStack>
-              <IconButton
-                borderRadius='full'
-                variant={'outline'}
-                borderColor={isFollow ? COLORS.button.secundary : COLORS.button.terciary}
-                icon={
-                  <FontAwesome5
-                    name={isFollow ? 'user-times' : 'user-plus'}
-                    size={20}
-                    color={isFollow ? COLORS.button.secundary : COLORS.button.terciary}
-                  />
-                }
-                onPress={() => {
-                  handleFollow()
-                }}
-              />
-            </VStack>
-          }
+                <VStack w='95%' alignItems='center' justifyContent='center'>
+                  <Text fontSize='xl' bold>
+                    {books ? books?.length : 0}
+                  </Text>
+                  <Text fontSize='md'>
+                    {books?.length === 1 ? 'Libro' : 'Libros'}
+                  </Text>
+                </VStack>
+              </TouchableOpacity>
+            )}
+          </Stack>
 
+          <Stack /* FOLLOWERS */
+            w='25%'
+            alignItems='center'
+            justifyContent='center'
+          >
+            <TouchableOpacity
+              onPress={() =>
+                navigation?.navigate('MyFollower', {
+                  userId: userInfo?._id,
+                  followers: followers,
+                })
+              }
+            >
+              <VStack w='95%' alignItems='center' justifyContent='center'>
+                <Text fontSize='xl' bold>
+                  {followers ? followers?.length : 0}
+                </Text>
+                <Text fontSize='md'>Seguidores</Text>
+              </VStack>
+            </TouchableOpacity>
+          </Stack>
+
+          <Stack /* FOLLOWS */
+            w='25%'
+            alignItems='center'
+            justifyContent='center'
+          >
+            <TouchableOpacity
+              onPress={() => {
+                navigation?.navigate('MyFollow', {
+                  userId: userInfo?._id,
+                  follows: follows,
+                })
+              }}
+            >
+              <VStack w='95%' alignItems='center' justifyContent='center'>
+                <Text fontSize='xl' bold>
+                  {follows ? follows?.length : 0}
+                </Text>
+                <Text fontSize='md'>Siguiendo</Text>
+              </VStack>
+            </TouchableOpacity>
+          </Stack>
         </HStack>
-      </Stack>
+
+        <HStack /* USERNAME */ w='100%'>
+          <Text fontSize='xl' bold color={'purple.900'}>
+            {userInfo && userInfo?.firstName + ' ' + userInfo?.lastName}
+          </Text>
+        </HStack>
+
+        <HStack /* ROL SINCE & BIRTHDAY */ w='100%'>
+          <HStack space={2} alignItems='center' w='60%'>
+            <Icon
+              as={
+                userInfo?.idRole?.name === 'Reader' ? FontAwesome5 : AntDesign
+              }
+              name={
+                userInfo?.idRole?.name === 'Reader' ? 'book-reader' : 'edit'
+              }
+            />
+            <Text fontSize='sm' color={'purple.600'} italic>
+              - {userInfo?.idRole?.name === 'Reader' ? 'Lector' : 'Escritor'}{' '}
+              desde{' '}
+              {userInfo?.createdAt
+                ? userInfo?.createdAt
+                    .split('T')[0]
+                    .split('-')
+                    .reverse()
+                    .join('/')
+                : '-'}
+            </Text>
+          </HStack>
+
+          <HStack alignItems='center' w='40%'>
+            <Icon mr={4} as={FontAwesome} name='birthday-cake' />
+            <Text fontSize='xs' italic>
+              {userInfo
+                ? userInfo?.birthday
+                    .split('T')[0]
+                    .split('-')
+                    .reverse()
+                    .join('/')
+                : '-'}
+            </Text>
+          </HStack>
+        </HStack>
+      </VStack>
     </Box>
   )
 }

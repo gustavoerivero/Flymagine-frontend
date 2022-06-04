@@ -94,10 +94,10 @@ const PostEditPage = ({ navigation, route }) => {
 
   return (
     <KeyboardAwareScrollView>
-      <VStack h={layout.height * .94}>
+      <VStack h={layout.height * .93}>
         <ScrollView>
           <VStack
-            maxH='65%'
+            maxH='65%' py={1} alignItems='center'
           >
             {post && (
               <PostModify
@@ -483,8 +483,6 @@ const PostEditPage = ({ navigation, route }) => {
                 disabled={post?.description === '' || isLoading}
                 onPress={() => {
                   startLoading()
-
-                  console.log(post._id)
 
                   updatePost(post._id, { description: post.description })
                     .then(res => {

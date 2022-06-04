@@ -38,7 +38,7 @@ import {
   setReadingBooks,
   getReadingBooks,
   setReadBooks,
-  getReadBooks
+  getReadBooks,
 } from '../../../services/user/userAPI'
 import { deleteBook } from '../../../services/book/bookAPI'
 import { previousFourteenHours } from '../../../utils/functions'
@@ -49,10 +49,16 @@ import COLORS from '../../styled-components/Colors'
 //Styles
 import stylesBook from '../../styled-components/stylesBook'
 
-const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) => {
+const InfoBookProfile = ({
+  navigation,
+  bookInfo,
+  author,
+  rating,
+  bookGenres,
+}) => {
   //Colors
-  const backgroundColor = COLORS.primary
-  const text = COLORS.base
+  const backgroundColor = COLORS.button.primary
+  const text = COLORS.secundary
   const elementsButton = COLORS.button.text
   const icon = COLORS.button.icon
   const buttonColor = COLORS.button.terciary
@@ -99,7 +105,6 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
             setButtonToRead(true)
             setNotRead(false)
           }
-
         })
         .catch((error) => {
           console.log(error)
@@ -114,7 +119,6 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
             setButtonReading(true)
             setNotRead(false)
           }
-
         })
         .catch((error) => {
           console.log(error)
@@ -129,17 +133,14 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
             setButtonRead(true)
             setNotRead(false)
           }
-
         })
         .catch((error) => {
           console.log(error)
         })
-
     }, [bookInfo])
   )
 
   const handleFav = async () => {
-
     let newFavBooks = favouriteBooks
     if (fav) {
       setFav(false)
@@ -154,17 +155,17 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
       const response = await setFavBooks(user.id, newFavBooks)
       console.log(response)
     }
-
   }
 
   const handleToRead = async () => {
-
     let newToReadBooks = userToReadBooks
 
     if (buttonToRead) {
       setNotRead(true)
       setButtonToRead(false)
-      newToReadBooks = userToReadBooks.filter((book) => book._id !== bookInfo?._id)
+      newToReadBooks = userToReadBooks.filter(
+        (book) => book._id !== bookInfo?._id
+      )
       setUserToReadBooks(newToReadBooks)
       const response = await setToReadBooks(user.id, newToReadBooks)
       console.log(response)
@@ -176,11 +177,9 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
       const response = await setToReadBooks(user.id, newToReadBooks)
       console.log(response)
     }
-
   }
 
   const handleReading = async () => {
-
     let newReadingBooks = userReadingBooks
     let newReadBooks = userReadBooks
 
@@ -188,7 +187,9 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
     if (buttonReading) {
       setButtonReading(false)
-      newReadingBooks = userReadingBooks.filter((book) => book._id !== bookInfo?._id)
+      newReadingBooks = userReadingBooks.filter(
+        (book) => book._id !== bookInfo?._id
+      )
       setUserReadingBooks(newReadingBooks)
       const response = await setReadingBooks(user.id, newReadingBooks)
       console.log(response)
@@ -198,15 +199,15 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
       setUserReadBooks(newReadBooks)
       const response2 = await setReadBooks(user.id, newReadBooks)
       console.log(response2)
-
     } else {
-
       let newToReadBooks = userToReadBooks
 
       if (newToReadBooks.find((book) => book._id === bookInfo?._id)) {
         setNotRead(false)
         setButtonToRead(false)
-        newToReadBooks = userToReadBooks.filter((book) => book._id !== bookInfo?._id)
+        newToReadBooks = userToReadBooks.filter(
+          (book) => book._id !== bookInfo?._id
+        )
         setUserToReadBooks(newToReadBooks)
         const response = await setToReadBooks(user.id, newToReadBooks)
         console.log(response)
@@ -214,7 +215,9 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
       if (newReadBooks.find((book) => book._id === bookInfo?._id)) {
         setButtonRead(false)
-        newReadBooks = userReadBooks.filter((book) => book._id !== bookInfo?._id)
+        newReadBooks = userReadBooks.filter(
+          (book) => book._id !== bookInfo?._id
+        )
         setUserReadBooks(newReadBooks)
         const response = await setReadBooks(user.id, newReadBooks)
         console.log(response)
@@ -222,7 +225,8 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
 
       setButtonReading(true)
 
-      if (newReadingBooks.find((book) => book._id === bookInfo?._id)) { } else {
+      if (newReadingBooks.find((book) => book._id === bookInfo?._id)) {
+      } else {
         newReadingBooks.push(bookInfo)
         setUserReadingBooks(newReadingBooks)
         const response = await setReadingBooks(user.id, newReadingBooks)
@@ -230,19 +234,14 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
       }
 
       Linking.openURL(bookInfo?.document)
-
     }
-
   }
 
   const handleDelete = async () => {
-
     try {
-
       const response = await deleteBook(bookInfo?._id)
       console.log(response)
       showSuccessToast('¡Misión cumplida! El libro fue eliminado con éxito')
-
     } catch (error) {
       console.log(error)
     }
@@ -316,8 +315,6 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
               />
             </Box>
           </HStack>
-
-
         </VStack>
       </HStack>
 
@@ -379,50 +376,41 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
             />
           </HStack>
 
-          <HStack
-            justifyContent='space-between'
-            mt='3'
-            maxH='30%'
-          >
+          <HStack justifyContent='space-between' mt='3' maxH='30%'>
             <VStack alignItems='flex-start'>
-              {author?._id === user?.id && previousFourteenHours(bookInfo?.createdAt) && (
-                <>
-                  <Button
-                    h='95%'
-                    variant='unstyled'
-                    borderRadius='full'
-                    startIcon={
-                      <FontAwesome
-                        name='edit'
-                        size={15}
-                        color={icon}
-                      />
-                    }
-                    onPress={() => navigation.navigate('EditBook', { bookInfo })}
-                  >
-                    <Text fontSize='md' bold color={text}>
-                      Editar libro
-                    </Text>
-                  </Button>
+              {author?._id === user?.id &&
+                previousFourteenHours(bookInfo?.createdAt) && (
+                  <>
+                    <Button
+                      h='95%'
+                      variant='unstyled'
+                      borderRadius='full'
+                      startIcon={
+                        <FontAwesome name='edit' size={15} color={icon} />
+                      }
+                      onPress={() =>
+                        navigation.navigate('EditBook', { bookInfo })
+                      }
+                    >
+                      <Text fontSize='md' bold color={text}>
+                        Editar libro
+                      </Text>
+                    </Button>
 
-                  <Button
-                    h='95%'
-                    variant='unstyled'
-                    borderRadius='full'
-                    startIcon={
-                      <FontAwesome
-                        name='trash'
-                        size={15}
-                        color={icon}
-                      />
-                    }
-                    onPress={() => setDeleteVisible(true)}
-                  >
-                    <Text fontSize='md' bold color={text}>
-                      Eliminar libro
-                    </Text>
-                  </Button>
-                  <AlertDialog
+                    <Button
+                      h='95%'
+                      variant='unstyled'
+                      borderRadius='full'
+                      startIcon={
+                        <FontAwesome name='trash' size={15} color={icon} />
+                      }
+                      onPress={() => setDeleteVisible(true)}
+                    >
+                      <Text fontSize='md' bold color={text}>
+                        Eliminar libro
+                      </Text>
+                    </Button>
+                    <AlertDialog
                       isOpen={deleteVisible}
                       onClose={() => {
                         setDeleteVisible(false)
@@ -434,8 +422,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
                           Eliminación de libro
                         </AlertDialog.Header>
                         <AlertDialog.Body>
-                          ¿Estás seguro de que quieres eliminar este
-                          libro?
+                          ¿Estás seguro de que quieres eliminar este libro?
                         </AlertDialog.Body>
                         <AlertDialog.Footer>
                           <Button.Group space={2}>
@@ -456,7 +443,9 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
                                   setDeleteVisible(false)
                                   navigation?.goBack()
                                 } catch {
-                                  showErrorToast('¡Misión fallida! No se pudo eliminar el libro')
+                                  showErrorToast(
+                                    '¡Misión fallida! No se pudo eliminar el libro'
+                                  )
                                 }
                               }}
                             >
@@ -466,12 +455,11 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
                         </AlertDialog.Footer>
                       </AlertDialog.Content>
                     </AlertDialog>
-                </>
-              )}
+                  </>
+                )}
             </VStack>
 
             <>
-
               {notRead && (
                 <Button
                   h='95%'
@@ -552,9 +540,7 @@ const InfoBookProfile = ({ navigation, bookInfo, author, rating, bookGenres }) =
                 </Button>
               )}
             </>
-
           </HStack>
-
         </VStack>
       </HStack>
     </Box>

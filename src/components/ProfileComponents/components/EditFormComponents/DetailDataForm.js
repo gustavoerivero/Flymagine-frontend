@@ -13,6 +13,7 @@ import {
   FormControl,
   Icon,
   FlatList,
+  Stack,
 } from 'native-base'
 import { MaterialIcons } from '@expo/vector-icons'
 import StyledArea from '../../../LoginComponents/StyledArea'
@@ -25,14 +26,20 @@ import COLORS from '../../../../components/styled-components/Colors'
 import styles from './styled-components/styles'
 import {
   dataDetailsSchema,
-  dataDetailsDefaultValues
+  dataDetailsDefaultValues,
 } from '../../../../utils/formValidations/dataDetailsFormValidation'
-import { updateDataUserAdapter, personalPreferencesData } from '../../../../adapters/User'
-import { updateUser, getPreferences, setPreferences } from '../../../../services/user/userAPI'
+import {
+  updateDataUserAdapter,
+  personalPreferencesData,
+} from '../../../../adapters/User'
+import {
+  updateUser,
+  getPreferences,
+  setPreferences,
+} from '../../../../services/user/userAPI'
 import { getAllLiteraryGenre } from '../../../../services/literaryGenre/literaryGenre'
 
 const DetailDataForm = ({ navigation, userData }) => {
-
   const [userInfo, setUserInfo] = useState(userData || null)
 
   const { showSuccessToast, showErrorToast } = useCustomToast()
@@ -56,18 +63,18 @@ const DetailDataForm = ({ navigation, userData }) => {
   useFocusEffect(
     useCallback(() => {
       getPreferences(userInfo?._id)
-        .then(response => {
+        .then((response) => {
           setValue('literaryGenres', response)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(`Error: ${error}`)
           showErrorToast('Error al agregar los géneros literarios')
         })
       getAllLiteraryGenre()
-        .then(response => {
+        .then((response) => {
           setLiteraryGenres(response)
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(`Error: ${error}`)
           showErrorToast('Error al agregar los géneros literarios')
         })
@@ -76,26 +83,31 @@ const DetailDataForm = ({ navigation, userData }) => {
       setValue('phone', userInfo?.phone)
       setValue('address', userInfo?.address)
       setValue('biography', userInfo?.biography || '')
-
     }, [])
   )
 
   const onSubmit = async (values) => {
     startLoading()
     try {
-
-      const response = await updateUser(userInfo?._id, updateDataUserAdapter(values))
-      const responsePreferences = await setPreferences(response?.Data?._id, personalPreferencesData(values))
+      const response = await updateUser(
+        userInfo?._id,
+        updateDataUserAdapter(values)
+      )
+      const responsePreferences = await setPreferences(
+        response?.Data?._id,
+        personalPreferencesData(values)
+      )
 
       console.log(responsePreferences)
 
-      showSuccessToast('¡Misión cumplida! Tus datos fueron actualizados con éxito')
+      showSuccessToast(
+        '¡Misión cumplida! Tus datos fueron actualizados con éxito'
+      )
 
       reset(dataDetailsDefaultValues)
       setValue('literaryGenres', [])
 
       navigation?.goBack()
-
     } catch (error) {
       showErrorToast(error?.message)
       console.log(error)
@@ -106,31 +118,23 @@ const DetailDataForm = ({ navigation, userData }) => {
   return (
     <ScrollView>
       <KeyboardAwareScrollView>
-
         <View style={styles.container}>
           <Box
             alignItems='center'
             rounded='lg'
-            bg='rgba(224, 218, 227, 1)'
+            bg={COLORS.secundary}
             opacity={0.95}
             shadow={2}
             borderColor='coolGray.300'
             borderWidth={1}
             p={3}
             py={5}
-            m={5}
+            m={3}
             w={350}
             mw={350}
           >
-            <VStack
-              space={4}
-              alignItems='center'
-            >
-              <Text
-                bold
-                fontSize='xl'
-                color='purple.800'
-              >
+            <VStack space={3} alignItems='center'>
+              <Text bold fontSize='xl' color={COLORS.primary}>
                 Datos Detallados
               </Text>
 
@@ -138,29 +142,28 @@ const DetailDataForm = ({ navigation, userData }) => {
                 control={control}
                 name='biography'
                 render={({
-                  field: { onChange, onBlur, value = '', ...field } }) => (
-                  <FormControl
-                    mb={errors?.biography && value !== '' ? 0 : 3}
-                  >
-                    <FormControl.Label>
-                      Biografía
-                    </FormControl.Label>
+                  field: { onChange, onBlur, value = '', ...field },
+                }) => (
+                  <FormControl mb={errors?.biography && value !== '' ? 0 : 3}>
+                    <FormControl.Label>Biografía</FormControl.Label>
                     <StyledArea
                       placeholder='Biografía'
                       onChangeText={onChange}
                       value={value}
-                      borderColor={errors?.biography && value !== '' ? 'red.500' : 'grey'}
+                      borderColor={
+                        errors?.biography && value !== '' ? 'red.500' : 'grey'
+                      }
                       {...field}
                       InputLeftElement={
                         <Icon
-                          as={
-                            <MaterialIcons
-                              name='history-edu'
-                            />
-                          }
+                          as={<MaterialIcons name='history-edu' />}
                           size={5}
                           ml='4'
-                          color={errors?.biography && value !== '' ? 'red.500' : 'muted.900'}
+                          color={
+                            errors?.biography && value !== ''
+                              ? 'red.500'
+                              : 'muted.900'
+                          }
                         />
                       }
                     />
@@ -176,24 +179,34 @@ const DetailDataForm = ({ navigation, userData }) => {
                     isRequired
                     isInvalid={errors?.literaryGenres && value?.length === 0}
                   >
-                    <Box ml={2} mr={2} >
+                    <Box ml={2} mr={2}>
                       <FormControl.Label>
                         Escoge los géneros literarios que te interesan
                       </FormControl.Label>
                       <FlatList
                         horizontal
                         showsHorizontalScrollIndicator={false}
+                        mt={1}
                         data={literaryGenres}
                         keyExtractor={(item) => item?._id}
                         ItemSeparatorComponent={() => <Box w={2} />}
                         renderItem={({ item }) => (
                           <TouchableOpacity
-                            activeOpacity={.7}
+                            activeOpacity={0.7}
                             onPress={() => {
                               const newValue = [...value]
 
-                              if (newValue.find((genre) => genre?.name === item?.name)) {
-                                newValue.splice(newValue.findIndex((genre) => genre?.name === item?.name), 1)
+                              if (
+                                newValue.find(
+                                  (genre) => genre?.name === item?.name
+                                )
+                              ) {
+                                newValue.splice(
+                                  newValue.findIndex(
+                                    (genre) => genre?.name === item?.name
+                                  ),
+                                  1
+                                )
                               } else {
                                 newValue.push(item)
                               }
@@ -208,16 +221,22 @@ const DetailDataForm = ({ navigation, userData }) => {
                               style={{
                                 borderRadius: 30,
                                 borderWidth: 1,
-                                borderColor: 'white',
-                                backgroundColor:
-                                  value.find((genre) => genre?._id === item?._id)
-                                    ? COLORS.primary : "#fff",
+                                borderColor: COLORS.bgPrimary,
+                                backgroundColor: value.find(
+                                  (genre) => genre?._id === item?._id
+                                )
+                                  ? COLORS.button.primary
+                                  : COLORS.base,
                               }}
                             >
                               <Text
                                 color={
-                                  value.find((genre) => genre?._id === item?._id)
-                                    ? 'white' : 'purple.900'}
+                                  value.find(
+                                    (genre) => genre?._id === item?._id
+                                  )
+                                    ? 'white'
+                                    : 'purple.900'
+                                }
                               >
                                 {item?.name}
                               </Text>
@@ -235,22 +254,24 @@ const DetailDataForm = ({ navigation, userData }) => {
                 )}
               />
 
-              <Button
-                title='Actualizar datos detallados'
-                buttonStyle={[styles.button, { backgroundColor: COLORS.button.primary }]}
-                isLoading={isLoading}
-                disabled={isLoading || !isValid}
-                onPress={handleSubmit(onSubmit)}
-              />
-
+              <Stack /* BUTTON */ mt={3}>
+                <Button
+                  title='Actualizar datos detallados'
+                  buttonStyle={[
+                    styles.button,
+                    { backgroundColor: COLORS.button.terciary },
+                  ]}
+                  isLoading={isLoading}
+                  disabled={isLoading || !isValid}
+                  onPress={handleSubmit(onSubmit)}
+                />
+              </Stack>
             </VStack>
           </Box>
         </View>
-
       </KeyboardAwareScrollView>
     </ScrollView>
   )
-
 }
 
 export default DetailDataForm
