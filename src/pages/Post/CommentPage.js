@@ -71,7 +71,7 @@ const CommentPage = ({ navigation, route }) => {
         .catch((error) => {
           console.log(error)
         })
-    }, [])
+    }, [comments])
   )
 
   const onSubmit = async (values) => {
@@ -101,75 +101,75 @@ const CommentPage = ({ navigation, route }) => {
   return (
     <KeyboardAwareScrollView>
       <ScrollView>
-      <VStack minH={layout.height * 0.81} >
-        <Stack /* POST */ alignItems='center'
-          w='100%'
-          p={2}
-          justifyContent='center'
-        >
-          <CommentPost navigation={navigation} post={post} />
-        </Stack>
-        <VStack /* POST COMENTARIES */ alignItems='flex-start'
-          ml={1}
-          w='95%'
-        >
-          {comments && (
-            <FlatList
-              py={2}
-              scrollEnabled
-              refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-              }
-              showsVerticalScrollIndicator={false}
-              data={comments}
-              keyExtractor={(item) => item?._id}
-              renderItem={({ item }) => (
-                <Stack p={1}>
-                  <Comment
-                    key={item._id}
-                    comment={item}
-                    navigation={navigation}
-                  />
-                </Stack>
-              )}
-            />
-          )}
+        <VStack minH={layout.height * 0.81} >
+          <Stack /* POST */ alignItems='center'
+            w='100%'
+            p={2}
+            justifyContent='center'
+          >
+            <CommentPost navigation={navigation} post={post} />
+          </Stack>
+          <VStack /* POST COMENTARIES */ alignItems='flex-start'
+            ml={1}
+            w='95%'
+          >
+            {comments && (
+              <FlatList
+                py={2}
+                scrollEnabled
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                showsVerticalScrollIndicator={false}
+                data={comments}
+                keyExtractor={(item) => item?._id}
+                renderItem={({ item }) => (
+                  <Stack p={1}>
+                    <Comment
+                      key={item._id}
+                      comment={item}
+                      navigation={navigation}
+                    />
+                  </Stack>
+                )}
+              />
+            )}
+          </VStack>
         </VStack>
-      </VStack>
       </ScrollView>
 
       <VStack>
-          <Controller
-            name='description'
-            control={control}
-            render={({ field: { onChange, value = '', ...field } }) => (
-              <CommentInput
-                {...field}
-                value={value}
-                onChangeText={onChange}
-                placeholder='¿Tienes algo que decir?'
-                rightElement={
-                  <FAB
-                    icon={<FontAwesome name='send' color='#fff' size={20} />}
-                    color='#b973ff'
-                    containerStyle={{
-                      position: 'relative',
-                      marginBottom: 5,
-                      right: '5%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 50,
-                      height: 50,
-                    }}
-                    disabled={!isValid || isLoading}
-                    loading={isLoading}
-                    onPress={handleSubmit(onSubmit)}
-                  />
-                }
-              />
-            )}
-          />
-        </VStack>
+        <Controller
+          name='description'
+          control={control}
+          render={({ field: { onChange, value = '', ...field } }) => (
+            <CommentInput
+              {...field}
+              value={value}
+              onChangeText={onChange}
+              placeholder='¿Tienes algo que decir?'
+              rightElement={
+                <FAB
+                  icon={<FontAwesome name='send' color='#fff' size={20} />}
+                  color='#b973ff'
+                  containerStyle={{
+                    position: 'relative',
+                    marginBottom: 5,
+                    right: '5%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 50,
+                    height: 50,
+                  }}
+                  disabled={!isValid || isLoading}
+                  loading={isLoading}
+                  onPress={handleSubmit(onSubmit)}
+                />
+              }
+            />
+          )}
+        />
+      </VStack>
     </KeyboardAwareScrollView>
   )
 }
