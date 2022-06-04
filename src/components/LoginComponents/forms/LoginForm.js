@@ -95,8 +95,8 @@ const LoginForm = ({ navigation }) => {
       <Box
         alignItems='center'
         rounded='lg'
-        bg='rgba(224, 218, 227, 1)'
-        opacity={0.95}
+        bg={COLORS.base}
+        opacity={0.8}
         shadow={2}
         borderColor='coolGray.300'
         borderWidth={1}
@@ -109,7 +109,7 @@ const LoginForm = ({ navigation }) => {
           style={{
             width: 150,
             height: 150,
-            opacity: 0.8,
+            opacity: 0.9,
           }}
           resizeMode='contain'
         />
@@ -214,14 +214,14 @@ const LoginForm = ({ navigation }) => {
           <HStack>
             <Button
               title='Iniciar sesión'
-              buttonStyle={styles.button}
+              buttonStyle={[styles.button, { backgroundColor: COLORS.button.primary }]}
               disabled={!isValid || isLoading}
               isLoading={isLoading}
               onPress={handleSubmit(onSubmit)}
             />
             <Button
               title='Registrarse'
-              buttonStyle={[styles.button, { backgroundColor: COLORS.button.secundary }]}
+              buttonStyle={[styles.button, { backgroundColor: COLORS.button.primary }]}
               onPress={() => navigation?.navigate('Register')}
             />
           </HStack>

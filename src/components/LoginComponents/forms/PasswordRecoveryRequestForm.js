@@ -20,6 +20,7 @@ import useLoading from '../../../hooks/useLoading'
 import { restorePassword } from '../../../services/authAPI'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { restorePasswordSchema, restorePasswordDefaultValue } from '../../../utils/formValidations/dataReset'
+import COLORS from '../../styled-components/Colors'
 
 const PasswordRecoveryRequestForm = ({ navigation }) => {
 
@@ -55,8 +56,8 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
     <Box
       alignItems='center'
       rounded='lg'
-      bg='rgba(224, 218, 227, 1)'
-      opacity={0.95}
+      bg={COLORS.base}
+      opacity={0.8}
       shadow={2}
       borderColor='coolGray.300'
       borderWidth={1}
@@ -73,7 +74,7 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
           <Text
             bold
             fontSize='xl'
-            color='purple.800'
+            color={COLORS.primary}
             mb={2}
           >
             ¿Olvidaste tu contraseña?
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   button: {
     width: 170,
     marginHorizontal: 2,
-    backgroundColor: '#9681DF'
+    backgroundColor: COLORS.button.primary
   },
 })
 

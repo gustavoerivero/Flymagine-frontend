@@ -1,5 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+//Splash Page
+import SplashScreen from '../pages/SplashScreen'
+
 // Login Pages
 import LoginPage from '../pages/Login/LoginPage'
 import RegisterPage from '../pages/Login/RegisterPage'

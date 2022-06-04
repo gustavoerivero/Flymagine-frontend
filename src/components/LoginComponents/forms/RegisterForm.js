@@ -122,8 +122,8 @@ const RegisterForm = ({ navigation }) => {
           <Box
             alignItems='center'
             rounded='lg'
-            bg='rgba(224, 218, 227, 1)'
-            opacity={0.95}
+            bg={COLORS.base}
+            opacity={0.8}
             shadow={2}
             borderColor='coolGray.300'
             borderWidth={1}
@@ -141,7 +141,7 @@ const RegisterForm = ({ navigation }) => {
               <Text
                 bold
                 fontSize='xl'
-                color='purple.800'
+                color={COLORS.primary}
               >
                 Formulario de Registro
               </Text>
@@ -647,7 +647,7 @@ const RegisterForm = ({ navigation }) => {
                                 borderColor: 'white',
                                 backgroundColor:
                                   value.find((genre) => genre?._id === item?._id)
-                                    ? COLORS.primary : "#fff",
+                                    ? COLORS.primary : COLORS.base,
                               }}
                             >
                               <Text
@@ -689,13 +689,14 @@ const RegisterForm = ({ navigation }) => {
                     <HStack
                       space={2}
                       px={2}
-                      alignContent='flex-start'
+                      alignItems='center'
                       w='100%'
+                      justifyContent='center'
                     >
                       <Box
                         alignItems='center'
                         rounded='lg'
-                        bg='rgba(255, 255, 255, 1)'
+                        bg={COLORS.secundary}
                         shadow={2}
                         borderColor='coolGray.300'
                         borderWidth={1}
@@ -706,6 +707,7 @@ const RegisterForm = ({ navigation }) => {
                         <VStack
                           space={2}
                           alignItems='center'
+                          bg={COLORS.secundary}
                         >
                           <Text
                             style={{
@@ -765,7 +767,7 @@ const RegisterForm = ({ navigation }) => {
                       <Box
                         alignItems='center'
                         rounded='lg'
-                        bg='rgba(255, 255, 255, 1)'
+                        bg={COLORS.secundary}
                         shadow={2}
                         borderColor='coolGray.300'
                         borderWidth={1}
