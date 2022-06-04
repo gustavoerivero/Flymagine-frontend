@@ -17,6 +17,7 @@ import BookProfilePage from '../pages/Book/BookProfilePage' //Perfil del Libro c
 import BookEdit from '../pages/Book/EditBook' //Edicion del libro
 import MyBook from '../pages/Book/MyBook' //Mis libros, con opcion de Agregar un libro
 import RegisterBook from '../pages/Book/RegisterBook' //Pagina de Registro de un libro nuevo
+import SplashScreen from '../pages/SplashScreen'
 
 
 const Tab = createBottomTabNavigator()

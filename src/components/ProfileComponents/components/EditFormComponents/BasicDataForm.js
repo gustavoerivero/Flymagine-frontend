@@ -285,7 +285,7 @@ const BasicDataForm = ({ navigation, userData }) => {
                   title='Actualizar datos básicos'
                   buttonStyle={[
                     styles.button,
-                    { backgroundColor: COLORS.button.terciary },
+                    { backgroundColor: COLORS.button.primary},
                   ]}
                   isLoading={isLoading}
                   disabled={isLoading || !isValid}
