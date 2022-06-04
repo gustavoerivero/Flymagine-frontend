@@ -1,5 +1,6 @@
 import React from 'react'
 import { Input } from 'native-base'
+import COLORS from '../../styled-components/Colors'
 
 const StyledField = ({ style = {}, ...props }) => {
   const inputStyle = {
@@ -8,8 +9,8 @@ const StyledField = ({ style = {}, ...props }) => {
   return (
     <Input
       style={inputStyle}
-      bgColor='rgba(158, 132, 173, .25)'
-      borderColor='grey'
+      bgColor={COLORS.base}
+      borderColor={COLORS.primary}
       placeholderTextColor='rgba(40, 10, 57, .5)'
       h={50}
       w={{

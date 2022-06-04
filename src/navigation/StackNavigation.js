@@ -1,5 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+//Splash Page
+import SplashScreen from '../pages/SplashScreen'
+
 // Login Pages
 import LoginPage from '../pages/Login/LoginPage'
 import RegisterPage from '../pages/Login/RegisterPage'
@@ -94,7 +97,7 @@ const stackRoutes = [
     component: CommentPage,
     requireAuth: true,
     options: {
-      title: '¿Qué están pasando?',
+      title: '¿Qué están pensando?',
     }
   },
   {
@@ -102,7 +105,7 @@ const stackRoutes = [
     component: CommentReviewPage,
     requireAuth: true,
     options: {
-      title: '¿Qué están pasando?',
+      title: '¿Qué están pensando?',
     }
   },
   {

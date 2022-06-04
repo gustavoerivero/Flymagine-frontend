@@ -89,9 +89,9 @@ const CommentReviewEditPage = ({ navigation, route }) => {
 
   return (
     <KeyboardAwareScrollView>
-      <VStack h={layout.height * .94}>
+      <VStack h={layout.height * .93}>
         <ScrollView>
-          <VStack maxH='65%' >
+          <VStack maxH='100%' alignItems='center' p={2}>
             <CommentModify
               comment={comment}
               user={userData}

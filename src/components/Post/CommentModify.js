@@ -18,15 +18,15 @@ const CommentModify = ({ user, comment }) => {
 
   return (
     <Box
+      w='100%'
+      p={1}
       bgColor={COLORS.secundary}
-      w={layout.width}
-      p={2}
+      rounded='lg'
       shadow={2}
       minH={layout.height * 0.1}
     >
-      <HStack
-        space={2}
-      >
+      <HStack justifyContent='center' m={1}>
+        <Stack /* AVATAR */ w='15%' alignItems='center' >
         <Avatar
           bg='purple.600'
           size='md'
@@ -40,34 +40,25 @@ const CommentModify = ({ user, comment }) => {
         >
           {user && (user?.firstName[0] + user?.lastName[0])}
         </Avatar>
-        <VStack
-          space={1}
-          w='85%'
-        >
-          <HStack space={2} >
-            <Text
-              bold
-              fontSize='sm'
-              pt={2}
-            >
+        </Stack>
+        
+        <VStack /* INFO */ px={1} pb={2} w='85%' >
+          <HStack /* USER */ w='100%' h={7} space={2} alignItems='center' >
+            <Text bold fontSize='sm' >
               {user?.firstName} {user?.lastName}
             </Text>
-            <Text
-              fontSize={10}
-              color='gray.300'
-              alignSelf='flex-end'
-            >
+            <Text fontSize={10} color='gray.300' >
               {parseDate(comment?.createdAt) + ' ' + parseTime(comment?.createdAt)}
             </Text>
           </HStack>
-          <Stack pl={3} pr={2}>
-
+          <Stack /* DESCRIPTION */ w='100%'>
             <Text fontSize='xs' textAlign='justify' >
               {comment?.description}
             </Text>
           </Stack>         
           
         </VStack>
+
       </HStack>
     </Box>
   )

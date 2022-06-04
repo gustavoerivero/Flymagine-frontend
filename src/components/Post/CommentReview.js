@@ -96,13 +96,16 @@ const CommentReview = ({ navigation, comment = {} }) => {
 
   return (
     <Box
-      p={2}
+      pl={2}
+      pr={1}
+      py={2}
       bgColor='white'
       rounded='lg'
       shadow={2}
-      pb={2}
+      w='100%'
     >
       <HStack>
+        <Stack /* AVATAR */ w='15%' alignItems='center'>
         <TouchableOpacity
           onPress={() => {
             console.log(`${userComment?.firstName + ' ' + userComment?.lastName}'s profile`)
@@ -126,21 +129,14 @@ const CommentReview = ({ navigation, comment = {} }) => {
             {userComment && (userComment?.firstName[0] + userComment?.lastName[0])}
           </Avatar>
         </TouchableOpacity>
-        <VStack
-          ml={2}
-        >
-          <HStack
-            space={2}
+        </Stack>
+
+        <VStack /* INFO */ px={1} w='85%'>
+          <HStack /* USER & BUTTONS */ w='100%' h={7}
             justifyContent='space-between'
             alignItems='center'
-            h={7}
-            mr={2} 
-            w={290}           
-            maxW={290}
           >
-            <HStack
-              space={2}
-            >
+            <HStack /* NAME & DATE */ w='80%' space={2} >
               <Text
                 bold
                 fontSize='sm'
@@ -157,9 +153,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
             </HStack>
 
             {(user?.id === comment?.idUser && previousFourteenHours(comment?.createdAt)) && (
-              <HStack
-                alignItems='flex-end'
-              >
+              <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
                     <FontAwesome
@@ -232,27 +226,18 @@ const CommentReview = ({ navigation, comment = {} }) => {
                 </AlertDialog>
               </HStack>
             )}
-
           </HStack>
 
-          <VStack>
-            <Stack
-              w={layout.width * .73}
-              mx={2}
-              mb={2}
-            >
+          <VStack /* DESCRIPTION & LIKES */ w='100%'>
+            <Stack /* DESCRIPTION */ w='100%' mb={1}>
               <Text fontSize='xs' textAlign='justify' >
-                {comment?.description}
+                {' '}{comment?.description}
               </Text>
             </Stack>
-            <Divider />
 
-            <HStack
-              w={layout.width * .73}
-              mt={1}
-              justifyContent='flex-end'
-              space={4}
-            >
+            <Divider my={1}/>
+
+            <HStack /* LIKE BUTTON */ w='100%' py={0.5} pr={2} justifyContent='flex-end'>
 
               <TouchableOpacity
                 onPress={() => {
