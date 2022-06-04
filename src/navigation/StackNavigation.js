@@ -94,7 +94,7 @@ const stackRoutes = [
     component: CommentPage,
     requireAuth: true,
     options: {
-      title: '¿Qué están pasando?',
+      title: '¿Qué están pensando?',
     }
   },
   {
@@ -102,7 +102,7 @@ const stackRoutes = [
     component: CommentReviewPage,
     requireAuth: true,
     options: {
-      title: '¿Qué están pasando?',
+      title: '¿Qué están pensando?',
     }
   },
   {

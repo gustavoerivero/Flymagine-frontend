@@ -106,13 +106,13 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
   return (
     <Box
       p={2}
-      bgColor='white'
+      bgColor={COLORS.secundary}
       rounded='lg'
       shadow={2}
-      pb={2}
       w='100%'
     >
       <HStack>
+        <Stack /* AVATAR */ w='15%' alignItems='center' >
         <TouchableOpacity
           onPress={() => {
             console.log(`${userReview?.firstName + ' ' + userReview?.lastName}'s profile`)
@@ -136,21 +136,15 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
             {userReview && (userReview?.firstName[0] + userReview?.lastName[0])}
           </Avatar>
         </TouchableOpacity>
-        <VStack
-          ml={2}
-        >
-          <HStack
+        </Stack>
+        
+        <VStack /* INFO */ px={1} w='85%' >
+          <HStack /* USER & BUTTONS */ w='100%' h={8}
             space={2}
             justifyContent='space-between'
             alignItems='center'
-            h={7}
-            mr={2} 
-            w={290}           
-            maxW={290}
           >
-            <HStack
-              space={2}
-            >
+            <HStack /* NAME & DATE */ w='80%' space={2} >
               <Text
                 bold
                 fontSize='sm'
@@ -167,9 +161,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
             </HStack>
 
             {(user?.id === review?.idUser && previousFourteenHours(review?.createdAt)) && (
-              <HStack
-                alignItems='flex-end'
-              >
+              <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
                     <FontAwesome
@@ -244,21 +236,17 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                 </AlertDialog>
               </HStack>
             )}
-
           </HStack>
 
-          <VStack>
+          <VStack /* DESCRIPTION & LIKES */ w='100%'>
 
-            <Stack
-              w={layout.width * .73}
-              mx={2}
-              mb={2}
-            >
+            <Stack /* DESCRIPTION */ w='100%' mb={1}>
               <Text fontSize='xs' textAlign='justify' >
                 {review?.description}
               </Text>
             </Stack>
-            <Stack w={layout.width * 0.73} mx={2} mb={3} alignItems='flex-start'>
+
+            <Stack /* RATING */ w='100%' mx={2} mt={1} mb={1} alignItems='flex-start'>
               <AirbnbRating
                 count={5}
                 showRating={false}
@@ -269,14 +257,10 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                 unSelectedColor={COLORS.button.secundaryDisabled}
               />
             </Stack>
-            <Divider />
+
+            <Divider my={1} />
             
-            <HStack
-              w={layout.width * .73}
-              mt={1}
-              justifyContent='flex-end'
-              space={4}
-            >
+            <HStack /* LIKE BUTTON */ w='100%' py={0.5} pr={2} justifyContent='flex-end' >
 
               <TouchableOpacity
                 onPress={() => {
