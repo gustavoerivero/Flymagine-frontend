@@ -52,7 +52,7 @@ npm i -f
 
 Once the installation of the dependencies is successful, the project is ready to deploy.
 
-## Deployment 📦 📦.
+## Deployment 📦 
 
 To perform a local deployment, we proceed by executing one of the following commands:_
 
