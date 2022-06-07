@@ -1,4 +1,4 @@
-# Flymagine-frontend
+# Flymagine
 
 Flymagine; Write, read, imagine! It's a social network for all the readers and writers of the world! Here, not only can you share with your friends posts, comments, even reactions to their comments and posts, but you can also visualize the books of your favorite writers, leave them your own review with the score you consider.  
 
