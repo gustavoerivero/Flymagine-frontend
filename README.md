@@ -24,7 +24,7 @@ The application developed with React Native and Expo for the frontend and, Node.
 
 ### Installation 🔧
 
-To begin, we proceed to download the repository. To do this, we open the console, go to the folder where we want to save the project and run the following command:_.
+To begin, we proceed to download the repository. To do this, we open the console, go to the folder where we want to save the project and run the following command:
 
 ```
 git clone https://github.com/gustavoerivero/Flymagine-frontend.git
@@ -32,7 +32,7 @@ git clone https://github.com/gustavoerivero/Flymagine-frontend.git
 
 Next, go to the cloned folder in the "Flymagine-frontend" repository.
 
-For a Windows operating system, with the command:__ ```` git clone
+For a Windows operating system, with the command:
 
 ```
 cd Flymagine-frontend
@@ -44,7 +44,7 @@ Next, we proceed to the installation of the libraries and dependencies necessary
 npm install
 ```
 
-If it doesn't work, try with:_
+If it doesn't work, try with:
 
 ```
 npm i -f
@@ -54,9 +54,9 @@ Once the installation of the dependencies is successful, the project is ready to
 
 ## Deployment 📦 
 
-To perform a local deployment, we proceed by executing one of the following commands:_
+To perform a local deployment, we proceed by executing one of the following commands:
 
-With expo:_
+With expo:
 ```
 expo start
 ```
