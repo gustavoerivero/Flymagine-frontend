@@ -4,7 +4,6 @@ Flymagine; Write, read, imagine! It's a social network for all the readers and w
 
 This project represents the FullStack assessed activity for the subject Lab III of the Computer Engineering Program of the 
 Engineering Program of the Faculty of Science and Technology of the Universidad Centroccidental "Lisandro Alvarado", Venezuela. 
-Centroccidental "Lisandro Alvarado", Venezuela.
 
 ## Getting started 🚀
 
