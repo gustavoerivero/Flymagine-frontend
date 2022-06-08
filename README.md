@@ -63,6 +63,10 @@ expo start
 After this, a screen will be displayed in console indicating the different methods to run the server. For the development of the project, it was done by emulating the application from android.
 
 
+## Backend 💻
+
+[Click here to go to the Flymagine backend repository.](https://github.com/gustavoerivero/Flymagine-backend)
+
 
 ## Thoteam✒️
 
