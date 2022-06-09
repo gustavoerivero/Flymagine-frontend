@@ -98,17 +98,11 @@ const Comment = ({ navigation, comment = {} }) => {
   )
 
   return (
-    <Box pl={2} pr={1} py={2} bgColor='white' rounded='lg' shadow={2} w='100%'>
+    <Box pl={2} pr={1} py={2} m={1} p={1} my={1} bgColor='white' rounded='lg' shadow={2} w='100%'>
       <HStack>
         <Stack /* AVATAR */ w='15%' alignItems='center'>
           <TouchableOpacity
             onPress={() => {
-              console.log(
-                `${
-                  userComment?.firstName + ' ' + userComment?.lastName
-                }'s profile`
-              )
-              console.log(userPost._id)
               if (userComment?._id === user?.id) {
                 navigation.navigate('Profile')
               } else {

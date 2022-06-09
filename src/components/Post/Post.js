@@ -284,22 +284,14 @@ const Post = ({ navigation, post = {} }) => {
             </HStack>
 
             <Divider opacity={0.5} />
-            <Stack py={0.5} width='100%' /* TAGS */>
-              {personTags?.length > 0 && (
-                <>
-                  <FlatList
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    data={personTags}
-                    keyExtractor={(item) => item?._id}
-                    renderItem={({ item }) => (
-                      <Tag tag={item} navigation={navigation} />
-                    )}
-                  />
-                  <Divider mt={0.5} opacity={0.5} />
-                </>
-              )}
-            </Stack>
+            {personTags?.length > 0 && (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                {personTags?.map((tag, index) => (
+                  <Tag key={index.toString()} tag={tag} navigation={navigation} />
+                ))}
+                <Divider mt={0.5} opacity={0.5} />
+              </ScrollView>
+            )}
           </VStack>
         </HStack>
 
@@ -319,19 +311,12 @@ const Post = ({ navigation, post = {} }) => {
             )}
           </Stack>
           {hashtags?.length > 0 && (
-            <>
-              <FlatList
-                horizontal
-                mt={0.5}
-                showsHorizontalScrollIndicator={false}
-                data={hashtags}
-                keyExtractor={(item) => item?._id}
-                renderItem={({ item }) => (
-                  <Hashtag hashtag={item} navigation={navigation} />
-                )}
-              />
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+              {hashtags?.map((hashtag, index) => (
+                <Hashtag key={index.toString()} hashtag={hashtag} navigation={navigation} />
+              ))}
               <Divider mt={0.5} opacity={0.5} />
-            </>
+            </ScrollView>
           )}
 
           <HStack w="95%" mt={1} justifyContent="flex-end" space={4}>

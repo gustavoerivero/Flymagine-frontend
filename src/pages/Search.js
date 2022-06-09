@@ -148,7 +148,7 @@ const Search = ({ navigation }) => {
               }}
               scrollable
             >
-              {tabs.map((tab) => (
+              {tabs.map((tab, i) => (
                 <Tab.Item
                   key={tab}
                   title={tab}

@@ -113,27 +113,13 @@ const CommentPage = ({ navigation, route }) => {
             ml={1}
             w='95%'
           >
-            {comments && (
-              <FlatList
-                py={2}
-                scrollEnabled
-                refreshControl={
-                  <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                }
-                showsVerticalScrollIndicator={false}
-                data={comments}
-                keyExtractor={(item) => item?._id}
-                renderItem={({ item }) => (
-                  <Stack p={1}>
-                    <Comment
-                      key={item._id}
-                      comment={item}
-                      navigation={navigation}
-                    />
-                  </Stack>
-                )}
+            {comments.length > 0 && comments.map((comment, index) => (
+              <Comment
+                key={index.toString()}
+                comment={comment}
+                navigation={navigation}
               />
-            )}
+            ))}
           </VStack>
         </VStack>
       </ScrollView>

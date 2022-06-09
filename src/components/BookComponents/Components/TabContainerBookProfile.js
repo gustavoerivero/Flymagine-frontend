@@ -99,9 +99,9 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
         }}
         scrollable
       >
-        {tabs.map((tab) => (
+        {tabs.map((tab, i) => (
           <Tab.Item
-            key={tab}
+            key={i.toString()}
             title={tab}
             titleStyle={{ color: COLORS.secundary }}
             containerStyle={{ backgroundColor: COLORS.primary }}
