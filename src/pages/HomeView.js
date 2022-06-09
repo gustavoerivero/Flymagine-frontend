@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { RefreshControl, useWindowDimensions } from 'react-native'
+import { RefreshControl, useWindowDimensions, ActivityIndicator } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { VStack, Box, StatusBar, FlatList, Stack } from 'native-base'
 
@@ -76,7 +76,7 @@ const HomeView = ({ navigation }) => {
       <StatusBar animated={true} backgroundColor={COLORS.primary} />
       <TopBar />
       <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
-        {posts && (
+        {posts ? (
           <FlatList
             py={2}
             refreshControl={
@@ -91,7 +91,10 @@ const HomeView = ({ navigation }) => {
               </Stack>
             )}
           />
-        )}
+        )
+          :
+          <ActivityIndicator />
+        }
       </VStack>
     </Box>
   )

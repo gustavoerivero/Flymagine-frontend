@@ -272,8 +272,7 @@ const Review = ({ navigation, dataReview = {} }) => {
                 unSelectedColor={COLORS.button.secundaryDisabled}
               />
             </Stack>
-
-
+            
             <Divider />
             <HStack
               w={layout.width * 0.73}

@@ -217,9 +217,9 @@ const CreatePostPage = ({ navigation }) => {
                   </HStack>
                   <ScrollView>
                     <VStack maxH='80%' space={2} mx='5%'>
-                      {usersSearched.map((item) => (
+                      {usersSearched.map((item, index) => (
                         <TouchableOpacity
-                          key={item._id}
+                          key={index.toString()}
                           onPress={() => {
                             setUserSearch('')
                             setUserSearched([])
@@ -368,9 +368,9 @@ const CreatePostPage = ({ navigation }) => {
                   </HStack>
                   <ScrollView>
                     <VStack maxH='80%' space={2} mx='5%'>
-                      {tagsSearched.map((item) => (
+                      {tagsSearched.map((item, index) => (
                         <TouchableOpacity
-                          key={item._id}
+                          key={index.toString()}
                           onPress={() => {
                             setTagSearch('')
                             setTagsSearched([])

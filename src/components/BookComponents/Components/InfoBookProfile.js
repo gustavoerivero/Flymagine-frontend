@@ -17,7 +17,6 @@ import {
   VStack,
   Icon,
   HStack,
-  FlatList,
   Badge,
   Button,
   IconButton,
@@ -293,14 +292,10 @@ const InfoBookProfile = ({
 
           <HStack my={2} h='15%'>
             <Box>
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={bookGenres}
-                keyExtractor={(item) => item?._id}
-                ItemSeparatorComponent={() => <Box w={1} />}
-                renderItem={({ item }) => (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {bookGenres.length > 0 && bookGenres.map((genre, index) => (
                   <Badge
+                    key={index.toString()}
                     colorScheme='success'
                     alignItems='center'
                     justifyContent='center'
@@ -309,10 +304,10 @@ const InfoBookProfile = ({
                       backgroundColor: categoryBgColor,
                     }}
                   >
-                    <Text color={elementsButton}>{item?.name}</Text>
+                    <Text color={elementsButton}>{genre?.name}</Text>
                   </Badge>
-                )}
-              />
+                ))}
+              </ScrollView>
             </Box>
           </HStack>
         </VStack>

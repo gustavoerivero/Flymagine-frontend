@@ -15,6 +15,8 @@ import {
   ScrollView,
   Icon,
 } from 'native-base'
+import Hashtag from './Hashtag'
+import Tag from './Tag'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
 import { previousFourteenHours } from '../../utils/functions'
@@ -257,51 +259,12 @@ const CommentPost = ({ navigation, post = {} }) => {
             <Stack>
               <Divider my={1} />
               {personTags?.length > 0 && (
-                <>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                    <HStack space={1} mr={10} m={1}>
-                      {personTags.map((tag) => (
-                        <TouchableOpacity
-                          key={tag._id}
-                          onPress={() => {
-                            if (tag?._id === user?.id) {
-                              navigation.navigate('Profile')
-                            } else {
-                              navigation.navigate('UserProfile', {
-                                user: tag._id,
-                              })
-                            }
-                          }}
-                        >
-                          <Badge
-                            size='sm'
-                            bgColor='rgba(223, 204, 255, .35)'
-                            rounded='full'
-                          >
-                            <HStack space={1}>
-                              <Avatar
-                                bg='purple.600'
-                                size='xs'
-                                source={{
-                                  uri:
-                                    tag?.photo === 'none' ? null : tag?.photo,
-                                }}
-                                borderColor='white'
-                                borderWidth={3}
-                              >
-                                {tag && tag?.firstName[0] + tag?.lastName[0]}
-                              </Avatar>
-                              <Text color='rgba(95, 0, 255, .55)'>
-                                {tag.firstName + ' ' + tag.lastName}
-                              </Text>
-                            </HStack>
-                          </Badge>
-                        </TouchableOpacity>
-                      ))}
-                    </HStack>
-                  </ScrollView>
-                  <Divider my={1} />
-                </>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                  {personTags?.map((tag, index) => (
+                    <Tag key={index.toString()} tag={tag} navigation={navigation} />
+                  ))}
+                  <Divider mt={0.5} opacity={0.5} />
+                </ScrollView>
               )}
             </Stack>
 
@@ -326,26 +289,12 @@ const CommentPost = ({ navigation, post = {} }) => {
               )}
             </Stack>
             {hashtags?.length > 0 && (
-              <>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  <HStack space={1} mr={10} m={1}>
-                    {hashtags.map((hashtag) => (
-                      <TouchableOpacity key={hashtag._id}>
-                        <Badge
-                          size='sm'
-                          bgColor='rgba(223, 204, 255, .35)'
-                          rounded='full'
-                        >
-                          <Text color='rgba(95, 0, 255, .55)'>
-                            {hashtag.name}
-                          </Text>
-                        </Badge>
-                      </TouchableOpacity>
-                    ))}
-                  </HStack>
-                </ScrollView>
-                <Divider />
-              </>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} >
+                {hashtags?.map((hashtag, index) => (
+                  <Hashtag key={index.toString()} hashtag={hashtag} navigation={navigation} />
+                ))}
+                <Divider mt={0.5} opacity={0.5} />
+              </ScrollView>
             )}
 
             <HStack /* LIKE BUTTON */ w='100%' py={0.5} pr={2} justifyContent='flex-end' >
