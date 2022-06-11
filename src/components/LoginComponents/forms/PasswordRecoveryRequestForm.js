@@ -41,7 +41,8 @@ const PasswordRecoveryRequestForm = ({ navigation }) => {
   const onSubmit = async (value) => {
     startLoading()
     try {
-      await restorePassword(value.email)
+      let resp = await restorePassword(value.email)
+      console.log(resp)
       showSuccessToast('¡El correo de recuperación de contraseña ha sido enviado!')
       reset()
       navigation?.navigate('Login')

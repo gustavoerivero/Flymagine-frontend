@@ -13,8 +13,18 @@ const login = async (form = {}) => {
 }
 
 const restorePassword = async (email) => {
-  const { data } = await http.post(`${BASE_URL}/restored/${email}`)	
-  return data
+  await fetch(`https://flymagine-backend.herokuapp.com/flymagine/api/v1/user/restored/${email}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }).then(response => {
+    response.text().then((res) => {
+      return res
+    })
+  }).catch(err => {
+    return err
+  })
 }
 
 module.exports = {
