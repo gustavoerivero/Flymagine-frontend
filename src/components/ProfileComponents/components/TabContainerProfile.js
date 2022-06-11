@@ -25,7 +25,7 @@ const TabContainerProfile = ({ navigation, userInfo }) => {
   ]
 
   return (
-    <View minH={layout.height} >
+    <View minH={layout.height} mb={4} pb={4}>
       <Tab
         value={index}
         onChange={setIndex}

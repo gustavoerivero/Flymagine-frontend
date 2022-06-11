@@ -4,7 +4,7 @@ import ProfileScreen from '../../components/ProfileComponents/screens/ProfileScr
 
 const UserProfilePage = ({ navigation, route }) => {
   return (
-    <View>
+    <View >
       <ProfileScreen navigation={navigation} userData={route?.params?.user} />
     </View>
   )

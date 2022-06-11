@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react'
-import { useWindowDimensions } from 'react-native'
+import { useWindowDimensions, ActivityIndicator } from 'react-native'
 import {
   ScrollView,
   View,
+  Stack,
 } from 'native-base'
 
 import UserItem from '../../components/ProfileComponents/components/UserItem'
@@ -16,11 +17,10 @@ const Follows = ({ navigation, route }) => {
   const layout = useWindowDimensions()
 
   const id = route?.params?.userId
-  const [follows, setFollows] = useState(route?.params?.follows || [])
+  const [follows, setFollows] = useState(route?.params?.follows || null)
 
   useFocusEffect(
     useCallback(() => {
-
       getFollows(id)
         .then(res => {
           setFollows(res?.Data?.follows)
@@ -28,8 +28,6 @@ const Follows = ({ navigation, route }) => {
         .catch(err => {
           console.log(err)
         })
-
-
     }, [follows])
   )
 
@@ -40,13 +38,18 @@ const Follows = ({ navigation, route }) => {
         w={layout.width}
         bgColor={COLORS.base}
       >
-        {follows && follows.map(follow => (
+        {follows ? follows.map(follow => (
           <UserItem
             key={follow._id}
             userItem={follow}
             navigation={navigation}
           />
-        ))}
+        ))
+          :
+          <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+            <ActivityIndicator size='large' color={COLORS.primary} />
+          </Stack>
+        }
       </View>
     </ScrollView>
   )

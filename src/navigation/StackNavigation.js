@@ -22,7 +22,6 @@ import Followers from '../pages/User/Followers'
 import BooksPage from '../pages/User/BooksPage'
 
 // Book Pages
-import MyBook from '../pages/Book/MyBook'
 import BookProfilePage from '../pages/Book/BookProfilePage'
 import RegisterBook from '../pages/Book/RegisterBook'
 import Book from '../pages/Book/Book'
@@ -122,14 +121,6 @@ const stackRoutes = [
     requireAuth: true,
     options: {
       title: 'Editar comentario',
-    }
-  },
-  {
-    name: 'MyBook',
-    component: MyBook,
-    requireAuth: true,
-    options: {
-      title: 'Mis Libros',
     }
   },
   {

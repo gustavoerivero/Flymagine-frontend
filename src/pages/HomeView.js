@@ -8,6 +8,7 @@ import Post from '../components/Post/Post'
 import TopBar from '../components/TopBar'
 
 import useAuthContext from '../hooks/useAuthContext'
+import useLoading from '../hooks/useLoading'
 
 import { getFollows } from '../services/user/userAPI'
 import { getFeed } from '../services/post/postAPI'
@@ -17,9 +18,6 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
-const STYLES = ['default', 'dark-content', 'light-content']
-const TRANSITIONS = ['fade', 'slide', 'none']
-
 const HomeView = ({ navigation }) => {
   const layout = useWindowDimensions()
 
@@ -27,10 +25,8 @@ const HomeView = ({ navigation }) => {
     state: { user },
   } = useAuthContext()
 
-  const [follows, setFollows] = useState([])
-
+  const { isLoading, startLoading, stopLoading } = useLoading()
   const [posts, setPosts] = useState([])
-
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = React.useCallback(() => {
@@ -40,9 +36,9 @@ const HomeView = ({ navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
+      startLoading()
       getFollows(user?.id)
         .then((res) => {
-          setFollows(res?.Data?.follows)
 
           let followsReceived = res?.Data?.follows
 
@@ -53,6 +49,7 @@ const HomeView = ({ navigation }) => {
             getFeed(f)
               .then((res) => {
                 setPosts(res?.Data)
+                stopLoading()
               })
               .catch((err) => {
                 console.log(err)
@@ -65,18 +62,12 @@ const HomeView = ({ navigation }) => {
     }, [])
   )
 
-  const [hidden, setHidden] = useState(false)
-  const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0])
-  const [statusBarTransition, setStatusBarTransition] = useState(
-    TRANSITIONS[0]
-  )
-
   return (
     <Box w={layout.width}>
       <StatusBar animated={true} backgroundColor={COLORS.primary} />
       <TopBar />
       <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
-        {posts ? (
+        {posts.length > 0 || !isLoading ? (
           <FlatList
             py={2}
             refreshControl={
@@ -93,7 +84,9 @@ const HomeView = ({ navigation }) => {
           />
         )
           :
-          <ActivityIndicator />
+          <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+            <ActivityIndicator size='large' color={COLORS.primary} />
+          </Stack>
         }
       </VStack>
     </Box>
