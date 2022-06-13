@@ -1,8 +1,8 @@
 const createCommentPostAdapter = (commentPost) => {
   return {
-    'idPost': commentPost.idPost,
-    'idUser': commentPost.idUser,
-    'description': commentPost.description,
+    post: commentPost.post,
+    user: commentPost.user,
+    description: commentPost.description,
   }
 }
 

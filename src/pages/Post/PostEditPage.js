@@ -52,7 +52,7 @@ const PostEditPage = ({ navigation, route }) => {
   const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
     _id: route.params.post._id,
-    idUser: route.params.post.idUser,
+    user: route.params.post.user,
     author: `${userData?.firstName} ${userData?.lastName}` || '',
     avatar: userData?.photo || '',
     photo: route.params.post.photo,
@@ -146,7 +146,7 @@ const PostEditPage = ({ navigation, route }) => {
                     justifyContent: 'center',
                   }}
                   onPress={() => {
-                    console.log(`${post?.idUser}'s post`)
+                    console.log(`${post?.user}'s post`)
                     _handleChange('photo', 'none')
                   }}
                 />

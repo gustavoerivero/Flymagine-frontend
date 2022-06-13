@@ -1,4 +1,5 @@
 import { http } from '../http'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'post'
 
@@ -8,10 +9,12 @@ const createPost = async (post) => {
 }
 
 const postImage = async (postId, image) => {
+  const token = await AsyncStorage.getItem('@token')
   fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${postId}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
     },
     body: image
   }).then(response => {
@@ -81,7 +84,6 @@ const getUsertags = async (postId) => {
   const { data } = await http.get(`${BASE_URL}/${postId}/usertag`)
   return data?.Data[0]?.users || null
 }
-
 
 module.exports = {
   createPost,

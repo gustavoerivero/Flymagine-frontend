@@ -1,8 +1,8 @@
 const createBookAdapter = (values) => {
   return {
-    idUser: values.idUser,
+    user: values.idUser,
     name: values.name,
-    sypnosis: values.synopsis,
+    synopsis: values.synopsis,
     photo: 'none',
     document: 'none',
     creationDate: values.creationDate
@@ -11,9 +11,9 @@ const createBookAdapter = (values) => {
 
 const updateBookAdapter = (values) => {
   return {
-    idUser: values.idUser,
+    user: values.user,
     name: values.name,
-    sypnosis: values.synopsis,
+    synopsis: values.synopsis,
     creationDate: values.creationDate
   }
 }

@@ -30,7 +30,6 @@ import {
 import { useFocusEffect } from '@react-navigation/native'
 
 const Comment = ({ navigation, comment = {} }) => {
-  const layout = useWindowDimensions()
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const {
     state: { user },
@@ -85,7 +84,7 @@ const Comment = ({ navigation, comment = {} }) => {
         .catch((error) => {
           console.log(error)
         })
-      getUserById(comment?.idUser)
+      getUserById(comment?.user)
         .then((res) => {
           setUserComment(res?.Data)
         })
@@ -142,7 +141,7 @@ const Comment = ({ navigation, comment = {} }) => {
               </Text>
             </HStack>
 
-            {user?.id === comment?.idUser &&
+            {user?.id === comment?.user &&
               previousFourteenHours(comment?.createdAt) && (
                 <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                   <IconButton

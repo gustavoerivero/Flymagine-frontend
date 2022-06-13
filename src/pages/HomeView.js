@@ -1,7 +1,11 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl, useWindowDimensions, ActivityIndicator } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { VStack, Box, StatusBar, FlatList, Stack } from 'native-base'
+import { VStack, Box, StatusBar, Image, FlatList, Stack, Text } from 'native-base'
+
+import DontKnow from '../../assets/images/dontknow.png'
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 //Components
 import Post from '../components/Post/Post'
@@ -35,8 +39,10 @@ const HomeView = ({ navigation }) => {
   }, [])
 
   useFocusEffect(
-    useCallback(() => {
-      startLoading()
+    useCallback(() => {      
+      if(posts.length === 0) {
+        startLoading()
+      }
       getFollows(user?.id)
         .then((res) => {
 
@@ -48,8 +54,10 @@ const HomeView = ({ navigation }) => {
 
             getFeed(f)
               .then((res) => {
-                setPosts(res?.Data)
+                setPosts(res?.Data || [])
+                if(posts.length !== 0) {
                 stopLoading()
+                }
               })
               .catch((err) => {
                 console.log(err)
@@ -83,11 +91,24 @@ const HomeView = ({ navigation }) => {
             )}
           />
         )
-          :
-          <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
-            <ActivityIndicator size='large' color={COLORS.primary} />
-          </Stack>
-        }
+          : posts.length === 0 ? (
+            <VStack alignItems='center' mx={2} my='30%'>
+              <Image
+                source={DontKnow}
+                alt='DontKnow'
+                resizeMode='contain'
+                size={300}
+              />
+              <Text bold textAlign='center' color={COLORS.primary}>
+                Qué extraño... Parece que aún no has hecho ningún amigo o publicado algo... ¿Qué esperas?
+              </Text>
+            </VStack>
+          )
+            : (
+              <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+                <ActivityIndicator size='large' color={COLORS.primary} />
+              </Stack>
+            )}
       </VStack>
     </Box>
   )

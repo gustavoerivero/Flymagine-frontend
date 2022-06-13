@@ -323,7 +323,7 @@ const InfoBookProfile = ({
           </HStack>
           <ScrollView>
             <Text fontSize='md' color={text} pl={1} textAlign='justify'>
-              {bookInfo && bookInfo?.sypnosis}
+              {bookInfo && bookInfo?.synopsis}
             </Text>
           </ScrollView>
         </VStack>

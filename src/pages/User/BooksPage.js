@@ -22,7 +22,7 @@ const BooksPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
-  const id = route?.params?.userId
+  const id = route?.params?.user
   const [userInfo, setUserInfo] = useState(null)
   const [books, setBooks] = useState(route?.params?.books || [])
 
@@ -72,7 +72,7 @@ const BooksPage = ({ navigation, route }) => {
             </Text>
           </VStack>
         }
-        {userInfo && id === user.id && userInfo?.idRole?.name === 'Writter' && (
+        {userInfo && id === user.id && userInfo?.role?.name === 'Writer' && (
           <Fab
             renderInPortal={false}
             shadow={2}

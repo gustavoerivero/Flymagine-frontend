@@ -72,7 +72,7 @@ const BookItem = ({ bookItem, navigation }) => {
                   textAlign='justify'
                   italic
                 >
-                  {bookItem?.idUser?.firstName} {bookItem?.idUser?.lastName}
+                  {bookItem?.user?.firstName} {bookItem?.user?.lastName}
                 </Text>
               </HStack>
               <HStack

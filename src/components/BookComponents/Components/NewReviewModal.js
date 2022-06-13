@@ -51,8 +51,8 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
 
       const review = reviewAdapter({
         ...values,
-        bookId: book._id,
-        userId: user.id,
+        book: book._id,
+        user: user.id,
       })
 
       console.log(review)

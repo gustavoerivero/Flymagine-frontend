@@ -99,7 +99,7 @@ const CommentPost = ({ navigation, post = {} }) => {
         .catch((error) => {
           console.log(error)
         })
-      getUserById(post?.idUser)
+      getUserById(post?.user)
         .then((res) => {
           setUserPost(res?.Data)
         })
@@ -142,10 +142,6 @@ const CommentPost = ({ navigation, post = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center'>
           <TouchableOpacity
             onPress={() => {
-              console.log(
-                `${userPost?.firstName + ' ' + userPost?.lastName}'s profile`
-              )
-              console.log(userPost._id)
               if (userPost?._id === user?.id) {
                 navigation.navigate('Profile')
               } else {
@@ -184,14 +180,13 @@ const CommentPost = ({ navigation, post = {} }) => {
               </Text>
             </HStack>
 
-            {user?.id === post?.idUser &&
+            {user?.id === post?.user &&
               previousFourteenHours(post?.createdAt) && (
                 <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                   <IconButton
                     icon={<FontAwesome name='edit' color='gray.300' />}
                     size='sm'
                     onPress={() => {
-                      console.log(post?._id)
                       navigation.navigate('EditPost', {
                         post: post,
                         hashtags: hashtags,

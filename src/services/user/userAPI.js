@@ -1,4 +1,5 @@
 import { http } from '../http'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'user'
 
@@ -8,10 +9,12 @@ const getOnlyUser = async (id) => {
 }
 
 const setProfileImage = async (id, image) => {
+  const token = await AsyncStorage.getItem('@token')
   fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
     },
     body: image
   }).then(response => {
@@ -34,12 +37,15 @@ const updateUser = async (id, values) => {
 }
 
 const changeUserPassword = async (id, values) => {
-  const { data } = await http.post(`${BASE_URL}/${id}/password`, values)	
+  const { data } = await http.post(`${BASE_URL}/${id}/password`, values)
   return data
 }
 
 const setPreferences = async (id, data) => {
-  const response = await http.post(`${BASE_URL}/${id}/preferences`, data)
+  const response = await http.post(`${BASE_URL}/preferences`, {
+    id: id,
+    genres: data
+  })
   return response.data
 }
 
@@ -74,7 +80,7 @@ const searchUsersNoLimits = async (search) => {
 }
 
 const setFavBooks = async (id, books) => {
-  const { data } = await http.post(`${BASE_URL}/${id}/fav`, books)	
+  const { data } = await http.post(`${BASE_URL}/${id}/fav`, books)
   return data
 }
 

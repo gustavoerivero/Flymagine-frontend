@@ -55,8 +55,8 @@ const EditReviewModal = ({ navigation, showModal, setShowModal, review }) => {
 
       const data = reviewAdapter({
         ...values,
-        userId: review.idUser,
-        bookId: review.idBook,
+        user: review.user,
+        book: review.book,
       })
       const response = await updateReview(review._id, data)
       console.log(response)

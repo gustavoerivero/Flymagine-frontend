@@ -54,7 +54,7 @@ const CreatePostPage = ({ navigation }) => {
 
   const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
-    idUser: user.id,
+    user: user.id,
     author: `${userData?.firstName} ${userData?.lastName}` || '',
     avatar: userData?.photo || '',
     photo: '',

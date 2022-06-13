@@ -75,8 +75,8 @@ const CommentReviewPage = ({ navigation, route }) => {
 
     try {
       const response = await createComment({
-        idReview: review._id,
-        idUser: user.id,
+        review: review._id,
+        user: user.id,
         description: values.description,
       })
 
