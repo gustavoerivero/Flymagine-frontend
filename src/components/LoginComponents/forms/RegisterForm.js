@@ -634,7 +634,6 @@ const RegisterForm = ({ navigation }) => {
                                 newValue.push(item)
                               }
 
-                              console.log(newValue)
                               onChange(newValue)
                               onBlur()
                             }}
@@ -673,9 +672,9 @@ const RegisterForm = ({ navigation }) => {
 
               <Controller
                 control={control}
-                name='idRole'
+                name='role'
                 render={({
-                  field: { value = '626aef37b4a9510568d6036d' }
+                  field: { value = '62a68e04f76e5e02ef008afc' }
                 }) => (
                   <FormControl
                     isRequired
@@ -741,13 +740,13 @@ const RegisterForm = ({ navigation }) => {
                           <Button
                             title='Lector'
                             buttonStyle={{
-                              backgroundColor: value === '626aef37b4a9510568d6036d' ? COLORS.button.secundary : COLORS.button.secundaryDisabled,
+                              backgroundColor: value === '62a68e04f76e5e02ef008afc' ? COLORS.button.secundary : COLORS.button.secundaryDisabled,
                             }}
                             containerStyle={{
                               width: 125,
                               alignContent: 'center',
                             }}
-                            onPress={() => setValue('idRole', '626aef37b4a9510568d6036d')}
+                            onPress={() => setValue('role', '62a68e04f76e5e02ef008afc')}
                             icon={
                               <Icon
                                 as={
@@ -756,7 +755,7 @@ const RegisterForm = ({ navigation }) => {
                                   />
                                 }
                                 size={5}
-                                color={value === '626aef37b4a9510568d6036d' ? 'muted.900' : 'muted.300'}
+                                color={value === '62a68e04f76e5e02ef008afc' ? 'muted.900' : 'muted.300'}
                                 mr={2}
                               />
                             }
@@ -811,13 +810,13 @@ const RegisterForm = ({ navigation }) => {
                           <Button
                             title='Escritor'
                             buttonStyle={{
-                              backgroundColor: value === '626aeed5b4a9510568d6036b' ? COLORS.button.terciary : COLORS.button.terciaryDisabled,
+                              backgroundColor: value === '62a68dfff76e5e02ef008af8' ? COLORS.button.terciary : COLORS.button.terciaryDisabled,
                             }}
                             containerStyle={{
                               width: 125,
                               alignContent: 'center',
                             }}
-                            onPress={() => setValue('idRole', '626aeed5b4a9510568d6036b')}
+                            onPress={() => setValue('role', '62a68dfff76e5e02ef008af8')}
                             icon={
                               <Icon
                                 as={
@@ -827,7 +826,7 @@ const RegisterForm = ({ navigation }) => {
                                 }
                                 mr={2}
                                 size={5}
-                                color={value === '626aeed5b4a9510568d6036b' ? 'muted.900' : 'muted.300'}
+                                color={value === '62a68dfff76e5e02ef008af8' ? 'muted.900' : 'muted.300'}
                               />
                             }
                           />

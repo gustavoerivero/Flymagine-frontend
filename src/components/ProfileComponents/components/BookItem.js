@@ -14,7 +14,7 @@ const BookItem = ({ bookItem, navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      getUserById(bookItem.idUser)
+      getUserById(bookItem.user)
         .then(res => {
           setAuthor(res?.Data || {})
         })
@@ -105,9 +105,9 @@ const BookItem = ({ bookItem, navigation }) => {
             <HStack space={1} h='55%' w='95%'>
               <Icon w='10%' mr={1} mt={0.5} as={MaterialIcons} name='history-edu' />
               <Text w='90%' h='90%' fontSize='xs' alignContent='center' textAlign='justify'>
-                {bookItem?.sypnosis?.length > 159
-                  ? bookItem?.sypnosis?.substring(0, 159 - 3) + '...'
-                  : bookItem?.sypnosis}
+                {bookItem?.synopsis?.length > 159
+                  ? bookItem?.synopsis?.substring(0, 159 - 3) + '...'
+                  : bookItem?.synopsis}
               </Text>
             </HStack>
           </VStack>

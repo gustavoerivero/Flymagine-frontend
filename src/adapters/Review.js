@@ -1,7 +1,7 @@
 const reviewAdapter = (values) => {
   return {
-    idUser: values.userId,
-    idBook: values.bookId,
+    user: values.user,
+    book: values.user,
     description: values.description,
     rating: values.rating,
   }

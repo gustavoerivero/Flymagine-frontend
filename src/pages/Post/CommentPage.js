@@ -79,8 +79,8 @@ const CommentPage = ({ navigation, route }) => {
 
     try {
       const response = await createComment({
-        idPost: post._id,
-        idUser: user.id,
+        post: post._id,
+        user: user.id,
         description: values.description,
       })
 

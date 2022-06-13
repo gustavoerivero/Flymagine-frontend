@@ -80,7 +80,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
         .catch(error => {
           console.log(error)
         })
-      getUserById(comment?.idUser)
+      getUserById(comment?.user)
         .then(res => {
           setUserComment(res?.Data)
         })
@@ -108,8 +108,6 @@ const CommentReview = ({ navigation, comment = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center'>
         <TouchableOpacity
           onPress={() => {
-            console.log(`${userComment?.firstName + ' ' + userComment?.lastName}'s profile`)
-            console.log(userPost._id)
             if (userComment?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
@@ -152,7 +150,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
               </Text>
             </HStack>
 
-            {(user?.id === comment?.idUser && previousFourteenHours(comment?.createdAt)) && (
+            {(user?.id === comment?.user && previousFourteenHours(comment?.createdAt)) && (
               <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
@@ -163,7 +161,6 @@ const CommentReview = ({ navigation, comment = {} }) => {
                   }
                   size='sm'
                   onPress={() => {
-                    console.log(comment?._id)
                     navigation.navigate('CommentReviewEditPage', { 
                       comment: comment
                     })

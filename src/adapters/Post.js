@@ -1,6 +1,6 @@
 const postAdapter = (values) => {
   return {
-    idUser: values.idUser,
+    user: values.user,
     description: values.description
   }
 }

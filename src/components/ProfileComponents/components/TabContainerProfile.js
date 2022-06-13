@@ -35,7 +35,7 @@ const TabContainerProfile = ({ navigation, userInfo }) => {
         }}
         scrollable
       >
-        {tabs.map((tab) => (
+        {tabs && tabs.map((tab) => (
           <Tab.Item
             key={tab}
             title={tab}

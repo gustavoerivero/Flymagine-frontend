@@ -53,6 +53,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initialize = async () => {
       try {
+        const accessID = await AsyncStorage.getItem('@id')
         const accessToken = await AsyncStorage.getItem('@token')
 
         if (!accessToken) {
@@ -67,18 +68,15 @@ export const AuthProvider = ({ children }) => {
           return
         }
 
-        await setSession(accessToken)
-
-        const token = jwt_decode(accessToken)
-
-        const { id } = token
+        await setSession(accessID, accessToken)
 
         dispatch({
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: true,
             user: {
-              id,
+              id: accessID,
+              token: accessToken,
             },
           },
         })

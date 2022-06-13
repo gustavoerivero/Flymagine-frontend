@@ -1,4 +1,5 @@
-import { http } from "../http"
+import { http } from '../http'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'book'
 
@@ -33,10 +34,12 @@ const searchBooks = async (name) => {
 }
 
 const uploadImage = async (id, image) => {
+  const token = await AsyncStorage.getItem('@token')
   fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
     },
     body: image
   }).then(response => {
@@ -49,10 +52,12 @@ const uploadImage = async (id, image) => {
 }
 
 const uploadDocument = async (id, document) => {
+  const token = await AsyncStorage.getItem('@token')
   fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/document`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
     },
     body: document
   }).then(response => {

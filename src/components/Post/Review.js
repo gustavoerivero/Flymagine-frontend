@@ -98,7 +98,7 @@ const Review = ({ navigation, dataReview = {} }) => {
         .then((res) => {
           setReview(res)
 
-          getUserById(res?.idUser)
+          getUserById(res?.user)
             .then((r) => {
               setUserReview(r?.Data)
             })
@@ -181,7 +181,7 @@ const Review = ({ navigation, dataReview = {} }) => {
               </Text>
             </HStack>
 
-            {user?.id === review?.idUser &&
+            {user?.id === review?.user &&
               previousFourteenHours(review?.createdAt) && (
                 <HStack alignItems='flex-end'>
                   <IconButton

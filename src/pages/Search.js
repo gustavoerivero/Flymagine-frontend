@@ -93,7 +93,7 @@ const Search = ({ navigation }) => {
 
                       searchPostByHashtags(hashtags)
                         .then((res) => {
-                          let pubs = res.map((element) => element.idPost)
+                          let pubs = res.map((element) => element.post)
                           let pubsActive = pubs.filter(
                             (pub) => pub.status === 'A'
                           )

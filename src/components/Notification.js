@@ -6,34 +6,22 @@ import {
 } from 'react-native'
 
 import {
-  View,
-  Image,
-  IconButton,
-  Icon,
   VStack,
   Stack,
   Text,
-  ScrollView,
   Box,
-  FlatList,
-  Badge,
   HStack,
-  Button,
   Avatar,
 } from 'native-base'
 
 import { FontAwesome } from '@expo/vector-icons'
-import Book from '../pages/Book/Book'
 import { useNavigation } from '@react-navigation/native'
 
 import { parseDate, parseTime } from '../utilities/Parsers'
 import COLORS from './styled-components/Colors'
 
 const Notification = (props) => {
-  const layout = useWindowDimensions()
-  const Navegation = useNavigation()
   const [read, setRead] = useState(props.check)
-  const [page, setPage] = useState(props.page)
 
   return (
     <TouchableOpacity
@@ -91,73 +79,5 @@ const Notification = (props) => {
     </TouchableOpacity>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    alignContent: 'stretch',
-    width: '100%',
-    minHeight: 100,
-    height: 'auto',
-    marginBottom: 5,
-    padding: 5,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    elevation: 2,
-  },
-  photoContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    marginRight: 10,
-    alignSelf: 'center',
-  },
-  contentContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    flexWrap: 'nowrap',
-    justifyContent: 'space-around',
-    alignItems: 'stretch',
-    alignContent: 'stretch',
-    width: '100%',
-    maxWidth: 260,
-    marginRight: 10,
-  },
-  profileButton: {
-    borderRadius: 50,
-    height: 50,
-    width: 50,
-  },
-  headerContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexWrap: 'nowrap',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-  icon: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-    fontSize: 10,
-    marginRight: 10,
-  },
-  button: {
-    backgroundColor: 'rgba(0, 0, 0, .5)',
-    borderWidth: 2,
-    borderColor: 'black',
-    borderRadius: 200,
-    width: '100%',
-    maxWidth: 250,
-    alignSelf: 'flex-end',
-    marginLeft: 1,
-    fontSize: 1,
-  },
-})
 
 export default Notification

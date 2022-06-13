@@ -35,8 +35,8 @@ const CommentReviewEditPage = ({ navigation, route }) => {
   const [userData, setUserData] = useState(null)
   const [comment, setComment] = useState({
     _id: route.params.comment._id,
-    idPost: route.params.comment.idPost,
-    idUser: user.id,
+    post: route.params.comment.post,
+    user: user.id,
     description: route.params.comment.description,
     createdAt: route.params.comment.createdAt,
     usersLiked: route.params.comment.usersLiked || [],

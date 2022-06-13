@@ -16,7 +16,7 @@ const Followers = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
-  const id = route?.params?.userId
+  const id = route?.params?.user
   const [followers, setFollowers] = useState(route?.params?.followers || null)
 
   useFocusEffect(
@@ -41,7 +41,7 @@ const Followers = ({ navigation, route }) => {
         {followers ? followers.map(follower => (
           <UserItem
             key={follower._id}
-            userItem={follower?.idUser}
+            userItem={follower?.user}
             navigation={navigation}
           />
         ))

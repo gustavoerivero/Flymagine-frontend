@@ -16,7 +16,7 @@ const Follows = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
 
-  const id = route?.params?.userId
+  const id = route?.params?.user
   const [follows, setFollows] = useState(route?.params?.follows || null)
 
   useFocusEffect(

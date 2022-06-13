@@ -39,7 +39,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
           let info = res
 
           if (info) {
-            getUserById(info?.idUser)
+            getUserById(info?.user)
               .then((res) => {
                 setAuthor(res?.Data)
               })

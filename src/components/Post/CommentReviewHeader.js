@@ -47,7 +47,6 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
 
   const deleteReviewById = async () => {
     try {
-      console.log(review)
       const data = await deleteReview(review?._id)
       console.log(data)
       showSuccessToast('¡Misión cumplida! La review fue eliminada con éxito')
@@ -83,7 +82,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
         .catch(error => {
           console.log(error)
         })
-      getUserById(review?.idUser)
+      getUserById(review?.user)
         .then(res => {
           setUserReview(res?.Data)
         })
@@ -115,8 +114,6 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center' >
         <TouchableOpacity
           onPress={() => {
-            console.log(`${userReview?.firstName + ' ' + userReview?.lastName}'s profile`)
-            console.log(userReview._id)
             if (userReview?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
@@ -160,7 +157,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
               </Text>
             </HStack>
 
-            {(user?.id === review?.idUser && previousFourteenHours(review?.createdAt)) && (
+            {(user?.id === review?.user && previousFourteenHours(review?.createdAt)) && (
               <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
@@ -171,7 +168,6 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                   }
                   size='sm'
                   onPress={() => {
-                    console.log(review?._id)
                     navigation.navigate('EditPost', { 
                       post: review,
                       hashtags: hashtags,

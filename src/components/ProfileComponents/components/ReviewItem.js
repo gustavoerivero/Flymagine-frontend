@@ -54,7 +54,7 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
   const [userReview, setUserReview] = useState(null);
 
   const [review, setReview] = useState(dataReview);
-  const [book, setBook] = useState(dataReview?.idBook);
+  const [book, setBook] = useState(dataReview?.book);
   const [showModal, setShowModal] = useState(false)
 
   const [isLiked, setIsLiked] = useState(false);
@@ -114,7 +114,7 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
         .then((res) => {
           setReview(res);
 
-          getUserById(res?.idUser)
+          getUserById(res?.user)
             .then((r) => {
               setUserReview(r?.Data);
             })
@@ -206,7 +206,7 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
                   </Text>
                 </HStack>
 
-                {user?.id === review?.idUser &&
+                {user?.id === review?.user &&
                   previousFourteenHours(review?.createdAt) && (
                     <HStack alignItems="flex-end">
                       <IconButton
