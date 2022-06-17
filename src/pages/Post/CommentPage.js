@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from 'react'
-import { useWindowDimensions, RefreshControl } from 'react-native'
+import { useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { ScrollView, Stack, VStack, FlatList } from 'native-base'
+import { ScrollView, Stack, VStack, Button } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
-import { FAB } from '@rneui/themed'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -42,6 +41,8 @@ const CommentPage = ({ navigation, route }) => {
   const [post, setPost] = useState(route.params.post || {})
   const [comments, setComments] = useState(route.params.comments || [])
 
+  const [comment, setComment] = useState(null)
+
   const layout = useWindowDimensions()
 
   const [refreshing, setRefreshing] = useState(false)
@@ -74,14 +75,14 @@ const CommentPage = ({ navigation, route }) => {
     }, [comments])
   )
 
-  const onSubmit = async (values) => {
+  const onSubmit = async () => {
     startLoading()
 
     try {
       const response = await createComment({
         post: post._id,
         user: user.id,
-        description: values.description,
+        description: comment,
       })
 
       console.log(response)
@@ -124,38 +125,22 @@ const CommentPage = ({ navigation, route }) => {
         </VStack>
       </ScrollView>
 
-      <VStack>
-        <Controller
-          name='description'
-          control={control}
-          render={({ field: { onChange, value = '', ...field } }) => (
-            <CommentInput
-              {...field}
-              value={value}
-              onChangeText={onChange}
-              placeholder='¿Tienes algo que decir?'
-              rightElement={
-                <FAB
-                  icon={<FontAwesome name='send' color='#fff' size={20} />}
-                  color='#b973ff'
-                  containerStyle={{
-                    position: 'relative',
-                    marginBottom: 5,
-                    right: '5%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 50,
-                    height: 50,
-                  }}
-                  disabled={!isValid || isLoading}
-                  loading={isLoading}
-                  onPress={handleSubmit(onSubmit)}
-                />
-              }
+        <CommentInput
+          value={comment}
+          onChangeText={(text) => setComment(text)}
+          placeholder='¿Tienes algo que decir?'
+          rightElement={
+            <Button
+              leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
+              colorScheme='purple'
+              borderRadius={100}
+              mr={2}
+              isDisabled={comment === '' || !comment}
+              isLoading={isLoading}
+              onPress={handleSubmit(onSubmit)}
             />
-          )}
+          }
         />
-      </VStack>
     </KeyboardAwareScrollView>
   )
 }
