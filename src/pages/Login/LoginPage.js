@@ -1,10 +1,7 @@
 import React from 'react'
-import {
-  StyleSheet,
-  ImageBackground,
-} from 'react-native'
+import { StyleSheet, ImageBackground } from 'react-native'
+import { VStack } from 'native-base'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import MakeItRain from 'react-native-make-it-rain'
 
 import LoginForm from '../../components/LoginComponents/forms/LoginForm'
 import Bibliothecary from '../../../assets/images/Bibliothecary.jpg'
@@ -22,16 +19,9 @@ const LoginPage = ({ navigation }) => {
       resizeMode='cover'
     >
       <KeyboardAwareScrollView>
-        <MakeItRain
-          numItems={80}
-          itemDimensions={{
-            width: 5,
-            height: 5,
-          }}
-          itemTintStrength={0.8}
-          fallSpeed={10}
-        />
-        <LoginForm navigation={navigation} />
+        <VStack minH='100%' justifyContent='center'>
+          <LoginForm navigation={navigation} />
+        </VStack>
       </KeyboardAwareScrollView>
     </ImageBackground>
   )
@@ -41,6 +31,7 @@ const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
     alignItems: 'center',
+    height: '100%'
   },
 })
 
