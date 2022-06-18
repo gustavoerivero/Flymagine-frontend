@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { ScrollView, Stack, VStack, Button } from 'native-base'
+import { ScrollView, Box, TextArea, Stack, Icon, HStack, VStack, Button } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -11,7 +11,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import CommentPost from '../../components/Post/CommentPost'
 import Comment from '../../components/Post/Comment'
-import CommentInput from '../../components/Post/CommentInput'
 import {
   getComments,
   createComment,
@@ -26,6 +25,8 @@ import {
   commentDefaultValue,
 } from '../../utils/formValidations/dataCommentValidation'
 
+import COLORS from '../../components/styled-components/Colors'
+
 const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
@@ -34,6 +35,8 @@ const CommentPage = ({ navigation, route }) => {
   const {
     state: { user },
   } = useAuthContext()
+
+  const [height, setHeight] = React.useState(20)
 
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
@@ -125,22 +128,54 @@ const CommentPage = ({ navigation, route }) => {
         </VStack>
       </ScrollView>
 
-        <CommentInput
-          value={comment}
-          onChangeText={(text) => setComment(text)}
-          placeholder='¿Tienes algo que decir?'
-          rightElement={
+      <Box
+        w={layout.width}
+        minH={layout.height * 0.12}
+        maxH={layout.height * 0.2}
+        bgColor='white'
+        py={1}
+        px={2}
+        justifyContent='center'
+      >
+        <HStack alignItems='center' w='100%'>
+          <Stack w='10%' alignItems='center'>
+            <Icon as={FontAwesome} name='comment' size={8} color='#aaa' />
+          </Stack>
+
+          <Stack w='75%'>
+            <TextArea
+              textAlignVertical='center'
+              textAlign='justify'
+              minH={16}
+              h={height}
+              maxH={120}
+              bgColor={COLORS.base}
+              color={COLORS.gray4}
+              borderColor={'white'}
+              m={1}
+              onContentSizeChange={(event) => {
+                setHeight(event.nativeEvent.contentSize.height)
+              }}
+              variant='unstyled'
+              size='md'
+              value={comment}
+              onChangeText={(text) => setComment(text)}
+              placeholder='¿Tienes algo que decir?'
+
+            />
+          </Stack>
+          <Stack w='15%' alignItems='center' alignContent='center'>
             <Button
               leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
               colorScheme='purple'
               borderRadius={100}
-              mr={2}
               isDisabled={comment === '' || !comment}
               isLoading={isLoading}
-              onPress={handleSubmit(onSubmit)}
+              onPress={onSubmit}
             />
-          }
-        />
+          </Stack>
+        </HStack>
+      </Box>
     </KeyboardAwareScrollView>
   )
 }

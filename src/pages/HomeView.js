@@ -5,8 +5,6 @@ import { VStack, Box, StatusBar, Image, FlatList, Stack, Text } from 'native-bas
 
 import DontKnow from '../../assets/images/dontknow.png'
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 //Components
 import Post from '../components/Post/Post'
 import TopBar from '../components/TopBar'

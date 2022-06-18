@@ -4,6 +4,8 @@ import {
   ScrollView,
   Avatar,
   Icon,
+  Box,
+  TextArea,
   Text,
   Stack,
   VStack,
@@ -21,7 +23,6 @@ import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import mime from 'mime'
 
-import CommentInput from '../components/Post/CommentInput'
 import PostModify from '../components/Post/PostModify'
 import COLORS from '../components/styled-components/Colors'
 import { handleChange, pickImage, permisionFunction } from '../utils/functions'
@@ -58,6 +59,8 @@ const CreatePostPage = ({ navigation }) => {
 
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
+
+  const [height, setHeight] = useState(20)
 
   const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
@@ -114,14 +117,15 @@ const CreatePostPage = ({ navigation }) => {
   const onSubmit = async () => {
     startLoading()
 
-    createPost(postAdapter({
-      user: user.id,
-      description: post.description,
-    }))
-      .then((res) => {
-        console.log(res)
+    try {
 
-        let idPost = res._id
+      const response = await createPost(postAdapter({
+        user: user.id,
+        description: post.description,
+      }))
+
+      if (response?._id) {
+        let idPost = response?._id
 
         if (image) {
           const imageUri =
@@ -180,13 +184,12 @@ const CreatePostPage = ({ navigation }) => {
           '¡Misión cumplida! Has creado una publicación'
         )
         navigation.navigate('Home')
-      })
-      .catch((error) => {
-        console.log(error)
-        showErrorToast(
-          '¡Misión fallida! No se ha podido crear la publicación'
-        )
-      })
+      }
+
+    } catch (error) {
+      console.log(error)
+      showErrorToast('¡Misión fallida! Ha ocurrido un error')
+    }
     stopLoading()
   }
 
@@ -523,23 +526,64 @@ const CreatePostPage = ({ navigation }) => {
             </HStack>
           </HStack>
 
-          <CommentInput
-            value={post.description}
-            onChangeText={(text) => _handleChange('description', text)}
-            placeholder='Cuentanos, ¿Qué hay de nuevo?'
-            rightElement={
-              <Button
-                leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
-                colorScheme='purple'
-                mr={2}
-                borderRadius={100}
-                isDisabled={post.description === ''}
-                isLoading={isLoading}
-                onPress={onSubmit}
-              />
-            }
-          />
+          <Controller
+            name='description'
+            control={control}
+            render={({ field: { onChange, value = post.description, ...field } }) => (
+              <Box
+                w={layout.width}
+                minH={layout.height * 0.12}
+                maxH={layout.height * 0.2}
+                bgColor='white'
+                py={1}
+                px={2}
+                justifyContent='center'
+              >
+                <HStack alignItems='center' w='100%'>
+                  <Stack w='10%' alignItems='center'>
+                    <Icon as={FontAwesome} name='comment' size={8} color='#aaa' />
+                  </Stack>
 
+                  <Stack w='75%'>
+                    <TextArea
+                      textAlignVertical='center'
+                      textAlign='justify'
+                      minH={16}
+                      h={height}
+                      maxH={120}
+                      bgColor={COLORS.base}
+                      color={COLORS.gray4}
+                      borderColor={'white'}
+                      m={1}
+                      onContentSizeChange={(event) => {
+                        setHeight(event.nativeEvent.contentSize.height)
+                      }}
+                      variant='unstyled'
+                      size='md'
+                      {...field}
+                      value={post.description}
+                      onChangeText={(text) => {
+                        _handleChange('description', text)
+                        onChange(text)
+                      }}
+                      placeholder='Cuentanos, ¿Qué hay de nuevo?'
+
+                    />
+                  </Stack>
+                  <Stack w='15%' alignItems='center' alignContent='center'>
+                    <Button
+                      leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
+                      colorScheme='purple'
+                      borderRadius={100}
+                      isDisabled={!isValid || isLoading}
+                      isLoading={isLoading}
+                      onPress={handleSubmit(onSubmit)}
+                    />
+                  </Stack>
+                </HStack>
+              </Box>
+            )}
+          />
         </VStack>
       </VStack>
     </KeyboardAwareScrollView>

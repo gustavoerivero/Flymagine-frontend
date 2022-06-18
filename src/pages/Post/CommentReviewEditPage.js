@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useWindowDimensions } from 'react-native'
-import { ScrollView, VStack } from 'native-base'
-import { FAB } from '@rneui/themed'
+import { ScrollView, Box, TextArea, Stack, Icon, HStack, VStack, Button } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -9,7 +8,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
-import CommentInput from '../../components/Post/CommentInput'
 import CommentModify from '../../components/Post/CommentModify'
 import { handleChange, } from '../../utils/functions'
 
@@ -21,6 +19,8 @@ import { updateComment } from '../../services/comments/commentReviewAPI'
 
 import { commentSchema, commentDefaultValue } from '../../utils/formValidations/dataCommentValidation'
 
+import COLORS from '../../components/styled-components/Colors'
+
 const CommentReviewEditPage = ({ navigation, route }) => {
 
   const layout = useWindowDimensions()
@@ -31,6 +31,8 @@ const CommentReviewEditPage = ({ navigation, route }) => {
 
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
+
+  const [height, setHeight] = useState(20)
 
   const [userData, setUserData] = useState(null)
   const [comment, setComment] = useState({
@@ -104,39 +106,58 @@ const CommentReviewEditPage = ({ navigation, route }) => {
             name='description'
             control={control}
             render={({ field: { onChange, value = comment.description, ...field } }) => (
-              <CommentInput
-                {...field}
-                value={value}
-                onChangeText={(text) => {
-                  onChange(text)
-                  _handleChange('description', text)
-                }}
-                placeholder='¿Tienes algo que decir?'
-                rightElement={
-                  <FAB
-                    icon={
-                      <FontAwesome
-                        name='send'
-                        color='#fff'
-                        size={20}
-                      />
-                    }
-                    color='#b973ff'
-                    containerStyle={{
-                      position: 'relative',
-                      marginBottom: 5,
-                      right: '5%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 50,
-                      height: 50,
-                    }}
-                    disabled={!isValid || isLoading}
-                    loading={isLoading}
-                    onPress={handleSubmit(onSubmit)}
-                  />
-                }
-              />
+              <Box
+                w={layout.width}
+                minH={layout.height * 0.12}
+                maxH={layout.height * 0.2}
+                bgColor='white'
+                py={1}
+                px={2}
+                justifyContent='center'
+              >
+                <HStack alignItems='center' w='100%'>
+                  <Stack w='10%' alignItems='center'>
+                    <Icon as={FontAwesome} name='comment' size={8} color='#aaa' />
+                  </Stack>
+
+                  <Stack w='75%'>
+                    <TextArea
+                      textAlignVertical='center'
+                      textAlign='justify'
+                      minH={16}
+                      h={height}
+                      maxH={120}
+                      bgColor={COLORS.base}
+                      color={COLORS.gray4}
+                      borderColor={'white'}
+                      m={1}
+                      onContentSizeChange={(event) => {
+                        setHeight(event.nativeEvent.contentSize.height)
+                      }}
+                      variant='unstyled'
+                      size='md'
+                      {...field}
+                      value={value}
+                      onChangeText={(text) => {
+                        onChange(text)
+                        _handleChange('description', text)
+                      }}
+                      placeholder='¿Tienes algo que decir?'
+
+                    />
+                  </Stack>
+                  <Stack w='15%' alignItems='center' alignContent='center'>
+                    <Button
+                      leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
+                      colorScheme='purple'
+                      borderRadius={100}
+                      isDisabled={!isValid || isLoading}
+                      isLoading={isLoading}
+                      onPress={handleSubmit(onSubmit)}
+                    />
+                  </Stack>
+                </HStack>
+              </Box>
             )}
           />
         </VStack>
