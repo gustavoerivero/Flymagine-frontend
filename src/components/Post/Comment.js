@@ -134,7 +134,7 @@ const Comment = ({ navigation, comment = {} }) => {
               <Text bold fontSize='sm'>
                 {userComment?.firstName} {userComment?.lastName}
               </Text>
-              <Text fontSize={10} color='gray.300' alignSelf='center'>
+              <Text fontSize={10} color='#806e91' alignSelf='center'>
                 {parseDate(comment?.createdAt) +
                   ' ' +
                   parseTime(comment?.createdAt)}
@@ -145,7 +145,7 @@ const Comment = ({ navigation, comment = {} }) => {
               previousFourteenHours(comment?.createdAt) && (
                 <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                   <IconButton
-                    icon={<FontAwesome name='edit' color='gray.300' />}
+                    icon={<FontAwesome name='edit' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       console.log(comment?._id)
@@ -155,7 +155,7 @@ const Comment = ({ navigation, comment = {} }) => {
                     }}
                   />
                   <IconButton
-                    icon={<FontAwesome name='trash' color='gray.300' />}
+                    icon={<FontAwesome name='trash' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       setDeleteVisible(true)

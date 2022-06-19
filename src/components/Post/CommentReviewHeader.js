@@ -150,7 +150,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
               </Text>
               <Text
                 fontSize={10}
-                color='gray.300'
+                color='#806e91'
                 alignSelf='center'
               >
                 {parseDate(review?.createdAt) + ' ' + parseTime(review?.createdAt)}
@@ -163,7 +163,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                   icon={
                     <FontAwesome
                       name='edit'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'
@@ -179,7 +179,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                   icon={
                     <FontAwesome
                       name='trash'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'

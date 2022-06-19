@@ -47,7 +47,7 @@ const PostModify = ({ user, post, handleChange }) => {
             <Text bold fontSize='sm' pt={2}>
               {user?.firstName} {user?.lastName}
             </Text>
-            <Text fontSize={10} color='gray.300' alignSelf='flex-end'>
+            <Text fontSize={10} color='#806e91' alignSelf='flex-end'>
               {parseDate(post?.createdAt) + ' ' + parseTime(post?.createdAt)}
             </Text>
           </HStack>

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   ScrollView,
   Avatar,

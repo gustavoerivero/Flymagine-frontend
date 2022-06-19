@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useWindowDimensions, RefreshControl } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { Stack, VStack, Button, HStack, Box, Icon, FlatList } from 'native-base'
+import { FlatList, Box, TextArea, Stack, Icon, HStack, VStack, Button } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 

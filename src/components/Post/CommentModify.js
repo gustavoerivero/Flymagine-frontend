@@ -47,7 +47,7 @@ const CommentModify = ({ user, comment }) => {
             <Text bold fontSize='sm' >
               {user?.firstName} {user?.lastName}
             </Text>
-            <Text fontSize={10} color='gray.300' >
+            <Text fontSize={10} color='#806e91' >
               {parseDate(comment?.createdAt) + ' ' + parseTime(comment?.createdAt)}
             </Text>
           </HStack>

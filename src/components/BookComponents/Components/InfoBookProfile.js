@@ -295,7 +295,7 @@ const InfoBookProfile = ({
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {bookGenres.length > 0 && bookGenres.map((genre, index) => (
                   <Badge
-                    key={index.toString()}
+                    key={genre?.name + index.toString()}
                     colorScheme='success'
                     alignItems='center'
                     justifyContent='center'

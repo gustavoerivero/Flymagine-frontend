@@ -14,7 +14,6 @@ import {
   IconButton,
   ScrollView,
   Icon,
-  FlatList,
 } from 'native-base'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
@@ -24,7 +23,6 @@ import {
   FontAwesome,
   MaterialIcons,
   MaterialCommunityIcons,
-  Fontisto
 } from '@expo/vector-icons'
 
 import COLORS from '../styled-components/Colors'
@@ -202,7 +200,7 @@ const Post = ({ navigation, post = {} }) => {
                 <Text bold fontSize='sm'>
                   {userPost?.firstName} {userPost?.lastName}
                 </Text>
-                <Text fontSize={10} color='gray.300' alignSelf='center'>
+                <Text fontSize={10} color='#806e91' alignSelf='center'>
                   {parseDate(post?.createdAt) +
                     ' ' +
                     parseTime(post?.createdAt)}
@@ -213,7 +211,7 @@ const Post = ({ navigation, post = {} }) => {
                 previousFourteenHours(post?.createdAt) && (
                   <HStack alignItems='flex-end'>
                     <IconButton
-                      icon={<FontAwesome name='edit' color='gray.300' />}
+                      icon={<FontAwesome name='edit' color='#806e91' />}
                       size='sm'
                       onPress={() => {
                         console.log(post?._id)
@@ -225,7 +223,7 @@ const Post = ({ navigation, post = {} }) => {
                       }}
                     />
                     <IconButton
-                      icon={<FontAwesome name='trash' color='gray.300' />}
+                      icon={<FontAwesome name='trash' color='#806e91' />}
                       size='sm'
                       onPress={() => {
                         setDeleteVisible(true)

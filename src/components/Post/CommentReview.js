@@ -143,7 +143,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
               </Text>
               <Text
                 fontSize={10}
-                color='gray.300'
+                color='#806e91'
                 alignSelf='center'
               >
                 {parseDate(comment?.createdAt) + ' ' + parseTime(comment?.createdAt)}
@@ -156,7 +156,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
                   icon={
                     <FontAwesome
                       name='edit'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'
@@ -170,7 +170,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
                   icon={
                     <FontAwesome
                       name='trash'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'

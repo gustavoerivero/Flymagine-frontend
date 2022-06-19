@@ -175,7 +175,7 @@ const CommentPost = ({ navigation, post = {} }) => {
               <Text bold fontSize='sm'>
                 {userPost?.firstName} {userPost?.lastName}
               </Text>
-              <Text fontSize={10} color='gray.300' alignSelf='center'>
+              <Text fontSize={10} color='#806e91' alignSelf='center'>
                 {parseDate(post?.createdAt) + ' ' + parseTime(post?.createdAt)}
               </Text>
             </HStack>
@@ -184,7 +184,7 @@ const CommentPost = ({ navigation, post = {} }) => {
               previousFourteenHours(post?.createdAt) && (
                 <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                   <IconButton
-                    icon={<FontAwesome name='edit' color='gray.300' />}
+                    icon={<FontAwesome name='edit' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       navigation.navigate('EditPost', {
@@ -195,7 +195,7 @@ const CommentPost = ({ navigation, post = {} }) => {
                     }}
                   />
                   <IconButton
-                    icon={<FontAwesome name='trash' color='gray.300' />}
+                    icon={<FontAwesome name='trash' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       setDeleteVisible(true)

@@ -174,7 +174,7 @@ const Review = ({ navigation, dataReview = {} }) => {
               <Text bold fontSize='sm'>
                 {userReview?.firstName} {userReview?.lastName}
               </Text>
-              <Text fontSize={10} color='gray.300' alignSelf='center'>
+              <Text fontSize={10} color='#806e91' alignSelf='center'>
                 {parseDate(review?.createdAt) +
                   ' ' +
                   parseTime(review?.createdAt)}
@@ -185,7 +185,7 @@ const Review = ({ navigation, dataReview = {} }) => {
               previousFourteenHours(review?.createdAt) && (
                 <HStack alignItems='flex-end'>
                   <IconButton
-                    icon={<FontAwesome name='edit' color='gray.300' />}
+                    icon={<FontAwesome name='edit' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       setShowModal(true)
@@ -200,7 +200,7 @@ const Review = ({ navigation, dataReview = {} }) => {
                   />
 
                   <IconButton
-                    icon={<FontAwesome name='trash' color='gray.300' />}
+                    icon={<FontAwesome name='trash' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       setDeleteVisible(true)
