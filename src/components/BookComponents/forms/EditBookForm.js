@@ -100,7 +100,7 @@ const EditBookForm = ({ navigation, bookData }) => {
       getGenresByIdBook(bookData._id)
         .then((res) => {
           setValue('name', bookData?.name)
-          setValue('synopsis', bookData.sypnosis)
+          setValue('synopsis', bookData.synopsis)
           setValue('literaryGenres', res)
 
           getAllLiteraryGenre()
@@ -158,13 +158,12 @@ const EditBookForm = ({ navigation, bookData }) => {
 
     try {
       const book = updateBookAdapter({
-        idUser: user.id,
+        user: user.id,
         name: data.name,
         synopsis: data.synopsis,
         creationDate: data.creationDate,
       })
       const response = await updateBook(bookData._id, book)
-      console.log('First upload', response)
 
       let imageUri =
         Platform.OS === 'ios'
@@ -177,7 +176,6 @@ const EditBookForm = ({ navigation, bookData }) => {
         name: imageUri.split('/').pop(),
       })
       const responseImage = await uploadImage(bookData._id, formData)
-      console.log('Second upload', responseImage)
 
       let documentUri =
         Platform.OS === 'ios'
@@ -193,22 +191,16 @@ const EditBookForm = ({ navigation, bookData }) => {
         bookData._id,
         formDataDocument
       )
-      console.log('Third upload', responseDocument)
 
       const responseGenres = await setLiteraryGenres(
         bookData._id,
         data.literaryGenres
       )
-      console.log('last upload', responseGenres)
-
-      showSuccessToast(
-        '¡Misión cumplida! El libro ha sido actualizado correctamente'
-      )
+      showSuccessToast('¡Misión cumplida! El libro ha sido actualizado correctamente')
       reset()
       stopLoading()
       navigation.goBack()
     } catch (error) {
-      console.log('an error... F', error)
       showErrorToast('¡Misión fallida! No se pudo actualizar el libro')
     }
     stopLoading()

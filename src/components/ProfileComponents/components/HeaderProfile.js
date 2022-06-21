@@ -85,11 +85,11 @@ const HeaderProfile = ({ userInfo, navigation }) => {
             alignItems='center'
             justifyContent='center'
           >
-            {userInfo?.idRole && userInfo?.idRole?.name === 'Writter' && (
+            {userInfo?.role && userInfo?.role?.name === 'Writer' && (
               <TouchableOpacity
                 onPress={() =>
                   navigation?.navigate('BooksPage', {
-                    userId: userInfo?._id,
+                    user: userInfo?._id,
                     books: books,
                   })
                 }
@@ -114,7 +114,7 @@ const HeaderProfile = ({ userInfo, navigation }) => {
             <TouchableOpacity
               onPress={() =>
                 navigation?.navigate('MyFollower', {
-                  userId: userInfo?._id,
+                  user: userInfo?._id,
                   followers: followers,
                 })
               }
@@ -136,7 +136,7 @@ const HeaderProfile = ({ userInfo, navigation }) => {
             <TouchableOpacity
               onPress={() => {
                 navigation?.navigate('MyFollow', {
-                  userId: userInfo?._id,
+                  user: userInfo?._id,
                   follows: follows,
                 })
               }}
@@ -161,14 +161,14 @@ const HeaderProfile = ({ userInfo, navigation }) => {
           <HStack space={2} alignItems='center' w='60%'>
             <Icon
               as={
-                userInfo?.idRole?.name === 'Reader' ? FontAwesome5 : AntDesign
+                userInfo?.role?.name === 'Reader' ? FontAwesome5 : AntDesign
               }
               name={
-                userInfo?.idRole?.name === 'Reader' ? 'book-reader' : 'edit'
+                userInfo?.role?.name === 'Reader' ? 'book-reader' : 'edit'
               }
             />
             <Text fontSize='sm' color={'purple.600'} italic>
-              - {userInfo?.idRole?.name === 'Reader' ? 'Lector' : 'Escritor'}{' '}
+              - {userInfo?.role?.name === 'Reader' ? 'Lector' : 'Escritor'}{' '}
               desde{' '}
               {userInfo?.createdAt
                 ? userInfo?.createdAt

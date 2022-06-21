@@ -17,7 +17,6 @@ import {
   VStack,
   Icon,
   HStack,
-  FlatList,
   Badge,
   Button,
   IconButton,
@@ -41,7 +40,7 @@ import {
   getReadBooks,
 } from '../../../services/user/userAPI'
 import { deleteBook } from '../../../services/book/bookAPI'
-import { previousFourteenHours } from '../../../utils/functions'
+import { before24hours } from '../../../utils/functions'
 
 //Colors
 import COLORS from '../../styled-components/Colors'
@@ -293,14 +292,10 @@ const InfoBookProfile = ({
 
           <HStack my={2} h='15%'>
             <Box>
-              <FlatList
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                data={bookGenres}
-                keyExtractor={(item) => item?._id}
-                ItemSeparatorComponent={() => <Box w={1} />}
-                renderItem={({ item }) => (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {bookGenres.length > 0 && bookGenres.map((genre, index) => (
                   <Badge
+                    key={genre?.name + index.toString()}
                     colorScheme='success'
                     alignItems='center'
                     justifyContent='center'
@@ -309,10 +304,10 @@ const InfoBookProfile = ({
                       backgroundColor: categoryBgColor,
                     }}
                   >
-                    <Text color={elementsButton}>{item?.name}</Text>
+                    <Text color={elementsButton}>{genre?.name}</Text>
                   </Badge>
-                )}
-              />
+                ))}
+              </ScrollView>
             </Box>
           </HStack>
         </VStack>
@@ -328,7 +323,7 @@ const InfoBookProfile = ({
           </HStack>
           <ScrollView>
             <Text fontSize='md' color={text} pl={1} textAlign='justify'>
-              {bookInfo && bookInfo?.sypnosis}
+              {bookInfo && bookInfo?.synopsis}
             </Text>
           </ScrollView>
         </VStack>
@@ -379,7 +374,7 @@ const InfoBookProfile = ({
           <HStack justifyContent='space-between' mt='3' maxH='30%'>
             <VStack alignItems='flex-start'>
               {author?._id === user?.id &&
-                previousFourteenHours(bookInfo?.createdAt) && (
+                before24hours(bookInfo?.createdAt) && (
                   <>
                     <Button
                       h='95%'

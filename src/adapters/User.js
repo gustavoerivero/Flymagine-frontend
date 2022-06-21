@@ -15,7 +15,7 @@ const registerData = (values) => {
     email: values.email,
     password: values.password,
     biography: values.biography,
-    idRole: values.idRole,
+    role: values.role,
   }
 }
 

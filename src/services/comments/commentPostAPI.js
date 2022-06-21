@@ -1,4 +1,5 @@
 import { http } from '../http'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'comment-post'
 
@@ -22,6 +23,24 @@ const updateComment = async (commentId, comment) => {
   return response
 }
 
+const postImage = async(commentId, image) => { 
+  const token = await AsyncStorage.getItem('@token')
+  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${commentId}/image`, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`
+    },
+    body: image
+  }).then(response => {
+    response.text().then((res) => {
+      return res
+    })
+  }).catch(err => {
+    return err
+  })
+}
+
 const deleteComment = async (commentId) => {
   const response = await http.delete(`${BASE_URL}/${commentId}`)
   return response
@@ -32,5 +51,6 @@ module.exports = {
   getComments,
   getComment,
   updateComment,
+  postImage,
   deleteComment,
 }

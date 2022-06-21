@@ -15,7 +15,7 @@ import {
 } from 'native-base'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
-import { previousFourteenHours } from '../../utils/functions'
+import { before24hours } from '../../utils/functions'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
@@ -37,7 +37,6 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
   } = useAuthContext()
 
   const [userLogged, setUserLogged] = useState(null)
-  const [userReview, setUserReview] = useState(null)
 
   const [isLiked, setIsLiked] = useState(false)
   const [reviewReactionInfo, setReviewReactionInfo] = useState([])
@@ -47,7 +46,6 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
 
   const deleteReviewById = async () => {
     try {
-      console.log(review)
       const data = await deleteReview(review?._id)
       console.log(data)
       showSuccessToast('¡Misión cumplida! La review fue eliminada con éxito')
@@ -59,8 +57,8 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
   const likePost = async () => {
     try {
       const newValue = reviewReactionInfo
-      if (newValue?.find((value) => userLogged._id === value?._id)) {
-        newValue?.splice(newValue?.findIndex((reactionUser) => userLogged?._id === reactionUser?._id), 1)
+      if (newValue?.find((value) => user.id === value?._id)) {
+        newValue?.splice(newValue?.findIndex((reactionUser) => user?.id === reactionUser?._id), 1)
       } else {
         newValue?.push(userLogged)
       }
@@ -83,13 +81,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
         .catch(error => {
           console.log(error)
         })
-      getUserById(review?.idUser)
-        .then(res => {
-          setUserReview(res?.Data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+
       getReactionsByReview(review?._id)
         .then(res => {
           setReviewReactionInfo(res?.Data[0]?.users || [])
@@ -115,12 +107,10 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center' >
         <TouchableOpacity
           onPress={() => {
-            console.log(`${userReview?.firstName + ' ' + userReview?.lastName}'s profile`)
-            console.log(userReview._id)
-            if (userReview?._id === user?.id) {
+            if (review?.user?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
-              navigation.navigate('UserProfile', { user: userReview._id })
+              navigation.navigate('UserProfile', { user: review?.user._id })
             }
           }}
         >
@@ -128,12 +118,12 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
             bg='purple.600'
             size='md'
             source={{
-              uri: (userReview?.photo === 'none' ? null : userReview?.photo)
+              uri: (review?.user?.photo === 'none' ? null : review?.user?.photo)
             }}
             borderColor='white'
             borderWidth={3}
           >
-            {userReview && (userReview?.firstName[0] + userReview?.lastName[0])}
+            {review?.user && (review?.user?.firstName[0] + review?.user?.lastName[0])}
           </Avatar>
         </TouchableOpacity>
         </Stack>
@@ -149,29 +139,28 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                 bold
                 fontSize='sm'
               >
-                {userReview?.firstName} {userReview?.lastName}
+                {review?.user?.firstName} {review?.user?.lastName}
               </Text>
               <Text
                 fontSize={10}
-                color='gray.300'
+                color='#806e91'
                 alignSelf='center'
               >
                 {parseDate(review?.createdAt) + ' ' + parseTime(review?.createdAt)}
               </Text>
             </HStack>
 
-            {(user?.id === review?.idUser && previousFourteenHours(review?.createdAt)) && (
+            {(user?.id === review?.user && before24hours(review?.createdAt)) && (
               <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
                     <FontAwesome
                       name='edit'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'
                   onPress={() => {
-                    console.log(review?._id)
                     navigation.navigate('EditPost', { 
                       post: review,
                       hashtags: hashtags,
@@ -183,7 +172,7 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                   icon={
                     <FontAwesome
                       name='trash'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'
@@ -278,8 +267,9 @@ const CommentReviewHeader = ({ navigation, post: review = {} }) => {
                     as={MaterialIcons}
                     name='thumb-up'
                     color={isLiked ? COLORS.button.secundary : 'gray.400'}
+                    size={4}
                   />
-                  <Text fontSize='xs' color={'gray.400'} >
+                  <Text fontSize='sm' color={'gray.400'} >
                     {likes}
                   </Text>
                 </HStack>

@@ -1,8 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
-//Splash Page
-import SplashScreen from '../pages/SplashScreen'
-
 // Login Pages
 import LoginPage from '../pages/Login/LoginPage'
 import RegisterPage from '../pages/Login/RegisterPage'
@@ -22,10 +19,8 @@ import Followers from '../pages/User/Followers'
 import BooksPage from '../pages/User/BooksPage'
 
 // Book Pages
-import MyBook from '../pages/Book/MyBook'
 import BookProfilePage from '../pages/Book/BookProfilePage'
 import RegisterBook from '../pages/Book/RegisterBook'
-import Book from '../pages/Book/Book'
 import EditBook from '../pages/Book/EditBook'
 
 import BottomNavigation from './BottomNavigation'
@@ -125,14 +120,6 @@ const stackRoutes = [
     }
   },
   {
-    name: 'MyBook',
-    component: MyBook,
-    requireAuth: true,
-    options: {
-      title: 'Mis Libros',
-    }
-  },
-  {
     name: 'MyFollower',
     component: Followers,
     requireAuth: true,
@@ -170,14 +157,6 @@ const stackRoutes = [
     requireAuth: true,
     options: {
       title: 'Registrar libro',
-    }
-  },
-  {
-    name: 'Book',
-    component: Book,
-    requireAuth: true,
-    options: {
-      title: 'Perfil del libro'
     }
   },
   {

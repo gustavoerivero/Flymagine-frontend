@@ -36,6 +36,7 @@ import { login } from '../../../services/authAPI'
 import useAuthContext from '../../../hooks/useAuthContext'
 import { loginData } from '../../../adapters/User'
 import COLORS from '../../../components/styled-components/Colors'
+import { setSession } from '../../../services/jwt'
 
 const LoginForm = ({ navigation }) => {
 
@@ -62,12 +63,14 @@ const LoginForm = ({ navigation }) => {
       const token = response?.Data?.token
 
       if (token) {
+        setSession(response?.Data?.id, token)
+        await AsyncStorage.setItem('@id', response?.Data?.id)
         await AsyncStorage.setItem('@token', token)
         dispatch({
           type: 'LOGIN',
           payload: {
             user: {
-              email: value.email,
+              token: token,
               id: response?.Data?.id,
             },
           },
@@ -115,7 +118,7 @@ const LoginForm = ({ navigation }) => {
           <Controller
             name='email'
             control={control}
-            render={({ field: { onChange, value = '', ...field } }) => (
+            render={({ field: { onChange, value = '' } }) => (
               <FormControl
                 isRequired
                 isInvalid={
@@ -125,7 +128,6 @@ const LoginForm = ({ navigation }) => {
                 <StyledField
                   placeholder='Correo electrónico'
                   onChangeText={onChange}
-                  {...field}
                   borderColor={!emailValidator(value) && value !== '' ? 'red.500' : 'grey'}
                   InputLeftElement={
                     <Icon

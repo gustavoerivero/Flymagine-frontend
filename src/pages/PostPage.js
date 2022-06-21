@@ -1,16 +1,17 @@
 import React, { useCallback, useState } from 'react'
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { ImageBackground, TouchableOpacity, useWindowDimensions } from 'react-native'
 import {
   ScrollView,
   Avatar,
   Icon,
+  Box,
+  TextArea,
   Text,
   Stack,
   VStack,
   HStack,
+  Button,
 } from 'native-base'
-import { Button, Image } from 'react-native-elements'
-import { FAB } from '@rneui/themed'
 import {
   AntDesign,
   MaterialCommunityIcons,
@@ -20,14 +21,21 @@ import {
 } from '@expo/vector-icons'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import mime from 'mime'
 
-import CommentInput from '../components/Post/CommentInput'
+
 import PostModify from '../components/Post/PostModify'
 import COLORS from '../components/styled-components/Colors'
 import { handleChange, pickImage, permisionFunction } from '../utils/functions'
 import AddTag from '../components/Post/AddTag'
 import StyledField from '../components/StyledField'
+
+import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+import {
+  commentSchema,
+  commentDefaultValue,
+} from '../utils/formValidations/dataCommentValidation'
 
 import useAuthContext from '../hooks/useAuthContext'
 import useLoading from '../hooks/useLoading'
@@ -52,9 +60,11 @@ const CreatePostPage = ({ navigation }) => {
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
+  const [height, setHeight] = useState(20)
+
   const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
-    idUser: user.id,
+    user: user.id,
     author: `${userData?.firstName} ${userData?.lastName}` || '',
     avatar: userData?.photo || '',
     photo: '',
@@ -62,6 +72,17 @@ const CreatePostPage = ({ navigation }) => {
     createdAt: new Date(),
     hashtags: [],
     personTags: [],
+  })
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+    reset,
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(commentSchema),
+    defaultvalue: commentDefaultValue,
   })
 
   const [image, setImage] = useState(null)
@@ -92,6 +113,85 @@ const CreatePostPage = ({ navigation }) => {
         })
     }, [])
   )
+
+  const onSubmit = async () => {
+    startLoading()
+
+    try {
+
+      const response = await createPost(postAdapter({
+        user: user.id,
+        description: post.description,
+      }))
+
+      if (response?._id) {
+        let idPost = response?._id
+
+        if (image) {
+          const imageUri =
+            Platform.OS === 'ios'
+              ? 'file:///' + image.uri.split('file:/').join('')
+              : image.uri
+
+          const formData = new FormData()
+          formData.append('photo', {
+            uri: imageUri,
+            type: mime.getType(imageUri),
+            name: imageUri.split('/').pop(),
+          })
+
+          postImage(idPost, formData)
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
+        if (post.personTags.length > 0) {
+          setUsertags(idPost, post.personTags)
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
+        if (post.hashtags.length > 0) {
+          setHashtags(idPost, post.hashtags)
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        }
+
+        setPost({
+          ...post,
+          description: '',
+          photo: '',
+          hashtags: [],
+          personTags: [],
+        })
+        setImage(null)
+
+        reset(commentDefaultValue)
+
+        showSuccessToast(
+          '¡Misión cumplida! Has creado una publicación'
+        )
+        navigation.navigate('Home')
+      }
+
+    } catch (error) {
+      console.log(error)
+      showErrorToast('¡Misión fallida! Ha ocurrido un error')
+    }
+    stopLoading()
+  }
 
   return (
     <KeyboardAwareScrollView>
@@ -136,38 +236,42 @@ const CreatePostPage = ({ navigation }) => {
             borderColor='gray.200'
             borderRadius={10}
           >
-            <Stack justifyContent='flex-end'>
+            <Stack justifyContent='flex-end' pb={2} pl={2}>
               {post?.photo !== '' && (
-                <Button
-                  icon={
-                    <Image
-                      source={{
-                        uri: post.photo,
-                      }}
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: 5,
-                      }}
-                    />
-                  }
-                  type='clear'
-                  containerStyle={{
-                    height: 45,
-                    width: 45,
-                    margin: 5,
-                    marginLeft: 10,
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                  }}
+                <TouchableOpacity
+                  activeOpacity={0.75}
                   onPress={() => {
                     console.log(`${post.author}'s post`)
                     _handleChange('image', '')
+                    setImage(null)
+                    post.photo = ''
                   }}
-                />
+                >
+                  <ImageBackground
+                    source={{
+                      uri: post.photo,
+                    }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 5,
+                    }}
+                    imageStyle={{
+                      borderRadius: 5,
+                    }}
+                    alt={post.author}
+                  >
+                    <Icon
+                      as={<MaterialIcons name='cancel' color='white' />}
+                      size={4}
+                      color='white'
+                      alignSelf='flex-start'
+                    />
+                  </ImageBackground>
+                </TouchableOpacity>
               )}
             </Stack>
-            <HStack space={2}>
+            <HStack space={1} mr={2} alignItems='center' alignContent='center'>
               <AddTag
                 visible={addPersonDialog}
                 setVisible={setAddPersonDialog}
@@ -204,12 +308,10 @@ const CreatePostPage = ({ navigation }) => {
                       w='85%'
                     />
                     <Button
-                      icon={
+                      leftIcon={
                         <MaterialIcons name='cancel' color='#fff' size={20} />
                       }
-                      buttonStyle={{
-                        backgroundColor: 'rgba(255, 84, 138, 1)',
-                      }}
+                      colorScheme='pink'
                       onPress={() => {
                         setAddPersonDialog(false)
                       }}
@@ -217,9 +319,9 @@ const CreatePostPage = ({ navigation }) => {
                   </HStack>
                   <ScrollView>
                     <VStack maxH='80%' space={2} mx='5%'>
-                      {usersSearched.map((item) => (
+                      {usersSearched.map((item, index) => (
                         <TouchableOpacity
-                          key={item._id}
+                          key={index.toString()}
                           onPress={() => {
                             setUserSearch('')
                             setUserSearched([])
@@ -258,18 +360,11 @@ const CreatePostPage = ({ navigation }) => {
                 </VStack>
               </AddTag>
 
-              <FAB
-                icon={<Ionicons name='ios-person-add' color='#fff' size={20} />}
-                containerStyle={{
-                  position: 'relative',
-                  marginBottom: 5,
-                  right: '15%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}
-                color='rgba(200, 123, 255, 1)'
+              <Button
+                leftIcon={<Ionicons name='ios-person-add' color='#fff' size={16} />}
+                maxH={10} maxW={10}
+                borderRadius='full'
+                colorScheme='blue'
                 onPress={() => {
                   console.log('Add person tag')
                   setAddPersonDialog(true)
@@ -311,17 +406,15 @@ const CreatePostPage = ({ navigation }) => {
                       w='70%'
                     />
                     <Button
-                      icon={
+                      leftIcon={
                         <MaterialCommunityIcons
                           name='tag-plus'
                           color='#fff'
                           size={20}
                         />
                       }
-                      buttonStyle={{
-                        backgroundColor: 'rgba(158, 84, 255, 1)',
-                      }}
-                      disabled={
+                      colorScheme='blue'
+                      isDisabled={
                         tagSearch === '' ||
                         post.hashtags.find((tag) => tag.name === tagSearch) ||
                         tagsSearched.find((tag) => tag.name === tagSearch) ||
@@ -355,12 +448,10 @@ const CreatePostPage = ({ navigation }) => {
                       }}
                     />
                     <Button
-                      icon={
+                      leftIcon={
                         <MaterialIcons name='cancel' color='#fff' size={20} />
                       }
-                      buttonStyle={{
-                        backgroundColor: 'rgba(255, 84, 138, 1)',
-                      }}
+                      colorScheme='pink'
                       onPress={() => {
                         setAddTagDialog(false)
                       }}
@@ -368,9 +459,9 @@ const CreatePostPage = ({ navigation }) => {
                   </HStack>
                   <ScrollView>
                     <VStack maxH='80%' space={2} mx='5%'>
-                      {tagsSearched.map((item) => (
+                      {tagsSearched.map((item, index) => (
                         <TouchableOpacity
-                          key={item._id}
+                          key={index.toString()}
                           onPress={() => {
                             setTagSearch('')
                             setTagsSearched([])
@@ -400,38 +491,25 @@ const CreatePostPage = ({ navigation }) => {
                 </VStack>
               </AddTag>
 
-              <FAB
-                icon={<AntDesign name='tags' color='#fff' size={20} />}
-                containerStyle={{
-                  position: 'relative',
-                  marginBottom: 5,
-                  right: '15%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}
-                color='rgba(90, 123, 255, 1)'
+              <Button
+                leftIcon={<AntDesign name='tags' color='#fff' size={15} />}
+                borderRadius='full'
+                maxH={10} maxW={10}
+                colorScheme='pink'
                 onPress={() => {
                   console.log('Add post tag')
                   setAddTagDialog(true)
                 }}
               />
 
-              <FAB
-                icon={
-                  <Ionicons name='ios-image-outline' color='#fff' size={20} />
+              <Button
+                leftIcon={
+                  <Ionicons name='ios-image-outline' color='#fff' size={16} />
                 }
-                containerStyle={{
-                  position: 'relative',
-                  marginBottom: 5,
-                  right: '15%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 40,
-                  height: 40,
-                }}
-                color='rgba(90, 85, 220, 1)'
+                borderRadius='full'
+                maxH={10} maxW={10}
+                ml={1}
+                colorScheme='indigo'
                 onPress={() => {
                   let image = pickImage()
                   image
@@ -448,99 +526,63 @@ const CreatePostPage = ({ navigation }) => {
             </HStack>
           </HStack>
 
-          <CommentInput
-            value={post.description}
-            onChangeText={(text) => _handleChange('description', text)}
-            placeholder='Cuentanos, ¿Qué hay de nuevo?'
-            rightElement={
-              <FAB
-                icon={<FontAwesome name='send' color='#fff' size={20} />}
-                color='#b973ff'
-                containerStyle={{
-                  position: 'relative',
-                  marginBottom: 5,
-                  right: '5%',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 50,
-                  height: 50,
-                  backgroundColor: COLORS.secundary,
-                }}
-                disabled={post.description === '' || isLoading}
-                onPress={() => {
-                  startLoading()
-                  createPost(postAdapter(post))
-                    .then((res) => {
-                      console.log(res)
+          <Controller
+            name='description'
+            control={control}
+            render={({ field: { onChange, value = post.description, ...field } }) => (
+              <Box
+                w={layout.width}
+                minH={layout.height * 0.12}
+                maxH={layout.height * 0.2}
+                bgColor='white'
+                py={1}
+                px={2}
+                justifyContent='center'
+              >
+                <HStack alignItems='center' w='100%'>
+                  <Stack w='10%' alignItems='center'>
+                    <Icon as={FontAwesome} name='comment' size={8} color='#aaa' />
+                  </Stack>
 
-                      let idPost = res._id
+                  <Stack w='75%'>
+                    <TextArea
+                      textAlignVertical='center'
+                      textAlign='justify'
+                      minH={16}
+                      h={height}
+                      maxH={120}
+                      bgColor={COLORS.base}
+                      color={COLORS.gray4}
+                      borderColor={'white'}
+                      m={1}
+                      onContentSizeChange={(event) => {
+                        setHeight(event.nativeEvent.contentSize.height)
+                      }}
+                      variant='unstyled'
+                      size='md'
+                      {...field}
+                      value={post.description}
+                      onChangeText={(text) => {
+                        _handleChange('description', text)
+                        onChange(text)
+                      }}
+                      placeholder='Cuentanos, ¿Qué hay de nuevo?'
 
-                      if (image) {
-                        const imageUri =
-                          Platform.OS === 'ios'
-                            ? 'file:///' + image.uri.split('file:/').join('')
-                            : image.uri
-
-                        const formData = new FormData()
-                        formData.append('photo', {
-                          uri: imageUri,
-                          type: mime.getType(imageUri),
-                          name: imageUri.split('/').pop(),
-                        })
-
-                        postImage(idPost, formData)
-                          .then((res) => {
-                            console.log(res)
-                          })
-                          .catch((err) => {
-                            console.log(err)
-                          })
-                      }
-
-                      if (post.personTags.length > 0) {
-                        setUsertags(idPost, post.personTags)
-                          .then((res) => {
-                            console.log(res)
-                          })
-                          .catch((err) => {
-                            console.log(err)
-                          })
-                      }
-
-                      if (post.hashtags.length > 0) {
-                        setHashtags(idPost, post.hashtags)
-                          .then((res) => {
-                            console.log(res)
-                          })
-                          .catch((err) => {
-                            console.log(err)
-                          })
-                      }
-
-                      setPost({
-                        ...post,
-                        description: '',
-                        photo: '',
-                        hashtags: [],
-                        personTags: [],
-                      })
-                      setImage(null)
-
-                      showSuccessToast(
-                        '¡Misión cumplida! Has creado una publicación'
-                      )
-                      navigation.navigate('Home')
-                    })
-                    .catch((error) => {
-                      console.log(error)
-                      showErrorToast(
-                        '¡Misión fallida! No se ha podido crear la publicación'
-                      )
-                    })
-                  stopLoading()
-                }}
-              />
-            }
+                    />
+                  </Stack>
+                  <Stack w='15%' alignItems='center' alignContent='center'>
+                    <Button
+                      leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
+                      colorScheme='purple'
+                      borderRadius={100}
+                      isDisabled={!isValid || isLoading}
+                      isLoading={isLoading}
+                      onPress={handleSubmit(onSubmit)}
+                    />
+                  </Stack>
+                </HStack>
+              </Box>
+            )}
           />
         </VStack>
       </VStack>

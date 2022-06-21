@@ -25,7 +25,7 @@ const TabContainerProfile = ({ navigation, userInfo }) => {
   ]
 
   return (
-    <View minH={layout.height} >
+    <View minH={layout.height} mb={4}>
       <Tab
         value={index}
         onChange={setIndex}
@@ -35,7 +35,7 @@ const TabContainerProfile = ({ navigation, userInfo }) => {
         }}
         scrollable
       >
-        {tabs.map((tab) => (
+        {tabs && tabs.map((tab) => (
           <Tab.Item
             key={tab}
             title={tab}

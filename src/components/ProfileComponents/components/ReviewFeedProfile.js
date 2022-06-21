@@ -1,14 +1,12 @@
 import React, { useState, useCallback } from 'react'
 import { RefreshControl } from 'react-native'
-import { Image, VStack, Text, ScrollView, FlatList, Stack } from 'native-base'
+import { Image, VStack, Text, FlatList, Stack } from 'native-base'
 import { useWindowDimensions } from 'react-native'
 import COLORS from '../../styled-components/Colors'
 import DontKnow from '../../../../assets/images/dontknow.png'
-import BookItem from './BookItem'
 import ReviewItem from './ReviewItem'
 import useAuthContext from '../../../hooks/useAuthContext'
 import { getReviewByUser } from '../../../services/post/reviewAPI'
-import { getToReadBooks } from '../../../services/user/userAPI'
 import { useFocusEffect } from '@react-navigation/native'
 
 const wait = (timeout) => {
@@ -29,14 +27,13 @@ const ReviewFeedProfile = ({ navigation, userInfo }) => {
     state: { user },
   } = useAuthContext()
 
-  const [books, setBooks] = useState([])
   const [reviews, setReviews] = useState([])
 
   useFocusEffect(
     useCallback(() => {
       getReviewByUser(userInfo._id || user._id)
         .then((res) => {
-          let revs = res.filter((review) => review.idBook.status === 'A')
+          let revs = res.filter((review) => review.book.status === 'A')
           setReviews(revs)
         })
         .catch((err) => {

@@ -39,8 +39,8 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
       <Stack>
         <ScrollView>
           {reviewData.length > 0 && reviewData ? (
-            reviewData?.map((review, id) => (
-              <Stack padding={1} key={id}>
+            reviewData?.map((review, index) => (
+              <Stack padding={1} key={index.toString()}>
                 <Review navigation={navigation} dataReview={review} />
               </Stack>
             ))

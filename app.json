@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/favicon.png",
         "backgroundColor": "#9c50db"
-      }
+      },
+      "package": "com.thoteam.flymagine"
     },
     "web": {
       "favicon": "./assets/favicon.png"

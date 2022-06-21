@@ -18,7 +18,7 @@ import { Entypo } from '@expo/vector-icons'
 import { parseDate, parseTime } from '../../utilities/Parsers'
 import COLORS from '../styled-components/Colors'
 
-const PostModify = ({ user, post, handleChange }) => {
+const PostModify = ({ post, handleChange }) => {
   const layout = useWindowDimensions()
 
   return (
@@ -35,19 +35,19 @@ const PostModify = ({ user, post, handleChange }) => {
           bg='purple.600'
           size='md'
           source={{
-            uri: user?.photo === 'none' ? null : user?.photo,
+            uri: post?.user?.photo === 'none' ? null : post?.user?.photo,
           }}
           borderColor='white'
           borderWidth={3}
         >
-          {user && user?.firstName[0] + user?.lastName[0]}
+          {post?.user && post?.user?.firstName[0] + post?.user?.lastName[0]}
         </Avatar>
         <VStack space={1} w='85%'>
           <HStack space={2}>
             <Text bold fontSize='sm' pt={2}>
-              {user?.firstName} {user?.lastName}
+              {post?.user?.firstName} {post?.user?.lastName}
             </Text>
-            <Text fontSize={10} color='gray.300' alignSelf='flex-end'>
+            <Text fontSize={10} color='#806e91' alignSelf='flex-end'>
               {parseDate(post?.createdAt) + ' ' + parseTime(post?.createdAt)}
             </Text>
           </HStack>

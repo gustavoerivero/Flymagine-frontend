@@ -1,13 +1,16 @@
 import React, { useState, useCallback } from 'react'
-import { RefreshControl, useWindowDimensions } from 'react-native'
+import { RefreshControl, useWindowDimensions, ActivityIndicator } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { VStack, Box, StatusBar, FlatList, Stack } from 'native-base'
+import { VStack, Box, StatusBar, Image, FlatList, Stack, Text } from 'native-base'
+
+import DontKnow from '../../assets/images/dontknow.png'
 
 //Components
 import Post from '../components/Post/Post'
 import TopBar from '../components/TopBar'
 
 import useAuthContext from '../hooks/useAuthContext'
+import useLoading from '../hooks/useLoading'
 
 import { getFollows } from '../services/user/userAPI'
 import { getFeed } from '../services/post/postAPI'
@@ -17,9 +20,6 @@ const wait = (timeout) => {
   return new Promise((resolve) => setTimeout(resolve, timeout))
 }
 
-const STYLES = ['default', 'dark-content', 'light-content']
-const TRANSITIONS = ['fade', 'slide', 'none']
-
 const HomeView = ({ navigation }) => {
   const layout = useWindowDimensions()
 
@@ -27,10 +27,8 @@ const HomeView = ({ navigation }) => {
     state: { user },
   } = useAuthContext()
 
-  const [follows, setFollows] = useState([])
-
+  const { isLoading, startLoading, stopLoading } = useLoading()
   const [posts, setPosts] = useState([])
-
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = React.useCallback(() => {
@@ -39,10 +37,12 @@ const HomeView = ({ navigation }) => {
   }, [])
 
   useFocusEffect(
-    useCallback(() => {
+    useCallback(() => {      
+      if(posts.length === 0) {
+        startLoading()
+      }
       getFollows(user?.id)
         .then((res) => {
-          setFollows(res?.Data?.follows)
 
           let followsReceived = res?.Data?.follows
 
@@ -52,7 +52,10 @@ const HomeView = ({ navigation }) => {
 
             getFeed(f)
               .then((res) => {
-                setPosts(res?.Data)
+                setPosts(res?.Data || [])
+                if(posts.length !== 0) {
+                stopLoading()
+                }
               })
               .catch((err) => {
                 console.log(err)
@@ -65,18 +68,12 @@ const HomeView = ({ navigation }) => {
     }, [])
   )
 
-  const [hidden, setHidden] = useState(false)
-  const [statusBarStyle, setStatusBarStyle] = useState(STYLES[0])
-  const [statusBarTransition, setStatusBarTransition] = useState(
-    TRANSITIONS[0]
-  )
-
   return (
     <Box w={layout.width}>
       <StatusBar animated={true} backgroundColor={COLORS.primary} />
       <TopBar />
       <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
-        {posts && (
+        {posts.length > 0 || !isLoading ? (
           <FlatList
             py={2}
             refreshControl={
@@ -91,7 +88,25 @@ const HomeView = ({ navigation }) => {
               </Stack>
             )}
           />
-        )}
+        )
+          : posts.length === 0 ? (
+            <VStack alignItems='center' mx={2} my='30%'>
+              <Image
+                source={DontKnow}
+                alt='DontKnow'
+                resizeMode='contain'
+                size={300}
+              />
+              <Text bold textAlign='center' color={COLORS.primary}>
+                Qué extraño... Parece que aún no has hecho ningún amigo o publicado algo... ¿Qué esperas?
+              </Text>
+            </VStack>
+          )
+            : (
+              <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+                <ActivityIndicator size='large' color={COLORS.primary} />
+              </Stack>
+            )}
       </VStack>
     </Box>
   )

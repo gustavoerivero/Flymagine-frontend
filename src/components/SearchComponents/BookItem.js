@@ -7,7 +7,6 @@ import { MaterialIcons, FontAwesome } from '@expo/vector-icons'
 import useAuthContext from '../../hooks/useAuthContext'
 
 //Image
-import book from '../../../assets/book.jpg'
 import COLORS from '../styled-components/Colors'
 
 const BookItem = ({ bookItem, navigation }) => {
@@ -72,7 +71,7 @@ const BookItem = ({ bookItem, navigation }) => {
                   textAlign='justify'
                   italic
                 >
-                  {bookItem?.idUser?.firstName} {bookItem?.idUser?.lastName}
+                  {bookItem?.user?.firstName} {bookItem?.user?.lastName}
                 </Text>
               </HStack>
               <HStack

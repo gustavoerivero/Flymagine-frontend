@@ -14,7 +14,7 @@ import {
 } from 'native-base'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
-import { previousFourteenHours } from '../../utils/functions'
+import { before24hours } from '../../utils/functions'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
@@ -80,7 +80,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
         .catch(error => {
           console.log(error)
         })
-      getUserById(comment?.idUser)
+      getUserById(comment?.user)
         .then(res => {
           setUserComment(res?.Data)
         })
@@ -108,12 +108,10 @@ const CommentReview = ({ navigation, comment = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center'>
         <TouchableOpacity
           onPress={() => {
-            console.log(`${userComment?.firstName + ' ' + userComment?.lastName}'s profile`)
-            console.log(userPost._id)
-            if (userComment?._id === user?.id) {
+            if (comment?.user?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
-              navigation.navigate('UserProfile', { user: userComment._id })
+              navigation.navigate('UserProfile', { user: comment?.user._id })
             }
           }}
         >
@@ -121,12 +119,12 @@ const CommentReview = ({ navigation, comment = {} }) => {
             bg='purple.600'
             size='md'
             source={{
-              uri: (userComment?.photo === 'none' ? null : userComment?.photo)
+              uri: (comment?.user?.photo === 'none' ? null : comment?.user?.photo)
             }}
             borderColor='white'
             borderWidth={3}
           >
-            {userComment && (userComment?.firstName[0] + userComment?.lastName[0])}
+            {comment?.user && (comment?.user?.firstName[0] + comment?.user?.lastName[0])}
           </Avatar>
         </TouchableOpacity>
         </Stack>
@@ -141,29 +139,28 @@ const CommentReview = ({ navigation, comment = {} }) => {
                 bold
                 fontSize='sm'
               >
-                {userComment?.firstName} {userComment?.lastName}
+                {comment?.user?.firstName} {comment?.user?.lastName}
               </Text>
               <Text
                 fontSize={10}
-                color='gray.300'
+                color='#806e91'
                 alignSelf='center'
               >
                 {parseDate(comment?.createdAt) + ' ' + parseTime(comment?.createdAt)}
               </Text>
             </HStack>
 
-            {(user?.id === comment?.idUser && previousFourteenHours(comment?.createdAt)) && (
+            {(user?.id === comment?.user._id && before24hours(comment?.createdAt)) && (
               <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
                     <FontAwesome
                       name='edit'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'
                   onPress={() => {
-                    console.log(comment?._id)
                     navigation.navigate('CommentReviewEditPage', { 
                       comment: comment
                     })
@@ -173,7 +170,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
                   icon={
                     <FontAwesome
                       name='trash'
-                      color='gray.300'
+                      color='#806e91'
                     />
                   }
                   size='sm'
