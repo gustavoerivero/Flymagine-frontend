@@ -202,9 +202,8 @@ const PostEditPage = ({ navigation, route }) => {
                   activeOpacity={0.75}
                   onPress={() => {
                     console.log(`${post.author}'s post`)
-                    _handleChange('image', '')
+                    _handleChange('photo', 'none')
                     setImage(null)
-                    post.photo = ''
                   }}
                 >
                   <ImageBackground
