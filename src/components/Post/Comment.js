@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Stack,
+  Image,
   HStack,
   VStack,
   Text,
@@ -209,6 +210,14 @@ const Comment = ({ navigation, comment = {} }) => {
             </Stack>
 
             <Divider my={1} />
+            <Stack alignItems='center'>
+              {comment?.photo && comment?.photo !== 'none' && (
+                <>
+                  <Image source={{ uri: comment?.photo }} size={300} alt='post' />
+                  <Divider opacity={0.5} />
+                </>
+              )}
+            </Stack>
 
             <HStack /* LIKE BUTTON */ w='100%'
               py={0.5}

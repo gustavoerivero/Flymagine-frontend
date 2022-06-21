@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react'
-import { useWindowDimensions } from 'react-native'
+import { useWindowDimensions, TouchableOpacity, ImageBackground, Platform } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import { ScrollView, Box, TextArea, Stack, Icon, HStack, VStack, Button } from 'native-base'
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, Ionicons, MaterialIcons } from '@expo/vector-icons'
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -14,7 +14,11 @@ import Comment from '../../components/Post/Comment'
 import {
   getComments,
   createComment,
+  postImage,
 } from '../../services/comments/commentPostAPI'
+
+import { pickImage, permisionFunction } from '../../utils/functions'
+import mime from 'mime'
 
 import useAuthContext from '../../hooks/useAuthContext'
 import useLoading from '../../hooks/useLoading'
@@ -45,6 +49,7 @@ const CommentPage = ({ navigation, route }) => {
   const [comments, setComments] = useState(route.params.comments || [])
 
   const [comment, setComment] = useState(null)
+  const [photo, setPhoto] = useState(null)
 
   const layout = useWindowDimensions()
 
@@ -75,6 +80,7 @@ const CommentPage = ({ navigation, route }) => {
         .catch((error) => {
           console.log(error)
         })
+      permisionFunction()
     }, [comments])
   )
 
@@ -82,18 +88,49 @@ const CommentPage = ({ navigation, route }) => {
     startLoading()
 
     try {
-      const response = await createComment({
+
+      createComment({
         post: post._id,
         user: user.id,
         description: comment,
+      }).then((res) => {
+
+        if (res && photo) {
+
+          const commentId = res?.Data?._id
+
+          const imageUri =
+            Platform.OS === 'ios'
+              ? 'file:///' + photo.uri.split('file:/').join('')
+              : photo.uri
+
+          const formData = new FormData()
+          formData.append('photo', {
+            uri: imageUri,
+            type: mime.getType(imageUri),
+            name: imageUri.split('/').pop(),
+          })
+          
+          postImage(commentId, formData)
+            .then((res) => {
+              console.log(res)
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+
+        }
+
+        setComment(null)
+        setPhoto(null)
+        reset(commentDefaultValue)
+        showSuccessToast('¡Misión cumplida! El comentario ha sido creado')
+
+      }).catch((error) => {
+        showErrorToast('¡Error! No se pudo crear el comentario')
+        console.log(error)
       })
 
-      console.log(response)
-      setComments([...comments, response])
-
-      reset(commentDefaultValue)
-
-      showSuccessToast('¡Misión cumplida! El comentario ha sido creado')
     } catch (error) {
       console.log(error)
       showErrorToast('¡Misión fallida! Ha ocurrido un error')
@@ -111,9 +148,9 @@ const CommentPage = ({ navigation, route }) => {
             p={2}
             justifyContent='center'
           >
-            <CommentPost 
-              navigation={navigation} 
-              post={post} 
+            <CommentPost
+              navigation={navigation}
+              post={post}
               hashtags={route.params.hashtags || []}
               personTags={route.params.personTags || []}
             />
@@ -133,6 +170,71 @@ const CommentPage = ({ navigation, route }) => {
         </VStack>
       </ScrollView>
 
+      <HStack
+        justifyContent='space-between'
+        h={57}
+        px={1}
+        pt={1}
+        minW={layout.width}
+        borderTopWidth={1}
+        borderColor='gray.200'
+        borderRadius={10}
+      >
+        <Stack justifyContent='flex-end' pb={2} pl={2}>
+          {photo && (
+            <TouchableOpacity
+              activeOpacity={0.75}
+              onPress={() => {
+                setPhoto(null)
+              }}
+            >
+              <ImageBackground
+                source={{
+                  uri: photo?.uri,
+                }}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 5,
+                }}
+                imageStyle={{
+                  borderRadius: 5,
+                }}
+                alt='Photo'
+              >
+                <Icon
+                  as={<MaterialIcons name='cancel' color='white' />}
+                  size={4}
+                  color='white'
+                  alignSelf='flex-start'
+                />
+              </ImageBackground>
+            </TouchableOpacity>
+          )}
+        </Stack>
+        <HStack space={1} mr={2} alignItems='center' alignContent='center'>
+          <Button
+            leftIcon={
+              <Ionicons name='ios-image-outline' color='#fff' size={16} />
+            }
+            borderRadius='full'
+            maxH={10} maxW={10}
+            ml={1}
+            colorScheme='indigo'
+            onPress={() => {
+              let image = pickImage()
+              image
+                .then((res) => {
+                  setPhoto(res)
+                  console.log(res)
+                })
+                .catch((err) => {
+                  console.log(err)
+                })
+            }}
+          />
+        </HStack>
+      </HStack>
       <Box
         w={layout.width}
         minH={layout.height * 0.12}

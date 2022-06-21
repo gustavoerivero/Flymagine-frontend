@@ -18,11 +18,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import mime from 'mime'
 
 import PostModify from '../../components/Post/PostModify'
-import {
-  handleChange,
-  pickImage,
-  permisionFunction,
-} from '../../utils/functions'
+import { handleChange, pickImage, permisionFunction } from '../../utils/functions'
 import AddTag from '../../components/Post/AddTag'
 import StyledField from '../../components/StyledField'
 

@@ -55,6 +55,8 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
         user: user.id,
       }))
 
+      console.log(data)
+
       showSuccessToast('¡Misión cumplida! La review fue creada con éxito')
       setShowModal(false)
       reset(reviewDefaultValues)

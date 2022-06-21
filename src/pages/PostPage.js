@@ -21,7 +21,7 @@ import {
 } from '@expo/vector-icons'
 import { useFocusEffect } from '@react-navigation/native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import mime from 'mime'
+
 
 import PostModify from '../components/Post/PostModify'
 import COLORS from '../components/styled-components/Colors'
