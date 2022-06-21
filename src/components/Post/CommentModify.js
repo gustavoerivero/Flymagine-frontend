@@ -12,7 +12,7 @@ import {
 import { parseDate, parseTime } from '../../utilities/Parsers'
 import COLORS from '../styled-components/Colors'
 
-const CommentModify = ({ user, comment }) => {
+const CommentModify = ({ comment }) => {
 
   const layout = useWindowDimensions()
 
@@ -31,21 +31,21 @@ const CommentModify = ({ user, comment }) => {
           bg='purple.600'
           size='md'
           source={{
-            uri: user?.photo === 'none' ?
+            uri: comment?.user?.photo === 'none' ?
               null
-              : user?.photo
+              : comment?.user?.photo
           }}
           borderColor='white'
           borderWidth={3}
         >
-          {user && (user?.firstName[0] + user?.lastName[0])}
+          {comment?.user && (comment?.user?.firstName[0] + comment?.user?.lastName[0])}
         </Avatar>
         </Stack>
         
         <VStack /* INFO */ px={1} pb={2} w='85%' >
           <HStack /* USER */ w='100%' h={7} space={2} alignItems='center' >
             <Text bold fontSize='sm' >
-              {user?.firstName} {user?.lastName}
+              {comment?.user?.firstName} {comment?.user?.lastName}
             </Text>
             <Text fontSize={10} color='#806e91' >
               {parseDate(comment?.createdAt) + ' ' + parseTime(comment?.createdAt)}

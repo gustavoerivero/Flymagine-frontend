@@ -34,11 +34,10 @@ const CommentReviewEditPage = ({ navigation, route }) => {
 
   const [height, setHeight] = useState(20)
 
-  const [userData, setUserData] = useState(null)
   const [comment, setComment] = useState({
     _id: route.params.comment._id,
     post: route.params.comment.post,
-    user: user.id,
+    user: route.params.comment.user,
     description: route.params.comment.description,
     createdAt: route.params.comment.createdAt,
     usersLiked: route.params.comment.usersLiked || [],
@@ -56,20 +55,6 @@ const CommentReviewEditPage = ({ navigation, route }) => {
     resolver: yupResolver(commentSchema),
     defaultvalue: commentDefaultValue,
   })
-
-  useFocusEffect(
-    useCallback(() => {
-
-      getUserById(user?.id)
-        .then(res => {
-          setUserData(res?.Data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-
-    }, [])
-  )
 
   const onSubmit = async (values) => {
     startLoading()
@@ -96,7 +81,6 @@ const CommentReviewEditPage = ({ navigation, route }) => {
           <VStack maxH='100%' alignItems='center' p={2}>
             <CommentModify
               comment={comment}
-              user={userData}
             />
           </VStack>
         </ScrollView>

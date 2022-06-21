@@ -41,7 +41,7 @@ const CommentPage = ({ navigation, route }) => {
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [post, setPost] = useState(route.params.post || {})
+  const post = route.params?.post || {}
   const [comments, setComments] = useState(route.params.comments || [])
 
   const [comment, setComment] = useState(null)
@@ -111,7 +111,12 @@ const CommentPage = ({ navigation, route }) => {
             p={2}
             justifyContent='center'
           >
-            <CommentPost navigation={navigation} post={post} />
+            <CommentPost 
+              navigation={navigation} 
+              post={post} 
+              hashtags={route.params.hashtags || []}
+              personTags={route.params.personTags || []}
+            />
           </Stack>
           <VStack /* POST COMENTARIES */ alignItems='flex-start'
             ml={1}

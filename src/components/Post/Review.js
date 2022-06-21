@@ -17,7 +17,7 @@ import {
 } from 'native-base'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
-import { previousFourteenHours } from '../../utils/functions'
+import { before24hours } from '../../utils/functions'
 import EditReviewModal from './EditReviewModal'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 
@@ -97,15 +97,6 @@ const Review = ({ navigation, dataReview = {} }) => {
       getReviewById(review?._id)
         .then((res) => {
           setReview(res)
-
-          getUserById(res?.user)
-            .then((r) => {
-              setUserReview(r?.Data)
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-
         })
         .catch((error) => {
           console.log(error)
@@ -139,14 +130,10 @@ const Review = ({ navigation, dataReview = {} }) => {
       <HStack>
         <TouchableOpacity
           onPress={() => {
-            console.log(
-              `${userReview?.firstName + ' ' + userReview?.lastName}'s profile`
-            )
-            console.log(userReview._id)
-            if (userReview?._id === user?.id) {
+            if (review?.user?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
-              navigation.navigate('UserProfile', { user: userReview._id })
+              navigation.navigate('UserProfile', { user: review?.user._id })
             }
           }}
         >
@@ -154,12 +141,12 @@ const Review = ({ navigation, dataReview = {} }) => {
             bg='purple.600'
             size='md'
             source={{
-              uri: (userReview?.photo === 'none' ? null : userReview?.photo)
+              uri: (review?.user?.photo === 'none' ? null : review?.user?.photo)
             }}
             borderColor='white'
             borderWidth={3}
           >
-            {userReview && userReview?.firstName[0] + userReview?.lastName[0]}
+            {review?.user && review?.user?.firstName[0] + review?.user?.lastName[0]}
           </Avatar>
         </TouchableOpacity>
         <VStack ml={2}>
@@ -172,7 +159,7 @@ const Review = ({ navigation, dataReview = {} }) => {
           >
             <HStack space={2}>
               <Text bold fontSize='sm'>
-                {userReview?.firstName} {userReview?.lastName}
+                {review?.user?.firstName} {review?.user?.lastName}
               </Text>
               <Text fontSize={10} color='#806e91' alignSelf='center'>
                 {parseDate(review?.createdAt) +
@@ -181,8 +168,8 @@ const Review = ({ navigation, dataReview = {} }) => {
               </Text>
             </HStack>
 
-            {user?.id === review?.user &&
-              previousFourteenHours(review?.createdAt) && (
+            {user?.id === review?.user?._id &&
+              before24hours(review?.createdAt) && (
                 <HStack alignItems='flex-end'>
                   <IconButton
                     icon={<FontAwesome name='edit' color='#806e91' />}
@@ -296,8 +283,9 @@ const Review = ({ navigation, dataReview = {} }) => {
                     as={MaterialIcons}
                     name='thumb-up'
                     color={isLiked ? COLORS.button.secundary : 'gray.400'}
+                    size={4}
                   />
-                  <Text fontSize='xs' color={'gray.400'}>
+                  <Text fontSize='sm' color={'gray.400'}>
                     {likes}
                   </Text>
                 </HStack>
@@ -316,8 +304,9 @@ const Review = ({ navigation, dataReview = {} }) => {
                     as={MaterialCommunityIcons}
                     name='comment'
                     color={'gray.400'}
+                    size={4}
                   />
-                  <Text fontSize='xs' color={'gray.400'}>
+                  <Text fontSize='sm' color={'gray.400'}>
                     {comments?.length || 0}
                   </Text>
                 </HStack>

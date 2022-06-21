@@ -81,7 +81,6 @@ const CommentReviewPage = ({ navigation, route }) => {
       })
 
       setComments([...comments, response])
-
       reset(commentDefaultValue)
 
       showSuccessToast('¡Misión cumplida! El comentario ha sido creado')

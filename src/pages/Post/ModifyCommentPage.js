@@ -34,31 +34,16 @@ const ModifyCommentPage = ({ navigation, route }) => {
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [userData, setUserData] = useState(null)
   const [comment, setComment] = useState({
     _id: route.params.comment._id,
     post: route.params.comment.post,
-    user: user.id,
+    user: route.params.comment.user,
     description: route.params.comment.description,
     createdAt: route.params.comment.createdAt,
     usersLiked: route.params.comment.usersLiked || [],
   })
 
   const _handleChange = (item, value) => handleChange(comment, setComment, item, value)
-
-  useFocusEffect(
-    useCallback(() => {
-
-      getUserById(user?.id)
-        .then(res => {
-          setUserData(res?.Data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-
-    }, [])
-  )
 
   const {
     control,
@@ -95,7 +80,6 @@ const ModifyCommentPage = ({ navigation, route }) => {
           <VStack maxH='100%' alignItems='center' p={2}>
             <CommentModify
               comment={comment}
-              user={userData}
             />
           </VStack>
         </ScrollView>

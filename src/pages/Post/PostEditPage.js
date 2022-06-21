@@ -70,12 +70,11 @@ const PostEditPage = ({ navigation, route }) => {
   const { showSuccessToast, showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
 
-  const [userData, setUserData] = useState(null)
   const [post, setPost] = useState({
     _id: route.params.post._id,
     user: route.params.post.user,
-    author: `${userData?.firstName} ${userData?.lastName}` || '',
-    avatar: userData?.photo || '',
+    author: `${post?.user?.firstName} ${post?.user?.lastName}` || '',
+    avatar: post?.user?.photo || '',
     photo: route.params.post.photo,
     description: route.params.post.description,
     createdAt: route.params.post.createdAt,
@@ -101,17 +100,7 @@ const PostEditPage = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
-
       permisionFunction()
-
-      getUserById(user?.id)
-        .then(res => {
-          setUserData(res?.Data)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-
     }, [])
   )
 
@@ -192,7 +181,6 @@ const PostEditPage = ({ navigation, route }) => {
           >
             {post && (
               <PostModify
-                user={userData}
                 post={post}
                 handleChange={_handleChange}
               />
@@ -266,7 +254,7 @@ const PostEditPage = ({ navigation, route }) => {
                             .then(res => {
 
                               let filtered = res.Data.filter(user => {
-                                return userData._id !== user._id && post?.personTags.find(tag => tag._id === user._id) === undefined
+                                return post?.user._id !== user._id && post?.personTags.find(tag => tag._id === user._id) === undefined
                               })
 
                               setUserSearched(filtered)

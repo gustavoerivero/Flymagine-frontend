@@ -14,7 +14,7 @@ import {
 } from 'native-base'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
-import { previousFourteenHours } from '../../utils/functions'
+import { before24hours } from '../../utils/functions'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
@@ -108,10 +108,10 @@ const CommentReview = ({ navigation, comment = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center'>
         <TouchableOpacity
           onPress={() => {
-            if (userComment?._id === user?.id) {
+            if (comment?.user?._id === user?.id) {
               navigation.navigate('Profile')
             } else {
-              navigation.navigate('UserProfile', { user: userComment._id })
+              navigation.navigate('UserProfile', { user: comment?.user._id })
             }
           }}
         >
@@ -119,12 +119,12 @@ const CommentReview = ({ navigation, comment = {} }) => {
             bg='purple.600'
             size='md'
             source={{
-              uri: (userComment?.photo === 'none' ? null : userComment?.photo)
+              uri: (comment?.user?.photo === 'none' ? null : comment?.user?.photo)
             }}
             borderColor='white'
             borderWidth={3}
           >
-            {userComment && (userComment?.firstName[0] + userComment?.lastName[0])}
+            {comment?.user && (comment?.user?.firstName[0] + comment?.user?.lastName[0])}
           </Avatar>
         </TouchableOpacity>
         </Stack>
@@ -139,7 +139,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
                 bold
                 fontSize='sm'
               >
-                {userComment?.firstName} {userComment?.lastName}
+                {comment?.user?.firstName} {comment?.user?.lastName}
               </Text>
               <Text
                 fontSize={10}
@@ -150,7 +150,7 @@ const CommentReview = ({ navigation, comment = {} }) => {
               </Text>
             </HStack>
 
-            {(user?.id === comment?.user && previousFourteenHours(comment?.createdAt)) && (
+            {(user?.id === comment?.user._id && before24hours(comment?.createdAt)) && (
               <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                 <IconButton
                   icon={
