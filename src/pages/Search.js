@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useWindowDimensions } from 'react-native'
+import React, { useState, useCallback } from 'react'
+import { useWindowDimensions, RefreshControl, ActivityIndicator } from 'react-native'
 import {
   View,
   Image,
@@ -11,11 +11,11 @@ import {
   ScrollView,
   Box,
   FlatList,
-  Badge,
   StatusBar,
 } from 'native-base'
 import { Tab, TabView } from '@rneui/themed'
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
+import { useFocusEffect } from '@react-navigation/native'
 
 import StyledField from '../components/SearchComponents/StyledField'
 import COLORS from '../components/styled-components/Colors'
@@ -48,9 +48,80 @@ const Search = ({ navigation }) => {
   const [books, setBooks] = useState([])
   const [posts, setPosts] = useState([])
 
+  const [isLoading, setIsLoading] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
+
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const onRefresh = useCallback(() => {
+    setPosts([])
+    setCurrentPage(1)
+    getPosts()
+  }, [])
+
+  const getPosts = () => {
+    searchHashtag(search)
+      .then((res) => {
+        if (res.length > 0) {
+          let hashtags = res?.map((hashtag) => hashtag?._id)
+
+          searchPostByHashtags(hashtags, currentPage)
+            .then((res) => {
+              let postsReceived = res?.docs
+
+              if (postsReceived?.length > 0) {
+                let pubs = postsReceived.map((element) => element?.post)
+                posts.map((post) => {
+                  pubs = pubs.filter((p) => p?._id !== post?._id && p?.status === 'A')
+                })
+                console.log(pubs)
+                setPosts([...posts, ...pubs])
+              }
+              setIsLoading(false)
+            })
+            .catch((err) => {
+              console.log(err)
+              setIsLoading(false)
+            })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const renderPostItem = ({ item }) => {
+    return (
+      <Post
+        key={item._id}
+        post={item}
+        navigation={navigation}
+      />
+    )
+  }
+
+  const renderPostLoader = () => {
+    return (
+      isLoading &&
+      <Stack my={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+        <ActivityIndicator size='large' color={COLORS.primary} />
+      </Stack>
+    )
+  }
+
+  const loadMorePostItem = () => {
+    setCurrentPage(currentPage + 1);
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getPosts()
+    }, [currentPage])
+  )
+
   return (
     <Box maxH={layout.height} bg={COLORS.base}>
-      <StatusBar animated={true} backgroundColor={COLORS.primary}/>
+      <StatusBar animated={true} backgroundColor={COLORS.primary} />
       <VStack alignItems='center'>
         <Stack
           bgColor={COLORS.primary}
@@ -86,27 +157,7 @@ const Search = ({ navigation }) => {
                     console.log(err)
                   })
 
-                searchHashtag(text)
-                  .then((res) => {
-                    if (res.length > 0) {
-                      let hashtags = res?.map((hashtag) => hashtag?._id)
-
-                      searchPostByHashtags(hashtags)
-                        .then((res) => {
-                          let pubs = res.map((element) => element.post)
-                          let pubsActive = pubs.filter(
-                            (pub) => pub.status === 'A'
-                          )
-                          setPosts(pubsActive || [])
-                        })
-                        .catch((err) => {
-                          console.log(err)
-                        })
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
+                getPosts()
               }
             }}
             value={search}
@@ -253,15 +304,7 @@ const Search = ({ navigation }) => {
                     mt={1}
                     space={1}
                   >
-                    {posts.length > 0 ? (
-                      posts.map((post) => (
-                        <Post
-                          key={post._id}
-                          post={post}
-                          navigation={navigation}
-                        />
-                      ))
-                    ) : (
+                    {posts?.length === 0 && !isLoading ? (
                       <VStack alignContent='center' alignItems='center'>
                         <Image
                           source={DontKnow}
@@ -274,6 +317,17 @@ const Search = ({ navigation }) => {
                           buscando
                         </Text>
                       </VStack>
+                    ) : (
+                      <FlatList
+                        refreshControl={
+                          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                        }
+                        data={posts}
+                        keyExtractor={item => item?._id?.toString()}
+                        renderItem={renderPostItem}
+                        ListFooterComponent={renderPostLoader}
+                        onEndReached={loadMorePostItem}
+                      />
                     )}
                   </VStack>
                 </ScrollView>
