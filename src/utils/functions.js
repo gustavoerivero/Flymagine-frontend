@@ -12,7 +12,7 @@ const handleChange = (data, setData, item, e) => {
 	}))
 }
 
-const previousFourteenHours = (date) => {
+const before24hours = (date) => {
 	let currentDate = new Date()
 	let postDate = new Date(date)
 	return currentDate - postDate < 86400000
@@ -86,7 +86,7 @@ const selectOneFile = async () => {
 
 module.exports = {
 	handleChange,
-	previousFourteenHours,
+	before24hours,
 	permisionFunction,
 	deleteValue,
 	pickImage,

@@ -5,110 +5,123 @@ import { VStack, Box, StatusBar, Image, FlatList, Stack, Text } from 'native-bas
 
 import DontKnow from '../../assets/images/dontknow.png'
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
 //Components
 import Post from '../components/Post/Post'
 import TopBar from '../components/TopBar'
 
 import useAuthContext from '../hooks/useAuthContext'
-import useLoading from '../hooks/useLoading'
 
 import { getFollows } from '../services/user/userAPI'
 import { getFeed } from '../services/post/postAPI'
 import COLORS from '../components/styled-components/Colors'
 
-const wait = (timeout) => {
-  return new Promise((resolve) => setTimeout(resolve, timeout))
-}
-
 const HomeView = ({ navigation }) => {
+
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isLoading, setIsLoading] = useState(false)
+
   const layout = useWindowDimensions()
 
   const {
     state: { user },
   } = useAuthContext()
 
-  const { isLoading, startLoading, stopLoading } = useLoading()
   const [posts, setPosts] = useState([])
   const [refreshing, setRefreshing] = useState(false)
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
+  const onRefresh = useCallback(() => {
+    setPosts([])
+    setCurrentPage(1)
+    getPosts()
   }, [])
 
+  const getPosts = () => {
+    console.log('page: ', currentPage)
+    setIsLoading(true)
+    getFollows(user?.id)
+      .then((res) => {
+        let followsReceived = res?.Data?.follows
+        if (followsReceived?.length >= 0) {
+          let f = followsReceived.map((follow) => follow._id)
+          f.push(user?.id)
+          getFeed(f, currentPage)
+            .then(res => {
+
+              let postsReceived = res?.docs
+              if (postsReceived?.length > 0) {
+                posts.map((post) => {
+                  postsReceived = postsReceived.filter((p) => p._id !== post._id)
+                })
+                setPosts([...posts, ...postsReceived])
+              }
+              setIsLoading(false)
+            })
+            .catch(err => {
+              console.log(err)
+              setIsLoading(false)
+            })
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  const renderItem = ({ item }) => {
+    return (
+      <Stack p={0.5}>
+        <Post key={item._id} post={item} navigation={navigation} />
+      </Stack>
+    )
+  }
+
+  const renderLoader = () => {
+    return (
+      isLoading &&
+      <Stack my={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
+        <ActivityIndicator size='large' color={COLORS.primary} />
+      </Stack>
+    )
+  }
+
+  const loadMoreItem = () => {
+    setCurrentPage(currentPage + 1);
+  }
+
   useFocusEffect(
-    useCallback(() => {      
-      if(posts.length === 0) {
-        startLoading()
-      }
-      getFollows(user?.id)
-        .then((res) => {
-
-          let followsReceived = res?.Data?.follows
-
-          if (followsReceived?.length >= 0) {
-            let f = followsReceived.map((follow) => follow._id)
-            f.push(user?.id)
-
-            getFeed(f)
-              .then((res) => {
-                setPosts(res?.Data || [])
-                if(posts.length !== 0) {
-                stopLoading()
-                }
-              })
-              .catch((err) => {
-                console.log(err)
-              })
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }, [])
+    useCallback(() => {
+      getPosts()
+    }, [currentPage])
   )
 
   return (
-    <Box w={layout.width}>
+    <Box w={layout.width} >
       <StatusBar animated={true} backgroundColor={COLORS.primary} />
-      <TopBar />
+      <TopBar onRefresh={onRefresh} />
       <VStack w={layout.width} h={layout.height * 0.85} px={2} bg={COLORS.base}>
-        {posts.length > 0 || !isLoading ? (
+        {posts?.length === 0 && !isLoading ?
+          <VStack alignItems='center' mx={2} my='30%'>
+            <Image
+              source={DontKnow}
+              alt='DontKnow'
+              resizeMode='contain'
+              size={300}
+            />
+            <Text bold textAlign='center' color={COLORS.primary}>
+              Qué extraño... Parece que aún no has hecho ningún amigo o publicado algo... ¿Qué esperas?
+            </Text>
+          </VStack> :
           <FlatList
-            py={2}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
-            showsVerticalScrollIndicator={false}
             data={posts}
-            keyExtractor={(item) => item?._id}
-            renderItem={({ item }) => (
-              <Stack p={0.5}>
-                <Post key={item._id} post={item} navigation={navigation} />
-              </Stack>
-            )}
+            keyExtractor={item => item?._id?.toString()}
+            renderItem={renderItem}
+            ListFooterComponent={renderLoader}
+            onEndReached={loadMoreItem}
           />
-        )
-          : posts.length === 0 ? (
-            <VStack alignItems='center' mx={2} my='30%'>
-              <Image
-                source={DontKnow}
-                alt='DontKnow'
-                resizeMode='contain'
-                size={300}
-              />
-              <Text bold textAlign='center' color={COLORS.primary}>
-                Qué extraño... Parece que aún no has hecho ningún amigo o publicado algo... ¿Qué esperas?
-              </Text>
-            </VStack>
-          )
-            : (
-              <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
-                <ActivityIndicator size='large' color={COLORS.primary} />
-              </Stack>
-            )}
+        }
       </VStack>
     </Box>
   )

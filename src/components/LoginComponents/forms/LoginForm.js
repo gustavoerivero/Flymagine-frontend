@@ -13,7 +13,6 @@ import {
   VStack,
   FormControl,
   WarningOutlineIcon,
-  Checkbox
 } from 'native-base'
 import {
   MaterialIcons
@@ -103,7 +102,6 @@ const LoginForm = ({ navigation }) => {
         shadow={2}
         borderColor='coolGray.300'
         borderWidth={1}
-        mt='50%'
         p={3}
         py={5}
       >
@@ -120,7 +118,7 @@ const LoginForm = ({ navigation }) => {
           <Controller
             name='email'
             control={control}
-            render={({ field: { onChange, value = '', ...field } }) => (
+            render={({ field: { onChange, value = '' } }) => (
               <FormControl
                 isRequired
                 isInvalid={
@@ -130,7 +128,6 @@ const LoginForm = ({ navigation }) => {
                 <StyledField
                   placeholder='Correo electrónico'
                   onChangeText={onChange}
-                  {...field}
                   borderColor={!emailValidator(value) && value !== '' ? 'red.500' : 'grey'}
                   InputLeftElement={
                     <Icon

@@ -49,15 +49,12 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
 
     try {
 
-      const review = reviewAdapter({
+      const data = await createReview(reviewAdapter({
         ...values,
-        book: book._id,
+        book: book,
         user: user.id,
-      })
+      }))
 
-      console.log(review)
-
-      const data = await createReview(review)
       console.log(data)
 
       showSuccessToast('¡Misión cumplida! La review fue creada con éxito')
@@ -78,11 +75,11 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
         <Modal.CloseButton />
         <Modal.Header bg={COLORS.primary}>
           <Text bold color={COLORS.base} fontSize={'md'}>
-            Nueva Review
+            Nueva Review 
           </Text>
         </Modal.Header>
         <Modal.Body>
-          <Text>Cuentanos tu experiencia al leer el libro...</Text>
+          <Text>Cuéntanos tu experiencia al leer el libro...</Text>
 
           <Controller
             name='description'
@@ -105,7 +102,7 @@ const NewReviewModal = ({ navigation, showModal, setShowModal, book }) => {
           <Controller
             name='rating'
             control={control}
-            render={({ field: { onChange, value = 1 } }) => (
+            render={({ field: { onChange, value = 0 } }) => (
               <FormControl mt='3'
                 isRequired
               >

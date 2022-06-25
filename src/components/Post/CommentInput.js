@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons'
 import { useWindowDimensions } from 'react-native'
 import COLORS from '../styled-components/Colors'
 
-const CommentInput = ({ style = {}, ...props }, { children }) => {
+const CommentInput = ({ style = {}, ...props }) => {
   const layout = useWindowDimensions()
 
   const [height, setHeight] = React.useState(20)

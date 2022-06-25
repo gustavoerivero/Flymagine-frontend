@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { TouchableOpacity, useWindowDimensions } from "react-native";
-import { AirbnbRating } from "react-native-elements";
+import React, { useState, useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { AirbnbRating } from 'react-native-elements'
 
 import {
   AlertDialog,
@@ -15,172 +15,172 @@ import {
   Divider,
   IconButton,
   Icon,
-} from "native-base";
+} from 'native-base'
 
-import { parseDate, parseTime } from "../../../utilities/Parsers";
-import { previousFourteenHours } from "../../../utils/functions";
+import { parseDate, parseTime } from '../../../utilities/Parsers'
+import { previousFourteenHours } from '../../../utils/functions'
 
 import {
   FontAwesome,
   MaterialIcons,
   MaterialCommunityIcons,
-} from "@expo/vector-icons";
+} from '@expo/vector-icons'
 
-import useAuthContext from "../../../hooks/useAuthContext";
-import useCustomToast from "../../../hooks/useCustomToast";
-import { getUserById, getOnlyUser } from "../../../services/user/userAPI";
-import { getReviewById, deleteReview } from "../../../services/post/reviewAPI";
+import useAuthContext from '../../../hooks/useAuthContext'
+import useCustomToast from '../../../hooks/useCustomToast'
+import { getUserById, getOnlyUser } from '../../../services/user/userAPI'
+import { getReviewById, deleteReview } from '../../../services/post/reviewAPI'
 import {
   postReactionsByReview,
   getReactionsByReview,
-} from "../../../services/post/reactionAPI";
-import { getComments } from "../../../services/comments/commentReviewAPI";
+} from '../../../services/post/reactionAPI'
+import { getComments } from '../../../services/comments/commentReviewAPI'
 
-import EditReviewModal from "../../Post/EditReviewModal";
+import EditReviewModal from '../../Post/EditReviewModal'
 
 //Colors
-import COLORS from "../../styled-components/Colors";
+import COLORS from '../../styled-components/Colors'
 
 const ReviewItem = ({ navigation, dataReview = {} }) => {
   const {
     state: { user },
-  } = useAuthContext();
+  } = useAuthContext()
 
-  const layout = useWindowDimensions();
+  const layout = useWindowDimensions()
 
-  const { showSuccessToast, showErrorToast } = useCustomToast();
+  const { showSuccessToast, showErrorToast } = useCustomToast()
 
-  const [userLogged, setUserLogged] = useState(null);
-  const [userReview, setUserReview] = useState(null);
+  const [userLogged, setUserLogged] = useState(null)
+  const [userReview, setUserReview] = useState(null)
 
-  const [review, setReview] = useState(dataReview);
-  const [book, setBook] = useState(dataReview?.book);
+  const [review, setReview] = useState(dataReview)
+  const [book, setBook] = useState(dataReview?.book)
   const [showModal, setShowModal] = useState(false)
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [reviewReactionInfo, setReviewReactionInfo] = useState([]);
-  const [likes, setLikes] = useState(0);
-  const [comments, setComments] = useState(null);
+  const [isLiked, setIsLiked] = useState(false)
+  const [reviewReactionInfo, setReviewReactionInfo] = useState([])
+  const [likes, setLikes] = useState(0)
+  const [comments, setComments] = useState(null)
 
-  const [deleteVisible, setDeleteVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false)
 
   const deleteReviewById = async () => {
     try {
-      console.log(review);
-      const data = await deleteReview(review?._id);
-      console.log(data);
-      showSuccessToast("Publicación eliminada con éxito");
+      console.log(review)
+      const data = await deleteReview(review?._id)
+      console.log(data)
+      showSuccessToast('Publicación eliminada con éxito')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   const likeReview = async () => {
     try {
-      const newValue = reviewReactionInfo;
+      const newValue = reviewReactionInfo
       if (newValue?.find((value) => userLogged._id === value?._id)) {
         newValue?.splice(
           newValue?.findIndex(
             (reactionUser) => userLogged?._id === reactionUser?._id
           )
-        );
+        )
       } else {
-        newValue?.push(userLogged);
+        newValue?.push(userLogged)
       }
 
-      setReviewReactionInfo(newValue);
+      setReviewReactionInfo(newValue)
       const response = await postReactionsByReview(
         review?._id,
         reviewReactionInfo
-      );
-      console.log("Response: ", response);
-      setLikes(reviewReactionInfo?.length);
+      )
+      console.log('Response: ', response)
+      setLikes(reviewReactionInfo?.length)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useFocusEffect(
     useCallback(() => {
       getOnlyUser(user?.id)
         .then((log) => {
-          setUserLogged(log?.Data);
+          setUserLogged(log?.Data)
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
 
       getReviewById(review?._id)
         .then((res) => {
-          setReview(res);
+          setReview(res)
 
           getUserById(res?.user)
             .then((r) => {
-              setUserReview(r?.Data);
+              setUserReview(r?.Data)
             })
             .catch((error) => {
-              console.log(error);
-            });
+              console.log(error)
+            })
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
 
       getReactionsByReview(review?._id)
         .then((res) => {
-          setReviewReactionInfo(res?.Data[0]?.users || []);
-          setLikes(res?.Data[0]?.users?.length || 0);
+          setReviewReactionInfo(res?.Data[0]?.users || [])
+          setLikes(res?.Data[0]?.users?.length || 0)
           setIsLiked(
             res?.Data[0]?.users?.find((value) => user.id === value?._id)
-          );
+          )
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
 
       getComments(review?._id)
         .then((res) => {
-          console.log(res);
-          setComments(res || []);
+          console.log(res)
+          setComments(res || [])
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     }, [])
-  );
+  )
 
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={() => {
-        navigation?.navigate("BookProfilePage", { book: book?._id });
+        navigation?.navigate('BookProfilePage', { book: book?._id })
       }}
     >
-      <Box p={2} bgColor={COLORS.secundary} rounded="lg" shadow={2}>
+      <Box p={2} bgColor={COLORS.secundary} rounded='lg' shadow={2}>
         <VStack>
           <HStack>
             <TouchableOpacity
               onPress={() => {
                 console.log(
                   `${
-                    userReview?.firstName + " " + userReview?.lastName
+                    userReview?.firstName + ' ' + userReview?.lastName
                   }'s profile`
-                );
-                console.log(userReview._id);
+                )
+                console.log(userReview._id)
                 if (userReview?._id === user?.id) {
-                  navigation.navigate("Profile");
+                  navigation.navigate('Profile')
                 } else {
-                  navigation.navigate("UserProfile", { user: userReview._id });
+                  navigation.navigate('UserProfile', { user: userReview._id })
                 }
               }}
             >
               <Avatar
-                bg="purple.600"
-                size="md"
+                bg='purple.600'
+                size='md'
                 source={{
-                  uri: userReview?.photo === "none" ? null : userReview?.photo,
+                  uri: userReview?.photo === 'none' ? null : userReview?.photo,
                 }}
-                borderColor="white"
+                borderColor='white'
                 borderWidth={3}
               >
                 {userReview &&
@@ -190,30 +190,30 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
             <VStack ml={2}>
               <HStack
                 space={2}
-                justifyContent="space-between"
-                alignItems="center"
+                justifyContent='space-between'
+                alignItems='center'
                 h={7}
                 mr={2}
               >
                 <HStack space={2} ml={1}>
-                  <Text bold fontSize="sm">
+                  <Text bold fontSize='sm'>
                     {userReview?.firstName} {userReview?.lastName}
                   </Text>
-                  <Text fontSize={10} color="gray.300" alignSelf="center">
+                  <Text fontSize={10} color='#806e91' alignSelf='center'>
                     {parseDate(review?.createdAt) +
-                      " " +
+                      ' ' +
                       parseTime(review?.createdAt)}
                   </Text>
                 </HStack>
 
                 {user?.id === review?.user &&
                   previousFourteenHours(review?.createdAt) && (
-                    <HStack alignItems="flex-end">
+                    <HStack alignItems='flex-end'>
                       <IconButton
-                        icon={<FontAwesome name="edit" color="gray.300" />}
-                        size="sm"
+                        icon={<FontAwesome name='edit' color='#806e91' />}
+                        size='sm'
                         onPress={() => {
-                          setShowModal(true);
+                          setShowModal(true)
                         }}
                       />
 
@@ -225,16 +225,16 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
                       />
 
                       <IconButton
-                        icon={<FontAwesome name="trash" color="gray.300" />}
-                        size="sm"
+                        icon={<FontAwesome name='trash' color='#806e91' />}
+                        size='sm'
                         onPress={() => {
-                          setDeleteVisible(true);
+                          setDeleteVisible(true)
                         }}
                       />
                       <AlertDialog
                         isOpen={deleteVisible}
                         onClose={() => {
-                          setDeleteVisible(false);
+                          setDeleteVisible(false)
                         }}
                       >
                         <AlertDialog.Content>
@@ -248,28 +248,28 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
                           <AlertDialog.Footer>
                             <Button.Group space={2}>
                               <Button
-                                variant="unstyled"
-                                colorScheme="coolGray"
+                                variant='unstyled'
+                                colorScheme='coolGray'
                                 onPress={() => {
-                                  setDeleteVisible(false);
+                                  setDeleteVisible(false)
                                 }}
                               >
                                 Cancelar
                               </Button>
                               <Button
-                                colorScheme="danger"
+                                colorScheme='danger'
                                 onPress={() => {
                                   try {
-                                    deleteReviewById(review?._id);
-                                    setDeleteVisible(false);
+                                    deleteReviewById(review?._id)
+                                    setDeleteVisible(false)
                                     showSuccessToast(
-                                      "¡Misión cumplida! La review fue eliminada con éxito"
-                                    );
-                                    navigation?.goBack();
+                                      '¡Misión cumplida! La review fue eliminada con éxito'
+                                    )
+                                    navigation?.goBack()
                                   } catch {
                                     showErrorToast(
-                                      "¡Misión fallida! La review no pudo ser eliminada"
-                                    );
+                                      '¡Misión fallida! La review no pudo ser eliminada'
+                                    )
                                   }
                                 }}
                               >
@@ -288,9 +288,9 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
                   w={layout.width * 0.73}
                   mx={1}
                   mb={2}
-                  alignItems="flex-start"
+                  alignItems='flex-start'
                 >
-                  <Text fontSize="xs" textAlign="justify">
+                  <Text fontSize='xs' textAlign='justify'>
                     {review?.description}
                   </Text>
                 </Stack>
@@ -298,7 +298,7 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
                   w={layout.width * 0.73}
                   mx={2}
                   mb={3}
-                  alignItems="flex-start"
+                  alignItems='flex-start'
                 >
                   <AirbnbRating
                     count={5}
@@ -306,7 +306,7 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
                     size={10}
                     defaultRating={review?.rating}
                     isDisabled={true}
-                    selectedColor={"#FF00F0"}
+                    selectedColor={'#FF00F0'}
                     unSelectedColor={COLORS.button.secundaryDisabled}
                   />
                 </Stack>
@@ -316,34 +316,34 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
             </VStack>
           </HStack>
 
-          <HStack w="95%" mt={1} justifyContent="space-around" space={4}>
-            <HStack pb={1} w="75%">
-              <Text fontSize="xs" color={COLORS.gray0}>
-                {" "}
+          <HStack w='95%' mt={1} justifyContent='space-around' space={4}>
+            <HStack pb={1} w='75%'>
+              <Text fontSize='xs' color={COLORS.gray0}>
+                {' '}
                 {book?.name?.length > 45
-                  ? book?.name?.substring(0, 45 - 3) + "..."
+                  ? book?.name?.substring(0, 45 - 3) + '...'
                   : book?.name}
               </Text>
             </HStack>
-            <HStack w="20%">
+            <HStack w='20%'>
               <TouchableOpacity
                 onPress={() => {
-                  setIsLiked(!isLiked);
-                  likeReview();
+                  setIsLiked(!isLiked)
+                  likeReview()
                   if (isLiked) {
-                    setLikes(likes - 1);
+                    setLikes(likes - 1)
                   } else {
-                    setLikes(likes + 1);
+                    setLikes(likes + 1)
                   }
                 }}
               >
-                <HStack space={1} alignItems="center">
+                <HStack space={1} alignItems='center'>
                   <Icon
                     as={MaterialIcons}
-                    name="thumb-up"
-                    color={isLiked ? COLORS.button.secundary : "gray.400"}
+                    name='thumb-up'
+                    color={isLiked ? COLORS.button.secundary : 'gray.400'}
                   />
-                  <Text fontSize="xs" color={"gray.400"}>
+                  <Text fontSize='xs' color={'gray.400'}>
                     {likes}
                   </Text>
                 </HStack>
@@ -351,19 +351,19 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
 
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("CommentReviewPage", {
+                  navigation.navigate('CommentReviewPage', {
                     review: review,
                     comments: comments,
-                  });
+                  })
                 }}
               >
-                <HStack space={1} alignItems="center" ml={4}>
+                <HStack space={1} alignItems='center' ml={4}>
                   <Icon
                     as={MaterialCommunityIcons}
-                    name="comment"
-                    color={"gray.400"}
+                    name='comment'
+                    color={'gray.400'}
                   />
-                  <Text fontSize="xs" color={"gray.400"}>
+                  <Text fontSize='xs' color={'gray.400'}>
                     {comments?.length || 0}
                   </Text>
                 </HStack>
@@ -373,7 +373,7 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
         </VStack>
       </Box>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default ReviewItem;
+export default ReviewItem

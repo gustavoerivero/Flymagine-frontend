@@ -40,7 +40,7 @@ import {
   getReadBooks,
 } from '../../../services/user/userAPI'
 import { deleteBook } from '../../../services/book/bookAPI'
-import { previousFourteenHours } from '../../../utils/functions'
+import { before24hours } from '../../../utils/functions'
 
 //Colors
 import COLORS from '../../styled-components/Colors'
@@ -295,7 +295,7 @@ const InfoBookProfile = ({
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {bookGenres.length > 0 && bookGenres.map((genre, index) => (
                   <Badge
-                    key={index.toString()}
+                    key={genre?.name + index.toString()}
                     colorScheme='success'
                     alignItems='center'
                     justifyContent='center'
@@ -374,7 +374,7 @@ const InfoBookProfile = ({
           <HStack justifyContent='space-between' mt='3' maxH='30%'>
             <VStack alignItems='flex-start'>
               {author?._id === user?.id &&
-                previousFourteenHours(bookInfo?.createdAt) && (
+                before24hours(bookInfo?.createdAt) && (
                   <>
                     <Button
                       h='95%'

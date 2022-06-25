@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { Box, View } from 'native-base'
+import { Box, Text } from 'native-base'
 import { Tab, TabView } from '@rneui/themed'
 import COLORS from '../../styled-components/Colors'
 import ReviewFeedBook from './ReviewFeedBook'
@@ -99,33 +99,35 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
         }}
         scrollable
       >
-        {tabs.map((tab, i) => (
+        {bookInfo && tabs.map((tab, i) => (
           <Tab.Item
-            key={i.toString()}
+            key={tab + i.toString()}
             title={tab}
             titleStyle={{ color: COLORS.secundary }}
             containerStyle={{ backgroundColor: COLORS.primary }}
           />
         ))}
       </Tab>
-      <TabView value={index} onChange={setIndex} animationType='spring'>
-        <TabView.Item>
-          <InfoBookProfile
-            navigation={navigation}
-            bookInfo={bookInfo}
-            rating={rating}
-            author={author}
-            bookGenres={bookGenres}
-          />
-        </TabView.Item>
-        <TabView.Item>
-          <ReviewFeedBook
-            navigation={navigation}
-            bookInfo={bookInfo}
-            reviewData={reviews}
-          />
-        </TabView.Item>
-      </TabView>
+      {bookInfo && (
+        <TabView value={index} onChange={setIndex} animationType='spring'>
+          <TabView.Item>
+            <InfoBookProfile
+              navigation={navigation}
+              bookInfo={bookInfo}
+              rating={rating}
+              author={author}
+              bookGenres={bookGenres}
+            />
+          </TabView.Item>
+          <TabView.Item>
+            <ReviewFeedBook
+              navigation={navigation}
+              bookInfo={bookData}
+              reviewData={reviews}
+            />
+          </TabView.Item>
+        </TabView>
+      )}
     </Box>
   )
 }

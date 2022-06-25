@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from 'react'
 import { useWindowDimensions, RefreshControl } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { ScrollView, Stack, VStack, FlatList } from 'native-base'
+import { FlatList, Box, TextArea, Stack, Icon, HStack, VStack, Button } from 'native-base'
 import { FontAwesome } from '@expo/vector-icons'
-import { FAB } from '@rneui/themed'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 import { Controller, useForm } from 'react-hook-form'
@@ -11,7 +10,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 
 import CommentReviewHeader from '../../components/Post/CommentReviewHeader'
 import CommentReview from '../../components/Post/CommentReview'
-import CommentInput from '../../components/Post/CommentInput'
 import {
   getComments,
   createComment,
@@ -41,6 +39,8 @@ const CommentReviewPage = ({ navigation, route }) => {
   const layout = useWindowDimensions()
 
   const [refreshing, setRefreshing] = useState(false)
+
+  const [height, setHeight] = useState(20)
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
@@ -80,9 +80,7 @@ const CommentReviewPage = ({ navigation, route }) => {
         description: values.description,
       })
 
-      console.log(response)
       setComments([...comments, response])
-
       reset(commentDefaultValue)
 
       showSuccessToast('¡Misión cumplida! El comentario ha sido creado')
@@ -129,29 +127,55 @@ const CommentReviewPage = ({ navigation, route }) => {
             name='description'
             control={control}
             render={({ field: { onChange, value = '', ...field } }) => (
-              <CommentInput
-                {...field}
-                value={value}
-                onChangeText={onChange}
-                placeholder='¿Tienes algo que decir?'
-                rightElement={
-                  <FAB
-                    icon={<FontAwesome name='send' color='#fff' size={20} />}
-                    color='#b973ff'
-                    containerStyle={{
-                      position: 'relative',
-                      right: '5%',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 50,
-                      height: 50,
-                    }}
-                    disabled={!isValid || isLoading}
-                    loading={isLoading}
-                    onPress={handleSubmit(onSubmit)}
-                  />
-                }
-              />
+              <Box
+                w={layout.width}
+                minH={layout.height * 0.12}
+                maxH={layout.height * 0.2}
+                bgColor='white'
+                py={1}
+                px={2}
+                justifyContent='center'
+              >
+                <HStack alignItems='center' w='100%'>
+                  <Stack w='10%' alignItems='center'>
+                    <Icon as={FontAwesome} name='comment' size={8} color='#aaa' />
+                  </Stack>
+
+                  <Stack w='75%'>
+                    <TextArea
+                      textAlignVertical='center'
+                      textAlign='justify'
+                      minH={16}
+                      h={height}
+                      maxH={120}
+                      bgColor={COLORS.base}
+                      color={COLORS.gray4}
+                      borderColor={'white'}
+                      m={1}
+                      onContentSizeChange={(event) => {
+                        setHeight(event.nativeEvent.contentSize.height)
+                      }}
+                      variant='unstyled'
+                      size='md'
+                      {...field}
+                      value={value}
+                      onChangeText={onChange}
+                      placeholder='¿Tienes algo que decir?'
+
+                    />
+                  </Stack>
+                  <Stack w='15%' alignItems='center' alignContent='center'>
+                    <Button
+                      leftIcon={<FontAwesome name='send' color='#fff' size={20} />}
+                      colorScheme='purple'
+                      borderRadius={100}
+                      isDisabled={!isValid || isLoading}
+                      isLoading={isLoading}
+                      onPress={handleSubmit(onSubmit)}
+                    />
+                  </Stack>
+                </HStack>
+              </Box>
             )}
           />
         </VStack>

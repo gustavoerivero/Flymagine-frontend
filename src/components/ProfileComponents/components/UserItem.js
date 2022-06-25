@@ -155,7 +155,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
                   handleFollow()
                 }}
               >
-                <Text fontSize={10} color={COLORS.primary}>
+                <Text fontSize={9} color={COLORS.primary}>
                   {isFollow ? 'Dejar de seguir' : 'Seguir'}
                 </Text>
               </Button>

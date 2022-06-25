@@ -5,6 +5,7 @@ import {
   Avatar,
   Box,
   Stack,
+  Image,
   HStack,
   VStack,
   Text,
@@ -14,7 +15,7 @@ import {
 } from 'native-base'
 
 import { parseDate, parseTime } from '../../utilities/Parsers'
-import { previousFourteenHours } from '../../utils/functions'
+import { before24hours } from '../../utils/functions'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons'
 
@@ -36,7 +37,6 @@ const Comment = ({ navigation, comment = {} }) => {
   } = useAuthContext()
 
   const [userLogged, setUserLogged] = useState(null)
-  const [userComment, setUserComment] = useState(null)
 
   const [isLiked, setIsLiked] = useState(false)
   const [likes, setLikes] = useState(comment?.usersLiked?.length || 0)
@@ -57,10 +57,10 @@ const Comment = ({ navigation, comment = {} }) => {
   const likePost = async () => {
     try {
       let newValue = comment?.usersLiked
-      if (newValue?.find((value) => userLogged._id === value)) {
+      if (newValue?.find((value) => user.id === value)) {
         newValue?.splice(
           newValue?.findIndex(
-            (reactionUser) => userLogged?._id === reactionUser
+            (reactionUser) => user?.id === reactionUser
           ),
           1
         )
@@ -82,16 +82,8 @@ const Comment = ({ navigation, comment = {} }) => {
           setUserLogged(res?.Data)
         })
         .catch((error) => {
-          console.log(error)
+          console.log('Obteniendo al usuario loggeado', error)
         })
-      getUserById(comment?.user)
-        .then((res) => {
-          setUserComment(res?.Data)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-
       setIsLiked(comment?.usersLiked?.find((value) => user.id === value))
     }, [])
   )
@@ -102,10 +94,10 @@ const Comment = ({ navigation, comment = {} }) => {
         <Stack /* AVATAR */ w='15%' alignItems='center'>
           <TouchableOpacity
             onPress={() => {
-              if (userComment?._id === user?.id) {
+              if (comment?.user?._id === user?.id) {
                 navigation.navigate('Profile')
               } else {
-                navigation.navigate('UserProfile', { user: userComment._id })
+                navigation.navigate('UserProfile', { user: comment?.user._id })
               }
             }}
           >
@@ -113,13 +105,13 @@ const Comment = ({ navigation, comment = {} }) => {
               bg='purple.600'
               size='md'
               source={{
-                uri: userComment?.photo === 'none' ? null : userComment?.photo,
+                uri: comment?.user?.photo === 'none' ? null : comment?.user?.photo,
               }}
               borderColor='white'
               borderWidth={3}
             >
-              {userComment &&
-                userComment?.firstName[0] + userComment?.lastName[0]}
+              {comment?.user &&
+                comment?.user?.firstName[0] + comment?.user?.lastName[0]}
             </Avatar>
           </TouchableOpacity>
         </Stack>
@@ -132,30 +124,29 @@ const Comment = ({ navigation, comment = {} }) => {
           >
             <HStack /* NAME & DATE */ w='80%' space={2}>
               <Text bold fontSize='sm'>
-                {userComment?.firstName} {userComment?.lastName}
+                {comment?.user?.firstName} {comment?.user?.lastName}
               </Text>
-              <Text fontSize={10} color='gray.300' alignSelf='center'>
+              <Text fontSize={10} color='#806e91' alignSelf='center'>
                 {parseDate(comment?.createdAt) +
                   ' ' +
                   parseTime(comment?.createdAt)}
               </Text>
             </HStack>
 
-            {user?.id === comment?.user &&
-              previousFourteenHours(comment?.createdAt) && (
+            {user?.id === comment?.user._id &&
+              before24hours(comment?.createdAt) && (
                 <HStack /* BUTTONS */ w='20%' alignItems='flex-end'>
                   <IconButton
-                    icon={<FontAwesome name='edit' color='gray.300' />}
+                    icon={<FontAwesome name='edit' color='#806e91' />}
                     size='sm'
                     onPress={() => {
-                      console.log(comment?._id)
                       navigation.navigate('ModifyCommentPage', {
                         comment: comment,
                       })
                     }}
                   />
                   <IconButton
-                    icon={<FontAwesome name='trash' color='gray.300' />}
+                    icon={<FontAwesome name='trash' color='#806e91' />}
                     size='sm'
                     onPress={() => {
                       setDeleteVisible(true)
@@ -219,6 +210,14 @@ const Comment = ({ navigation, comment = {} }) => {
             </Stack>
 
             <Divider my={1} />
+            <Stack alignItems='center'>
+              {comment?.photo && comment?.photo !== 'none' && (
+                <>
+                  <Image source={{ uri: comment?.photo }} size={300} alt='post' />
+                  <Divider opacity={0.5} />
+                </>
+              )}
+            </Stack>
 
             <HStack /* LIKE BUTTON */ w='100%'
               py={0.5}
@@ -241,8 +240,9 @@ const Comment = ({ navigation, comment = {} }) => {
                     as={MaterialIcons}
                     name='thumb-up'
                     color={isLiked ? COLORS.button.secundary : 'gray.400'}
+                    size={4}
                   />
-                  <Text fontSize='xs' color={'gray.400'}>
+                  <Text fontSize='sm' color={'gray.400'}>
                     {likes}
                   </Text>
                 </HStack>
