@@ -30,27 +30,31 @@ const UserItem = ({ userItem, navigation, onPress }) => {
   } = useAuthContext()
 
   const [isFollow, setIsFollow] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [follows, setFollows] = useState(null)
 
   useFocusEffect(
     useCallback(() => {
+      setIsLoading(true)
       getFollows(user?.id)
         .then(res => {
-          setFollows(res?.Data?.follows)
 
-          if (follows?.find(f => f._id === userItem._id)) {
-            setIsFollow(true)
-          }
+          let foll = res?.Data?.follows
+          setFollows(foll)
+          setIsFollow(foll?.find(f => f._id === userItem._id)) 
+          setIsLoading(false)
 
         })
         .catch(err => {
           console.log(err)
+          setIsLoading(false)
         })
     }, [follows])
   )
 
   const handleFollow = async () => {
 
+    setIsLoading(true)
     let newFollows = [...follows]
 
     if (isFollow) {
@@ -65,9 +69,11 @@ const UserItem = ({ userItem, navigation, onPress }) => {
       .then(res => {
         console.log(res)
         setFollows(res?.Data?.follows)
+        setIsLoading(false)
       })
       .catch(err => {
         console.log(err)
+        setIsLoading(false)
       })
 
   }
@@ -150,12 +156,10 @@ const UserItem = ({ userItem, navigation, onPress }) => {
                 variant='outline'
                 height={layout.height * .04}
                 borderRadius={50}
-                onPress={() => {
-                  console.log(isFollow ? 'unfollow' : 'follow')
-                  handleFollow()
-                }}
+                isDisabled={isLoading}
+                onPress={handleFollow}
               >
-                {isFollow !== null ?
+                {!isLoading ?
                   <Text fontSize={9} color={COLORS.primary}>
                     {isFollow ? 'Dejar de seguir' : 'Seguir'}
                   </Text>
