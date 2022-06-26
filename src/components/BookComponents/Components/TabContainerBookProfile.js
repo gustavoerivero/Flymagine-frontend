@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
-import { Box, Text } from 'native-base'
+import { Box } from 'native-base'
 import { Tab, TabView } from '@rneui/themed'
 import COLORS from '../../styled-components/Colors'
 import ReviewFeedBook from './ReviewFeedBook'
@@ -9,19 +9,14 @@ import InfoBookProfile from './InfoBookProfile'
 import useAuthContext from '../../../hooks/useAuthContext'
 
 import { getBookById, getGenresByIdBook } from '../../../services/book/bookAPI'
-import { getUserById } from '../../../services/user/userAPI'
 import { getReviewByBook } from '../../../services/post/reviewAPI'
 
 //<ReviewFeedBook/>
 
 const TabContainerBookProfile = ({ navigation, bookData }) => {
-  const {
-    state: { user },
-  } = useAuthContext()
-
+  
   const [bookInfo, setBookInfo] = useState(null)
   const [bookGenres, setBookGenres] = useState([])
-  const [author, setAuthor] = useState(null)
   const [reviews, setReviews] = useState([])
   const [rating, setRating] = useState(0)
 
@@ -39,13 +34,6 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
           let info = res
 
           if (info) {
-            getUserById(info?.user)
-              .then((res) => {
-                setAuthor(res?.Data)
-              })
-              .catch((error) => {
-                console.log(error)
-              })
 
             getReviewByBook(info?._id)
               .then((res) => {
@@ -84,7 +72,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
         })
 
 
-    }, [reviews])
+    }, [])
   )
 
   return (
@@ -115,7 +103,7 @@ const TabContainerBookProfile = ({ navigation, bookData }) => {
               navigation={navigation}
               bookInfo={bookInfo}
               rating={rating}
-              author={author}
+              author={bookInfo?.user}
               bookGenres={bookGenres}
             />
           </TabView.Item>

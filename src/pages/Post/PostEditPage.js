@@ -245,10 +245,10 @@ const PostEditPage = ({ navigation, route }) => {
                       onChangeText={(text) => {
                         setUserSearch(text)
                         if (text !== '') {
-                          searchUsers(text)
+                          searchUsers(text, 1)
                             .then(res => {
 
-                              let filtered = res.Data.filter(user => {
+                              let filtered = res.docs.filter(user => {
                                 return post?.user._id !== user._id && post?.personTags.find(tag => tag._id === user._id) === undefined
                               })
 

@@ -1,22 +1,12 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
-import { useFocusEffect } from '@react-navigation/native'
-import { Box, VStack, HStack, Image, Text, Icon, Stack } from 'native-base'
+import { Box, VStack, HStack, Image, Text, Icon } from 'native-base'
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons'
 
-import useAuthContext from '../../hooks/useAuthContext'
-
-//Image
 import COLORS from '../styled-components/Colors'
 
 const BookItem = ({ bookItem, navigation }) => {
   const layout = useWindowDimensions()
-
-  const {
-    state: { user },
-  } = useAuthContext()
-
-  useFocusEffect(useCallback(() => {}, []))
 
   return (
     <TouchableOpacity
@@ -100,9 +90,9 @@ const BookItem = ({ bookItem, navigation }) => {
             <HStack space={1} h='55%' w='95%'>
               <Icon w='10%' mr={1} mt={0.5} as={MaterialIcons} name='history-edu' />
               <Text w='90%' h='90%' fontSize='xs' alignContent='center' textAlign='justify'>
-                {bookItem?.sypnosis?.length > 22
-                  ? bookItem?.sypnosis?.substring(0, 150 - 3) + '...'
-                  : bookItem?.sypnosis}
+                {bookItem?.synopsis?.length > 22
+                  ? bookItem?.synopsis?.substring(0, 150 - 3) + '...'
+                  : bookItem?.synopsis}
               </Text>
             </HStack>
           </VStack>

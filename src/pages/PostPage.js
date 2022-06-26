@@ -304,9 +304,9 @@ const CreatePostPage = ({ navigation }) => {
                           onChangeText={(text) => {
                             setUserSearch(text)
                             if (text !== '') {
-                              searchUsers(text)
+                              searchUsers(text, 1)
                                 .then((res) => {
-                                  let filtered = res.Data.filter((user) => {
+                                  let filtered = res.docs.filter((user) => {
                                     return (
                                       userData._id !== user.id &&
                                       post.personTags.find(

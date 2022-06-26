@@ -1,27 +1,14 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import { TouchableOpacity, useWindowDimensions } from 'react-native'
-import { useFocusEffect } from '@react-navigation/native'
 import { Box, VStack, HStack, Image, Text, Icon } from 'native-base'
 import { MaterialIcons, FontAwesome } from '@expo/vector-icons'
-import { getUserById } from '../../../services/user/userAPI'
 
 import COLORS from '../../styled-components/Colors'
 
 const BookItem = ({ bookItem, navigation }) => {
   const layout = useWindowDimensions()
 
-  const [author, setAuthor] = useState({})
-
-  useFocusEffect(
-    useCallback(() => {
-      getUserById(bookItem.user)
-        .then(res => {
-          setAuthor(res?.Data || {})
-        })
-        .catch(error => {
-          console.log(error)
-        })
-  }, []))
+  const [author, setAuthor] = useState(bookItem?.user)
 
   return (
     <TouchableOpacity

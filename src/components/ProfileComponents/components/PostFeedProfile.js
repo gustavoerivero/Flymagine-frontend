@@ -26,31 +26,43 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [posts, setPosts] = useState([])
   const [currentPage, setCurrentPage] = useState(1)
-
+  const [isNextPage, setIsNextPage] = useState(true)
 
   const onRefresh = React.useCallback(() => {
     setPosts([])
+    setIsNextPage(true)
     setCurrentPage(1)
     getPosts()
   }, [])
 
   const getPosts = () => {
-    setIsLoading(true)
-    getPostByUser(userInfo?._id || user?.id, currentPage)
-      .then((res) => {
-        let postsReceived = res?.docs
-        if (postsReceived?.length > 0) {
-          posts.map((post) => {
-            postsReceived = postsReceived.filter((p) => p._id !== post._id)
-          })
-          setPosts([...posts, ...postsReceived])
-        }
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.log(error)
-        setIsLoading(false)
-      })
+
+    console.log('Post Feed Profile Page: ', currentPage)
+
+    if (isNextPage) {
+
+      setIsLoading(true)
+      getPostByUser(userInfo?._id || user?.id, currentPage)
+        .then((res) => {
+          
+          let postsReceived = res?.docs
+
+          setIsNextPage(res?.hasNextPage)
+          console.log(`Have Next User Page: ${res?.hasNextPage ? 'Yes' : 'No'}`)
+
+          if (postsReceived?.length > 0) {
+            posts.map((post) => {
+              postsReceived = postsReceived.filter((p) => p._id !== post._id)
+            })
+            setPosts([...posts, ...postsReceived])
+          }
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.log(error)
+          setIsLoading(false)
+        })
+    }
   }
 
   useFocusEffect(
@@ -86,7 +98,7 @@ const PostFeedProfile = ({ navigation, userInfo }) => {
       minH={layout.height * 0.5}
       minW={layout.width}
       pb={layout.height * 0.2}
-      mb={layout.height * 0.2}
+      mb={layout.height * 0.20}
     >
       {posts?.length === 0 && !isLoading ? (
         <VStack alignItems='center'>
