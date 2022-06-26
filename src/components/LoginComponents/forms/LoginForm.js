@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   Image,
 } from 'react-native'
@@ -25,6 +24,7 @@ import {
 
 import Flymagine from '../../../../assets/Flymagine_Complete.png'
 import StyledField from '../StyledField'
+import Thoteam from '../Thoteam'
 
 import { loginDefaultvalue, loginSchema } from '../../../utils/formValidations/loginFormValidations'
 import { Controller, useForm } from 'react-hook-form'
@@ -43,6 +43,7 @@ const LoginForm = ({ navigation }) => {
   const { dispatch } = useAuthContext()
   const { showErrorToast } = useCustomToast()
   const { isLoading, startLoading, stopLoading } = useLoading()
+  const [showModal, setShowModal] = useState(false)
 
   const {
     control,
@@ -59,7 +60,7 @@ const LoginForm = ({ navigation }) => {
     startLoading()
     try {
       const response = await login(loginData(value))
-      
+
       const token = response?.Data?.token
 
       if (token) {
@@ -160,7 +161,7 @@ const LoginForm = ({ navigation }) => {
           <Controller
             name='password'
             control={control}
-            render={({ field: { onChange, value = '',...field } }) => (
+            render={({ field: { onChange, value = '', ...field } }) => (
               <FormControl
                 isRequired
                 isInvalid={
@@ -170,7 +171,7 @@ const LoginForm = ({ navigation }) => {
                 <StyledField
                   placeholder='Contraseña'
                   {...field}
-                  onChangeText={onChange}                  
+                  onChangeText={onChange}
                   borderColor={!passwordValidator(value) && value !== '' ? 'red.500' : 'grey'}
                   InputLeftElement={
                     <Icon as={
@@ -210,7 +211,7 @@ const LoginForm = ({ navigation }) => {
               </FormControl>
             )}
           />
-          
+
           <HStack>
             <Button
               title='Iniciar sesión'
@@ -244,17 +245,17 @@ const LoginForm = ({ navigation }) => {
           }}
           onPress={() => navigation?.navigate('PasswordRecoveryRequest')}
         />
-        <Text
-          style={[
-            styles.text,
-            {
-              fontSize: 10,
-              marginTop: 10
-            }
-          ]}
-        >
-          Thoteam ® - 2022
-        </Text>
+        <Button
+          title='Thoteam ® - 2022'
+          type='clear'
+          containerStyle={styles.buttonCopyright}
+          titleStyle={[styles.text, { fontSize: 10 }]}
+          onPress={() => setShowModal(true)}
+        />
+        <Thoteam 
+          showModal={showModal}
+          setShowModal={setShowModal}
+        />
       </Box>
     </View>
   )
@@ -283,6 +284,10 @@ const styles = StyleSheet.create({
   buttonRecover: {
     height: 40,
     width: '100%',
+    margin: 0,
+    padding: 0
+  },
+  buttonCopyright: {
     margin: 0,
     padding: 0
   }
