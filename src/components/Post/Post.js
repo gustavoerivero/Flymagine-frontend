@@ -51,13 +51,13 @@ const Post = ({ navigation, post = {} }) => {
   } = useAuthContext()
 
   const [userLogged, setUserLogged] = useState(null)
-  const [personTags, setPersonTags] = useState([])
+  const [personTags, setPersonTags] = useState(null)
   const [hashtags, setHashtags] = useState(null)
 
   const [isLiked, setIsLiked] = useState(false)
   const [postReactionInfo, setPostReactionInfo] = useState([])
-  const [likes, setLikes] = useState(0)
-  const [comments, setComments] = useState(0)
+  const [likes, setLikes] = useState(null)
+  const [comments, setComments] = useState(null)
 
   const [deleteVisible, setDeleteVisible] = useState(false)
 
@@ -122,7 +122,7 @@ const Post = ({ navigation, post = {} }) => {
 
         getHashtags(post?._id)
           .then((res) => {
-            setHashtags(res)
+            setHashtags(res || [])
           })
           .catch((error) => {
             console.log(error)
@@ -130,7 +130,7 @@ const Post = ({ navigation, post = {} }) => {
 
         getUsertags(post?._id)
           .then((res) => {
-            setPersonTags(res)
+            setPersonTags(res || [])
           })
           .catch((error) => {
             console.log(error)
@@ -138,7 +138,7 @@ const Post = ({ navigation, post = {} }) => {
 
         getComments(post?._id)
           .then((res) => {
-            setComments(res)
+            setComments(res || [])
           })
           .catch((error) => {
             console.log(error)
@@ -162,7 +162,7 @@ const Post = ({ navigation, post = {} }) => {
       shadow={1}
       mb={2}
     >
-      {isLoading ? (
+      {isLoading || likes === null || comments === null || hashtags === null || personTags === null ? (
         <Stack mt={2} alignItems='center' justifyContent='center' alignContent='center' alignSelf='center'>
           <ActivityIndicator size='large' color={COLORS.primary} />
         </Stack>

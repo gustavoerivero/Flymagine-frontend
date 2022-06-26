@@ -38,24 +38,24 @@ const HeaderProfile = ({ userInfo, navigation }) => {
       if (userInfo) {
         getFollowers(userInfo?._id)
           .then((res) => {
-            setFollowers(res?.Data)
+            setFollowers(res)
           })
           .catch((error) => {
-            console.log(error)
+            console.log('Followers error: ', error)
           })
         getFollows(userInfo?._id)
           .then((res) => {
             setFollows(res?.Data?.follows)
           })
           .catch((error) => {
-            console.log(error)
+            console.log('Follows error: ', error)
           })
         getBooksByUser(userInfo?._id)
           .then((res) => {
             setBooks(res)
           })
           .catch((error) => {
-            console.log(error)
+            console.log('Books error: ', error)
           })
       }
     }, [])
@@ -90,16 +90,16 @@ const HeaderProfile = ({ userInfo, navigation }) => {
                 onPress={() =>
                   navigation?.navigate('BooksPage', {
                     user: userInfo?._id,
-                    books: books,
+                    books: books.docs,
                   })
                 }
               >
                 <VStack w='95%' alignItems='center' justifyContent='center'>
                   <Text fontSize='xl' bold>
-                    {books ? books?.length : 0}
+                    {books ? books?.totalDocs : 0}
                   </Text>
                   <Text fontSize='md'>
-                    {books?.length === 1 ? 'Libro' : 'Libros'}
+                    {books?.totalDocs === 1 ? 'Libro' : 'Libros'}
                   </Text>
                 </VStack>
               </TouchableOpacity>
@@ -123,7 +123,9 @@ const HeaderProfile = ({ userInfo, navigation }) => {
                 <Text fontSize='xl' bold>
                   {followers ? followers?.length : 0}
                 </Text>
-                <Text fontSize='md'>Seguidores</Text>
+                <Text fontSize='md'>
+                  {followers?.length === 1 ? 'Seguidor' : 'Seguidores'}
+                </Text>
               </VStack>
             </TouchableOpacity>
           </Stack>
@@ -145,7 +147,9 @@ const HeaderProfile = ({ userInfo, navigation }) => {
                 <Text fontSize='xl' bold>
                   {follows ? follows?.length : 0}
                 </Text>
-                <Text fontSize='md'>Siguiendo</Text>
+                <Text fontSize='md'>
+                  {follows?.length === 1 ? 'Seguido' : 'Seguidos'}
+                </Text>
               </VStack>
             </TouchableOpacity>
           </Stack>

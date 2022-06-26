@@ -3,7 +3,7 @@ import { object, string, array } from 'yup'
 export const registerBookSchema = object({
   name: string()
     .min(2, 'El nombre debe contener al menos 2 caracterer')
-    .max(255, 'El nombre debe contener máximo 255 caracteres')
+    .max(525, 'El nombre debe contener máximo 525 caracteres')
     .required('El nombre es requerido'),
   synopsis: string()
     .min(2, 'La sipnosis debe contener al menos 2 caracteres')

@@ -29,7 +29,7 @@ const ReviewFeedBook = ({ navigation, bookInfo, reviewData }) => {
 
   return (
     <Box
-      maxH='93%'
+      maxH={layout.height * .82}
       minW={layout.width}
       bg={COLORS.base}
       justifyContent='center'

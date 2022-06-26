@@ -23,7 +23,7 @@ const Followers = ({ navigation, route }) => {
     useCallback(() => {
       getFollowers(id)
         .then(res => {
-          setFollowers(res?.Data)
+          setFollowers(res)
         })
         .catch(err => {
           console.log(err)

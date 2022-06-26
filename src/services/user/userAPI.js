@@ -1,4 +1,4 @@
-import { http } from '../http'
+import { http, URL } from '../http'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'user'
@@ -10,7 +10,7 @@ const getOnlyUser = async (id) => {
 
 const setProfileImage = async (id, image) => {
   const token = await AsyncStorage.getItem('@token')
-  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/image`, {
+  fetch(`${URL}${BASE_URL}/${id}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -66,17 +66,12 @@ const getFollows = async (id) => {
 
 const getFollowers = async (id) => {
   const { data } = await http.get(`${BASE_URL}/${id}/followers`)
-  return data
+  return data?.Data || null
 }
 
-const searchUsers = async (search) => {
-  const { data } = await http.get(`${BASE_URL}/search/${search}`)
-  return data
-}
-
-const searchUsersNoLimits = async (search) => {
-  const { data } = await http.get(`${BASE_URL}/search-users/${search}`)
-  return data
+const searchUsers = async (search, page = 1) => {
+  const { data } = await http.get(`${BASE_URL}/search=${search}/page=${page}&limit=10`)
+  return data?.Data || null
 }
 
 const setFavBooks = async (id, books) => {
@@ -134,7 +129,6 @@ module.exports = {
   getFollowers,
 
   searchUsers,
-  searchUsersNoLimits,
 
   setFavBooks,
   getFavBooks,

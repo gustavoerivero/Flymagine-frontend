@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { TouchableOpacity, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, TouchableOpacity, useWindowDimensions } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import {
   Box,
@@ -29,7 +29,7 @@ const UserItem = ({ userItem, navigation, onPress }) => {
     state: { user }
   } = useAuthContext()
 
-  const [isFollow, setIsFollow] = useState(false)
+  const [isFollow, setIsFollow] = useState(null)
   const [follows, setFollows] = useState(null)
 
   useFocusEffect(
@@ -155,9 +155,16 @@ const UserItem = ({ userItem, navigation, onPress }) => {
                   handleFollow()
                 }}
               >
-                <Text fontSize={9} color={COLORS.primary}>
-                  {isFollow ? 'Dejar de seguir' : 'Seguir'}
-                </Text>
+                {isFollow !== null ?
+                  <Text fontSize={9} color={COLORS.primary}>
+                    {isFollow ? 'Dejar de seguir' : 'Seguir'}
+                  </Text>
+                  :
+                  <ActivityIndicator
+                    size='small'
+                    color={COLORS.primary}
+                  />
+                }
               </Button>
             )}
           </Stack>

@@ -107,23 +107,16 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
           setUserLogged(log?.Data)
         })
         .catch((error) => {
-          console.log(error)
+          console.log('User review error: ', error)
         })
 
       getReviewById(review?._id)
         .then((res) => {
           setReview(res)
-
-          getUserById(res?.user)
-            .then((r) => {
-              setUserReview(r?.Data)
-            })
-            .catch((error) => {
-              console.log(error)
-            })
+          setUserReview(res?.user)
         })
         .catch((error) => {
-          console.log(error)
+          console.log('Review error: ', error)
         })
 
       getReactionsByReview(review?._id)
@@ -135,16 +128,15 @@ const ReviewItem = ({ navigation, dataReview = {} }) => {
           )
         })
         .catch((error) => {
-          console.log(error)
+          console.log('Reactions review error: ', error)
         })
 
       getComments(review?._id)
         .then((res) => {
-          console.log(res)
           setComments(res || [])
         })
         .catch((error) => {
-          console.log(error)
+          console.log('Comments error: ', error)
         })
     }, [])
   )

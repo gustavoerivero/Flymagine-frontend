@@ -22,13 +22,14 @@ import {
 import { getBooksByUser } from '../../../services/book/bookAPI'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import COLORS from '../../styled-components/Colors'
+import { ActivityIndicator } from 'react-native'
 
 const InfoUserProfile = ({ userInfo, navigation }) => {
   const {
     state: { user },
   } = useAuthContext()
 
-  const [isFollow, setIsFollow] = useState(false)
+  const [isFollow, setIsFollow] = useState(null)
   const [follows, setFollows] = useState(null)
 
   useFocusEffect(
@@ -42,7 +43,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
           }
         })
         .catch((err) => {
-          console.log(err)
+          console.log('Follows error: ', err)
         })
     }, [follows])
   )
@@ -117,6 +118,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                   isFollow ? COLORS.button.secundary : COLORS.button.terciary
                 }
                 startIcon={
+                  isFollow !== null &&
                   <FontAwesome5
                     name={isFollow ? 'user-times' : 'user-plus'}
                     size={20}
@@ -128,18 +130,26 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                   />
                 }
                 onPress={() => {
-                  handleFollow()
+                  isFollow !== null && handleFollow()
                 }}
               >
-                <Text
-                  bold
-                  fontSize='md'
-                  color={
-                    isFollow ? COLORS.button.secundary : COLORS.button.terciary
-                  }
-                >
-                  {isFollow ? 'Dejar de seguir' : 'Seguir'}
-                </Text>
+                {isFollow !== null ?
+                  <Text
+                    bold
+                    fontSize='md'
+                    color={
+                      isFollow ? COLORS.button.secundary : COLORS.button.terciary
+                    }
+                  >
+                    {isFollow ? 'Dejar de seguir' : 'Seguir'}
+                  </Text>
+                  :
+                  <ActivityIndicator
+                    size='small'
+                    color={COLORS.button.terciary}
+                  />
+                }
+
               </Button>
             </HStack>
           )}
