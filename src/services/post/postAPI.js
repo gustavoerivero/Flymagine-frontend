@@ -1,4 +1,4 @@
-import { http } from '../http'
+import { http, URL } from '../http'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'post'
@@ -10,7 +10,7 @@ const createPost = async (post) => {
 
 const postImage = async (postId, image) => {
   const token = await AsyncStorage.getItem('@token')
-  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${postId}/image`, {
+  fetch(`${URL}${BASE_URL}/${postId}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -31,24 +31,24 @@ const getPostById = async (id) => {
   return data?.Data
 }
 
-const getPosts = async () => {
-  const { data } = await http.get(`${BASE_URL}`)
+const getPosts = async (page) => {
+  const { data } = await http.get(`${BASE_URL}/page=${page}&limit=10`)
   return data?.Data || null
 }
 
-const getFeed = async (users) => {
-  const { data } = await http.post(`${BASE_URL}/feed`, users)
-  return data || null
+const getFeed = async (users, page = 1) => {
+  const { data } = await http.post(`${BASE_URL}/feed/page=${page}&limit=10`, users)
+  return data?.Data || null
 }
 
-const getPostByUser = async (id) => {
-  const { data } = await http.get(`${BASE_URL}/user/${id}`)
-  return data || null
+const getPostByUser = async (id, page = 1) => {
+  const { data } = await http.get(`${BASE_URL}/user/${id}/page=${page}&limit=10`)
+  return data?.Data || null
 }
 
-const searchPostByHashtags = async (hashtags) => {
-  const { data } = await http.post(`${BASE_URL}/hashtags`, hashtags)
-  return data?.Data || []
+const searchPostByHashtags = async (hashtags, page = 1) => {
+  const { data } = await http.post(`${BASE_URL}/hashtags/page=${page}&limit=10`, hashtags)
+  return data?.Data || null
 }
 
 const updatePost = async (id, post) => {

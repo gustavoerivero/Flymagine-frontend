@@ -8,10 +8,8 @@ import {
   VStack,
   Stack,
   Text,
-  ScrollView,
   Box,
   FlatList,
-  Badge,
   StatusBar,
 } from 'native-base'
 import { Tab, TabView } from '@rneui/themed'
@@ -25,7 +23,7 @@ import BookItem from '../components/SearchComponents/BookItem'
 import Post from '../components/Post/Post'
 import FoundCard from '../components/SearchComponents/FoundCard'
 
-import { searchUsersNoLimits } from '../services/user/userAPI'
+import { searchUsers } from '../services/user/userAPI'
 import { searchBooks } from '../services/book/bookAPI'
 import { searchHashtag } from '../services/hashtag/hashtagAPI'
 import { searchPostByHashtags } from '../services/post/postAPI'
@@ -36,6 +34,8 @@ import DontKnow from '../../assets/images/dontknow.png'
 import userfound from '../../assets/images/userfound.png'
 import bookfound from '../../assets/images/bookfound.png'
 import postfound from '../../assets/images/postfound.png'
+
+import ScrollInfiniteItems from '../components/SearchComponents/components/ScrollInfiniteItems'
 
 const Search = ({ navigation }) => {
   const layout = useWindowDimensions()
@@ -48,9 +48,154 @@ const Search = ({ navigation }) => {
   const [books, setBooks] = useState([])
   const [posts, setPosts] = useState([])
 
+  const [isLoadingPost, setIsLoadingPost] = useState(false)
+  const [currentPagePost, setCurrentPagePost] = useState(1)
+  const [isNextPagePost, setIsNextPagePost] = useState(true)
+
+  const [isLoadingUser, setIsLoadingUser] = useState(false)
+  const [currentPageUser, setCurrentPageUser] = useState(1)
+  const [isNextPageUser, setIsNextPageUser] = useState(true)
+
+  const [isLoadingBook, setIsLoadingBook] = useState(false)
+  const [currentPageBook, setCurrentPageBook] = useState(1)
+  const [isNextPageBook, setIsNextPageBook] = useState(true)
+
+  const getUsers = () => {
+
+    console.log('User Page: ', currentPageUser)
+
+    if (isNextPageUser) {
+
+      setIsLoadingUser(true)
+      searchUsers(search, currentPageUser)
+        .then((res) => {
+
+          let usersReceived = res?.docs
+          setIsNextPageUser(res?.hasNextPage)
+          console.log(`Have Next User Page: ${res?.hasNextPage ? 'Yes' : 'No'}`)
+
+          if (usersReceived?.length > 0) {
+            users.map((user) => {
+              usersReceived = usersReceived.filter((u) => u._id !== user._id && u.status === 'A')
+            })
+            setUsers([...users, ...usersReceived])
+          }
+          setIsLoadingUser(false)
+        })
+        .catch((err) => {
+          console.log('User search error: ', err)
+          setIsLoadingUser(false)
+        })
+
+    }
+
+  }
+
+  const getBooks = () => {
+
+    console.log('Book Page: ', currentPageBook)
+
+    if (isNextPageBook) {
+
+      setIsLoadingBook(true)
+      searchBooks(search, currentPageBook)
+        .then((res) => {
+
+          let booksReceived = res?.docs
+
+          setIsNextPageBook(res?.hasNextPage)
+          console.log(`Have Next Book Page: ${res?.hasNextPage ? 'Yes' : 'No'}`)
+
+          if (booksReceived?.length > 0) {
+            books.map((book) => {
+              booksReceived = booksReceived.filter((b) => b._id !== book._id && b.status === 'A')
+            })
+            setBooks([...books, ...booksReceived])
+          }
+          setIsLoadingBook(false)
+        })
+        .catch((err) => {
+          console.log('Book search error: ', err)
+          setIsLoadingBook(false)
+        })
+
+    }
+  }
+
+  const getPosts = () => {
+
+    console.log('Post Page: ', currentPagePost)
+
+    if (isNextPagePost) {
+
+      setIsLoadingPost(true)
+      searchHashtag(search)
+        .then((res) => {
+          if (res.length > 0) {
+            let hashtags = res?.map((hashtag) => hashtag?._id)
+
+            searchPostByHashtags(hashtags, currentPagePost)
+              .then((res) => {
+                let postsReceived = res?.docs
+
+                setIsNextPagePost(res?.hasNextPage)
+                console.log(`Have Next Post Page: ${res?.hasNextPage ? 'Yes' : 'No'}`)
+
+                if (postsReceived?.length > 0) {
+                  let pubs = postsReceived.map((element) => element?.post)
+                  posts.map((post) => {
+                    pubs = pubs.filter((p) => p?._id !== post?._id && p?.status === 'A')
+                  })
+                  setPosts([...posts, ...pubs])
+                }
+                setIsLoadingPost(false)
+              })
+              .catch((err) => {
+                console.log('Post search error: ', err)
+                setIsLoadingPost(false)
+              })
+          }
+        })
+        .catch((err) => {
+          console.log('Hashtag search error: ', err)
+        })
+
+    }
+  }
+
+  const renderUserItem = ({ item }) => {
+    return (
+      <UserItem
+        key={item._id}
+        userItem={item}
+        navigation={navigation}
+      />
+    )
+  }
+
+  const renderPostItem = ({ item }) => {
+    return (
+      <Post
+        key={item._id}
+        post={item}
+        navigation={navigation}
+      />
+    )
+  }
+
+  const renderBookItem = ({ item }) => {
+    return (
+      <BookItem
+        key={item._id}
+        bookItem={item}
+        navigation={navigation}
+      />
+    )
+  }
+
   return (
     <Box maxH={layout.height} bg={COLORS.base}>
-      <StatusBar animated={true} backgroundColor={COLORS.primary}/>
+      <StatusBar animated={true} backgroundColor={COLORS.primary} />
       <VStack alignItems='center'>
         <Stack
           bgColor={COLORS.primary}
@@ -70,43 +215,9 @@ const Search = ({ navigation }) => {
               setSearch(text)
 
               if (text !== '') {
-                searchUsersNoLimits(text)
-                  .then((res) => {
-                    setUsers(res?.Data || [])
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-
-                searchBooks(text)
-                  .then((res) => {
-                    setBooks(res)
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
-
-                searchHashtag(text)
-                  .then((res) => {
-                    if (res.length > 0) {
-                      let hashtags = res?.map((hashtag) => hashtag?._id)
-
-                      searchPostByHashtags(hashtags)
-                        .then((res) => {
-                          let pubs = res.map((element) => element.post)
-                          let pubsActive = pubs.filter(
-                            (pub) => pub.status === 'A'
-                          )
-                          setPosts(pubsActive || [])
-                        })
-                        .catch((err) => {
-                          console.log(err)
-                        })
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err)
-                  })
+                getUsers()
+                getBooks()
+                getPosts()
               }
             }}
             value={search}
@@ -186,97 +297,56 @@ const Search = ({ navigation }) => {
 
               <TabView.Item>
                 <VStack h='77%' w={layout.width} p={2} bg={COLORS.base}>
-                  {users.length ? (
-                    <FlatList
-                      showsVerticalScrollIndicator={false}
-                      data={users}
-                      keyExtractor={(item) => item?._id}
-                      renderItem={({ item }) => (
-                        <UserItem
-                          key={item._id}
-                          userItem={item}
-                          navigation={navigation}
-                        />
-                      )}
-                    />
-                  ) : (
-                    <VStack alignContent='center' alignItems='center'>
-                      <Image
-                        source={DontKnow}
-                        alt='DontKnow'
-                        resizeMode='contain'
-                        size={400}
-                      />
-                      <Text bold textAlign='center' color={COLORS.primary}>
-                        Discúlpanos, pero no pudimos encontrar lo que estás
-                        buscando
-                      </Text>
-                    </VStack>
-                  )}
+                  <ScrollInfiniteItems
+                    setData={setUsers}
+                    data={users}
+                    getData={getUsers}
+                    renderItem={renderUserItem}
+                    isLoading={isLoadingUser}
+                    currentPage={currentPageUser}
+                    setCurrentPage={setCurrentPageUser}
+                    setIsNextPage={setIsNextPageUser}
+                  />
                 </VStack>
               </TabView.Item>
 
               <TabView.Item>
                 <VStack h='77%' w={layout.width} p={2} bg={COLORS.base}>
-                  {books.length > 0 ? (
-                    <FlatList
-                      showsVerticalScrollIndicator={false}
-                      data={books}
-                      keyExtractor={(item) => item?._id}
-                      renderItem={({ item }) => (
-                        <BookItem bookItem={item} navigation={navigation} />
-                      )}
-                    />
-                  ) : (
-                    <VStack alignContent='center' alignItems='center'>
-                      <Image
-                        source={DontKnow}
-                        alt='DontKnow'
-                        resizeMode='contain'
-                        size={400}
-                      />
-                      <Text bold textAlign='center' color={COLORS.primary}>
-                        Discúlpanos, pero no pudimos encontrar lo que estás
-                        buscando
-                      </Text>
-                    </VStack>
-                  )}
+                  <ScrollInfiniteItems
+                    setData={setBooks}
+                    data={books}
+                    getData={getBooks}
+                    renderItem={renderBookItem}
+                    isLoading={isLoadingBook}
+                    currentPage={currentPageBook}
+                    setCurrentPage={setCurrentPageBook}
+                    setIsNextPage={setIsNextPageBook}
+                  />
                 </VStack>
               </TabView.Item>
 
               <TabView.Item>
-                <ScrollView>
-                  <VStack
-                    minH={layout.height}
-                    pb={layout.height * 0.3}
-                    mx={2}
-                    mt={1}
-                    space={1}
-                  >
-                    {posts.length > 0 ? (
-                      posts.map((post) => (
-                        <Post
-                          key={post._id}
-                          post={post}
-                          navigation={navigation}
-                        />
-                      ))
-                    ) : (
-                      <VStack alignContent='center' alignItems='center'>
-                        <Image
-                          source={DontKnow}
-                          alt='DontKnow'
-                          resizeMode='contain'
-                          size={400}
-                        />
-                        <Text bold textAlign='center' color={COLORS.primary}>
-                          Discúlpanos, pero no pudimos encontrar lo que estás
-                          buscando
-                        </Text>
-                      </VStack>
-                    )}
-                  </VStack>
-                </ScrollView>
+                <VStack
+                  minH={layout.height}
+                  minW={layout.width * 0.95}
+                  pb={layout.height * 0.3}
+                  mx={1}
+                  mt={1}
+                  space={1}
+                  justifyContent='center'
+                  alignItems='center'
+                >
+                  <ScrollInfiniteItems
+                    setData={setPosts}
+                    data={posts}
+                    getData={getPosts}
+                    renderItem={renderPostItem}
+                    isLoading={isLoadingPost}
+                    currentPage={currentPagePost}
+                    setCurrentPage={setCurrentPagePost}
+                    setIsNextPage={setIsNextPagePost}
+                  />
+                </VStack>
               </TabView.Item>
             </TabView>
           </View>
@@ -289,7 +359,7 @@ const Search = ({ navigation }) => {
           </VStack>
         )}
       </VStack>
-    </Box>
+    </Box >
   )
 }
 

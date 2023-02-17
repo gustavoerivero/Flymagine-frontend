@@ -8,11 +8,21 @@ import COLORS from './styled-components/Colors'
 import largeLogo from '../../assets/LogoHeader.png'
 import { TouchableOpacity } from 'react-native'
 
-const TopBar = () => {
+const TopBar = ({ onRefresh }) => {
 
   const { dispatch } = useAuthContext()
   const { showSuccessToast } = useCustomToast()
   const [count, setCount] = React.useState(0)
+
+  const touch = () => {
+    onRefresh()
+    if(count < 5) {
+      setCount(count + 1)
+    } else {          
+      setCount(0)
+      showSuccessToast('¡He pillado que te gusta andar de travieso!')
+    }   
+  }
 
   return (
     <HStack
@@ -23,14 +33,7 @@ const TopBar = () => {
       justifyContent='space-between'
       alignItems='center'
     >
-      <TouchableOpacity onPress={() => {
-        if(count < 5) {
-          setCount(count + 1)
-        } else {          
-          setCount(0)
-          showSuccessToast('¡He pillado que te gusta andar de travieso!')
-        }        
-      }}>
+      <TouchableOpacity onPress={touch}>
         <Image
           source={largeLogo}
           opacity={count === 0 ? 1 : 1 - (count / 8)}

@@ -1,4 +1,4 @@
-import { http } from '../http'
+import { http, URL } from '../http'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'book'
@@ -8,9 +8,9 @@ const createBook = async (book) => {
   return data
 }
 
-const getBooks = async () => {
-  const { data } = await http.get(`${BASE_URL}`)
-  return data?.Data
+const getBooks = async (page = 1) => {
+  const { data } = await http.get(`${BASE_URL}/page=${page}&limit=10`)
+  return data?.Data || null
 }
 
 const getBookById = async (id) => {
@@ -23,19 +23,19 @@ const getGenresByIdBook = async (id) => {
   return data?.Data[0]?.genres || []
 }
 
-const getBooksByUser = async (id) => {
-  const { data } = await http.get(`${BASE_URL}/user/${id}`)
-  return data?.Data || []
+const getBooksByUser = async (id, page = 1) => {
+  const { data } = await http.get(`${BASE_URL}/user=${id}/page=${page}&limit=10`)
+  return data?.Data || null
 }
 
-const searchBooks = async (name) => {
-  const { data } = await http.get(`${BASE_URL}/search/${name}`)
-  return data?.Data || []
+const searchBooks = async (name, page = 1) => {
+  const { data } = await http.get(`${BASE_URL}/search=${name}/page=${page}&limit=10`)
+  return data?.Data || null
 }
 
 const uploadImage = async (id, image) => {
   const token = await AsyncStorage.getItem('@token')
-  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/image`, {
+  fetch(`${URL}${BASE_URL}/${id}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -53,7 +53,7 @@ const uploadImage = async (id, image) => {
 
 const uploadDocument = async (id, document) => {
   const token = await AsyncStorage.getItem('@token')
-  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${id}/document`, {
+  fetch(`${URL}${BASE_URL}/${id}/document`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',

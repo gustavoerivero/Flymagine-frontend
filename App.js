@@ -6,17 +6,19 @@ import StackNavigation from './src/navigation/StackNavigation'
 
 const App = () => {
   return (
-    <SafeAreaProvider>
+    <>
+      <SafeAreaProvider>
         <NavigationContainer>
           <NativeBaseProvider>
             <AuthProvider>
               <SafeAreaView style={{ flex: 1 }}>
-                <StackNavigation />
+                  <StackNavigation />
               </SafeAreaView>
             </AuthProvider>
           </NativeBaseProvider>
         </NavigationContainer>
-    </SafeAreaProvider>
+      </SafeAreaProvider>
+    </>
   )
 }
 

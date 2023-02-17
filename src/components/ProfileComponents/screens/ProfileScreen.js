@@ -29,7 +29,7 @@ const ProfileScreen = ({ navigation, userData }) => {
           stopLoading()
         })
         .catch((error) => {
-          console.log(error)
+          console.log('Profile error: ', error)
         })
     }, [])
   )

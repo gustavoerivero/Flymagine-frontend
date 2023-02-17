@@ -1,4 +1,4 @@
-import { http } from '../http'
+import { http, URL } from '../http'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const BASE_URL = 'comment-post'
@@ -25,7 +25,7 @@ const updateComment = async (commentId, comment) => {
 
 const postImage = async(commentId, image) => { 
   const token = await AsyncStorage.getItem('@token')
-  fetch(`https://medinajosedev.com/flymagine/api/v1/${BASE_URL}/${commentId}/image`, {
+  fetch(`${URL}${BASE_URL}/${commentId}/image`, {
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',

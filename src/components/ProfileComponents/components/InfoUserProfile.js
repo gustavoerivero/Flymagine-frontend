@@ -6,11 +6,9 @@ import {
   VStack,
   Text,
   Icon,
-  Link,
   Button,
-  IconButton,
 } from 'native-base'
-import { MaterialIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons'
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons'
 import { useFocusEffect } from '@react-navigation/native'
 import useAuthContext from '../../../hooks/useAuthContext'
 
@@ -22,32 +20,39 @@ import {
 import { getBooksByUser } from '../../../services/book/bookAPI'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import COLORS from '../../styled-components/Colors'
+import { ActivityIndicator } from 'react-native'
 
 const InfoUserProfile = ({ userInfo, navigation }) => {
   const {
     state: { user },
   } = useAuthContext()
 
-  const [isFollow, setIsFollow] = useState(false)
+  const [isFollow, setIsFollow] = useState(null)
   const [follows, setFollows] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useFocusEffect(
     useCallback(() => {
+      setIsLoading(true)
       getFollows(user?.id)
         .then((res) => {
-          setFollows(res?.Data?.follows)
 
-          if (follows?.find((f) => f._id === userInfo?._id)) {
-            setIsFollow(true)
-          }
+          let foll = res?.Data?.follows
+          setFollows(foll)
+          setIsFollow(foll?.find((f) => f._id === userInfo?._id))
+          setIsLoading(false)
+
         })
         .catch((err) => {
-          console.log(err)
+          console.log('Follows error: ', err)
+          setIsLoading(false)
         })
     }, [follows])
   )
 
   const handleFollow = async () => {
+    
+    setIsLoading(true)
     let newFollows = [...follows]
 
     if (isFollow) {
@@ -62,9 +67,11 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
       .then((res) => {
         console.log(res)
         setFollows(res?.Data?.follows)
+        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)
+        setIsLoading(false)
       })
   }
 
@@ -117,6 +124,7 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                   isFollow ? COLORS.button.secundary : COLORS.button.terciary
                 }
                 startIcon={
+                  !isLoading &&
                   <FontAwesome5
                     name={isFollow ? 'user-times' : 'user-plus'}
                     size={20}
@@ -127,19 +135,26 @@ const InfoUserProfile = ({ userInfo, navigation }) => {
                     }
                   />
                 }
-                onPress={() => {
-                  handleFollow()
-                }}
+                isDisabled={isLoading}
+                onPress={handleFollow}
               >
-                <Text
-                  bold
-                  fontSize='md'
-                  color={
-                    isFollow ? COLORS.button.secundary : COLORS.button.terciary
-                  }
-                >
-                  {isFollow ? 'Dejar de seguir' : 'Seguir'}
-                </Text>
+                {!isLoading ?
+                  <Text
+                    bold
+                    fontSize='md'
+                    color={
+                      isFollow ? COLORS.button.secundary : COLORS.button.terciary
+                    }
+                  >
+                    {isFollow ? 'Dejar de seguir' : 'Seguir'}
+                  </Text>
+                  :
+                  <ActivityIndicator
+                    size='small'
+                    color={COLORS.button.terciary}
+                  />
+                }
+
               </Button>
             </HStack>
           )}
